@@ -85,21 +85,24 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .breadcrumbs { @apply mb-7 flex flex-wrap items-center gap-2 text-[9px] font-bold tracking-[0.11em] text-muted; }
   .breadcrumbs a { @apply text-muted no-underline hover:text-terra; }
   .breadcrumbs b { @apply max-w-[230px] truncate text-ink; }
-  .product-detail-grid { @apply grid gap-9 lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,.72fr)] lg:gap-[clamp(42px,7vw,120px)]; }
-  .product-gallery { @apply min-w-0; }
-  .product-main-image { @apply relative aspect-[4/5] overflow-hidden bg-sand; }
-  .product-main-image img { @apply h-full w-full object-cover; }
+  .product-detail-grid { @apply grid gap-9 lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,.72fr)] lg:gap-[clamp(42px,7vw,120px)]; animation: page-fade-in 420ms ease; }
+  .product-gallery { @apply flex min-w-0 flex-col-reverse gap-3 lg:flex-row lg:gap-4; }
+  .product-main-image { @apply relative aspect-[4/5] flex-1 cursor-zoom-in overflow-hidden bg-sand; }
+  .product-main-image img { @apply h-full w-full object-contain; animation: gallery-fade-in 320ms ease; }
   .product-main-image span { @apply absolute left-4 top-4 bg-paper px-3 py-1.5 text-[9px] font-bold tracking-[0.12em] text-terra; }
-  .product-thumbnails { @apply mt-3 flex gap-2 overflow-x-auto pb-1; }
-  .product-thumbnails button { @apply h-[72px] w-[58px] shrink-0 overflow-hidden border border-transparent bg-sand p-0; }
+  .product-thumbnails { @apply flex gap-2 overflow-x-auto pb-1 lg:max-h-[640px] lg:w-20 lg:shrink-0 lg:flex-col lg:overflow-x-visible lg:overflow-y-auto lg:pb-0; }
+  .product-thumbnails button { @apply h-[72px] w-[58px] shrink-0 overflow-hidden border border-transparent bg-sand p-0 transition hover:border-line lg:h-24 lg:w-full; }
   .product-thumbnails button.active { @apply border-ink; }
-  .product-thumbnails img { @apply h-full w-full object-cover; }
-  .product-detail-content { @apply max-w-[510px] lg:pt-3; }
-  .product-detail-content h1 { @apply m-0 font-playfair text-[clamp(36px,4vw,56px)] font-medium leading-[1.02] tracking-[-.05em] text-ink; }
-  .product-rating { @apply mt-4 text-sm tracking-[0.14em] text-[#c08a4b]; }
-  .product-rating span { @apply ml-2 text-xs tracking-normal text-muted; }
+  .product-thumbnails img { @apply h-full w-full object-contain; }
+  .product-detail-content { @apply lg:max-w-[510px] lg:pt-3; }
+  .detail-heading-row { @apply flex items-start justify-between gap-4; }
+  .detail-heading-row h1 { @apply m-0 font-playfair text-[clamp(30px,4vw,56px)] font-medium leading-[1.02] tracking-[-.05em] text-ink; }
+  .detail-wishlist-icon { @apply grid h-11 w-11 shrink-0 place-items-center border border-line bg-transparent text-ink transition hover:border-terra hover:text-terra; }
+  .detail-wishlist-icon svg { @apply h-[18px] w-[18px] transition; }
+  .detail-wishlist-icon.is-saved { @apply border-terra text-terra; }
+  .detail-wishlist-icon.is-saved svg { fill: currentColor; }
   .detail-price { @apply mt-6 flex flex-wrap items-center gap-3; }
-  .detail-price > b { @apply text-xl text-ink; }
+  .detail-price > b { @apply text-2xl text-ink; }
   .detail-price del { @apply text-sm text-muted; }
   .detail-price em { @apply bg-[#f7e8e4] px-2 py-1 text-[10px] font-bold not-italic text-terra; }
   .tax-note { @apply mb-0 mt-1 text-[10px] text-muted; }
@@ -107,21 +110,63 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .quantity-row { @apply mb-6 flex flex-wrap items-center gap-4; }
   .quantity-row > span { @apply text-[10px] font-bold tracking-[0.13em] text-ink; }
   .quantity-row small { @apply text-xs text-muted; }
-  .product-actions-detail { @apply grid grid-cols-[1fr_auto] gap-3; }
-  .detail-wishlist { @apply inline-flex min-h-[46px] items-center justify-center gap-2 border border-line bg-transparent px-4 text-[10px] font-bold tracking-[0.1em] text-ink transition hover:border-terra hover:text-terra; }
-  .detail-wishlist.is-saved { @apply border-terra text-terra; }
-  .delivery-note { @apply my-7 flex gap-3 border-y border-line py-5 text-terra; }
-  .delivery-note > svg { @apply h-6 w-6 shrink-0; }
-  .delivery-note div { @apply flex flex-col gap-1; }
-  .delivery-note b { @apply text-xs text-ink; }
-  .delivery-note span { @apply text-xs leading-5 text-muted; }
-  .product-accordion { @apply border-b border-line; }
-  .product-accordion > button { @apply flex w-full items-center justify-between border-0 bg-transparent py-4 text-left text-[10px] font-bold tracking-[0.13em] text-ink; }
-  .product-accordion > button svg { @apply h-4 w-4; }
-  .product-accordion dl { @apply grid grid-cols-2 gap-x-5 gap-y-4 border-t border-line py-5; }
-  .product-accordion dl div { @apply grid gap-1; }
-  .product-accordion dt { @apply text-[9px] font-bold tracking-[0.1em] text-muted; }
-  .product-accordion dd { @apply m-0 text-xs text-ink; }
+  .product-actions-detail { @apply grid grid-cols-[1fr_1fr] gap-3; }
+
+  /* Trust badges */
+  .trust-badges { @apply my-6 grid grid-cols-3 gap-3 border-t border-line pt-6; }
+  .trust-badges > div { @apply flex flex-col items-center gap-2 text-center; }
+  .trust-badges svg { @apply h-5 w-5 text-terra; }
+  .trust-badges span { @apply text-[9px] font-bold uppercase leading-tight tracking-[0.06em] text-muted; }
+
+  /* Colour variant swatches */
+  .variant-row { @apply my-6 flex flex-col gap-2; }
+  .variant-label { @apply text-[10px] font-bold uppercase tracking-[0.13em] text-ink; }
+  .variant-swatches { @apply flex flex-wrap gap-3; }
+  .variant-swatch { @apply grid h-11 w-11 place-items-center rounded-full border-2 border-transparent bg-sand p-0.5 text-[10px] font-bold uppercase text-ink outline outline-1 outline-offset-2 outline-line transition hover:outline-terra/50; }
+  .variant-swatch.active { @apply border-terra outline-terra; }
+  .variant-swatch span { @apply grid h-full w-full place-items-center rounded-full bg-[#f0e9df]; }
+
+  /* Offers / delivery pincode check */
+  .offer-line { @apply my-4 flex items-center gap-2 text-xs font-medium text-terra; }
+  .offer-line svg { @apply h-4 w-4 shrink-0; }
+  .delivery-check { @apply my-7 border-y border-line py-5; }
+  .delivery-check-input { @apply flex items-center gap-2 border border-line bg-paper px-3; }
+  .delivery-check-input svg { @apply h-4 w-4 shrink-0 text-muted; }
+  .delivery-check-input input { @apply h-11 flex-1 border-0 bg-transparent px-1 text-sm text-ink outline-none placeholder:text-muted; }
+  .delivery-check-input button { @apply shrink-0 border-0 bg-transparent px-2 text-[10px] font-bold tracking-[0.1em] text-terra disabled:text-muted; }
+  .delivery-error { @apply m-0 mt-2 text-xs text-[#a53232]; }
+  .delivery-result { @apply m-0 mt-3 flex items-center gap-2 text-xs leading-5 text-ink; }
+  .delivery-result svg { @apply h-4 w-4 shrink-0 text-terra; }
+
+  /* Multi-section accordion */
+  .product-accordion { @apply border-t border-line; }
+  .accordion-section { @apply border-b border-line; }
+  .accordion-section > button { @apply flex w-full items-center justify-between border-0 bg-transparent py-4 text-left text-[10px] font-bold tracking-[0.13em] text-ink; }
+  .accordion-section > button svg { @apply h-4 w-4; }
+  .accordion-body { @apply grid gap-3 pb-5 text-xs leading-6 text-muted; animation: accordion-in 220ms ease; }
+  .accordion-section dl { @apply grid grid-cols-2 gap-x-5 gap-y-4 pb-5; animation: accordion-in 220ms ease; }
+  .accordion-section dl div { @apply grid gap-1; }
+  .accordion-section dt { @apply text-[9px] font-bold tracking-[0.1em] text-muted; }
+  .accordion-section dd { @apply m-0 text-xs text-ink; }
+
+  /* Zoom lightbox */
+  .zoom-trigger { @apply absolute bottom-4 right-4 grid h-9 w-9 place-items-center rounded-full border-0 bg-paper/90 text-ink shadow-[0_2px_10px_rgba(36,27,24,.18)] transition hover:text-terra; }
+  .zoom-trigger svg { @apply h-4 w-4; }
+  .image-lightbox { @apply fixed inset-0 z-50 grid place-items-center bg-black/85 p-6; }
+  .lightbox-close { @apply absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full border-0 bg-paper/90 text-ink; }
+  .image-lightbox img { @apply max-h-[88vh] max-w-[92vw] object-contain; }
+
+  /* Related products (nested inside .product-page, which already has the
+     page's horizontal padding — no extra max-w/px here or it doubles up) */
+  .related-products { @apply mt-[clamp(60px,7vw,110px)]; }
+  .related-products h2 { @apply m-0 mb-6 border-b border-line pb-6 font-playfair text-[clamp(28px,3vw,40px)] font-medium tracking-[-.05em] text-ink; }
+  .related-products-row { @apply grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 md:gap-x-5 lg:grid-cols-4; }
+
+  /* Mobile sticky buy bar (hidden by default; shown under 768px) */
+  .mobile-buy-bar { @apply hidden; }
+
+  /* Cart line variant label */
+  .cart-item-variant { @apply -mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.08em] text-muted; }
   .checkout-form { @apply grid gap-7; }
   .checkout-section { @apply border border-line bg-[#fbf7f0] p-5 md:p-7; }
   .checkout-section h2 { @apply mb-5 mt-0 text-[10px] font-bold tracking-[0.15em] text-ink; }
@@ -164,8 +209,58 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .listing-toolbar { align-items: flex-end; }
   .listing-actions label { font-size: 0; }
   .listing-actions select { max-width: 92px; }
-  .product-actions-detail { grid-template-columns: 1fr; }
   .cart-item > strong { align-self: end; }
+}
+
+/* ===== Product page: sticky mobile buy bar replaces the inline
+   Buy Now / Add to Bag row below 768px, so the CTA stays reachable
+   while scrolling through specs/reviews without duplicating buttons. ===== */
+@media (max-width: 767px) {
+  .product-page { padding-bottom: 86px; }
+  .product-actions-detail { display: none; }
+  .mobile-buy-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -8px 24px rgba(36, 27, 24, .1);
+  }
+  .mobile-buy-bar-price { display: flex; flex-direction: column; margin-right: auto; min-width: 0; }
+  .mobile-buy-bar-price b { font-size: 15px; color: var(--ink); white-space: nowrap; }
+  .mobile-buy-bar-price del { font-size: 10px; color: var(--muted); }
+  .mobile-buy-bar .store-primary-button,
+  .mobile-buy-bar .store-secondary-button {
+    min-height: 42px;
+    padding: 0 14px;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+}
+
+/* ===== Product Detail Page Animations ===== */
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes gallery-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes accordion-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-detail-grid, .product-main-image img, .accordion-body, .accordion-section dl {
+    animation: none !important;
+  }
 }
 
 /* ===== Hero Banner Animations ===== */

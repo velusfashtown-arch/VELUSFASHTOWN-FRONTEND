@@ -10,6 +10,8 @@ const WishlistPage = lazy(() => import('../pages/website/Pages/Wishlist/Wishlist
 const CartPage = lazy(() => import('../pages/website/Pages/Cart/Cart'));
 const CheckoutPage = lazy(() => import('../pages/website/Pages/Checkout/Checkout'));
 const OrderSuccessPage = lazy(() => import('../pages/website/Pages/OrderSuccess/OrderSuccess'));
+const OrderCancelledPage = lazy(() => import('../pages/website/Pages/OrderCancelled/OrderCancelled'));
+const OrderFailedPage = lazy(() => import('../pages/website/Pages/OrderFailed/OrderFailed'));
 const AccountPage = lazy(() => import('../pages/website/Account/index'));
 
 // Admin Auth pages
@@ -78,7 +80,9 @@ export default function AppRouter() {
             </RequireCustomer>
           }
         />
-        <Route path="/order-success" element={<OrderSuccessPage />} />
+<Route path="/order-success" element={<OrderSuccessPage />} />
+        <Route path="/order-cancelled" element={<OrderCancelledPage />} />
+        <Route path="/order-failed" element={<OrderFailedPage />} />
         <Route
           path="/account"
           element={

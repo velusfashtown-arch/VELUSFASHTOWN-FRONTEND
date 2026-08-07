@@ -15,7 +15,11 @@ const iconPaths = {
   chevron: <path d="m6 9 6 6 6-6" />,
   truck: <><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z" /><circle cx="7" cy="18" r="2" /><circle cx="18" cy="18" r="2" /></>,
   lock: <><rect x="5" y="10" width="14" height="10" rx="1" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></>,
-  filter: <><path d="M4 6h16M7 12h10M10 18h4" /></>
+  filter: <><path d="M4 6h16M7 12h10M10 18h4" /></>,
+  zoom: <><circle cx="10" cy="10" r="6" /><path d="m21 21-5-5M10 7v6M7 10h6" /></>,
+  pin: <><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.3" /></>,
+  package: <><path d="M12 3 3 7.5 12 12l9-4.5L12 3Z" /><path d="M3 7.5v9L12 21m0-9v9m9-13.5v9L12 21" /></>,
+  refresh: <><path d="M4 12a8 8 0 0 1 14.5-4.7M20 12a8 8 0 0 1-14.5 4.7" /><path d="M18.5 3v4.3H14.2M5.5 21v-4.3h4.3" /></>,
 };
 
 export default function StoreIcon({ name }) {

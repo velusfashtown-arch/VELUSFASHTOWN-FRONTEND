@@ -77,7 +77,7 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
           <span className="h-6 w-px shrink-0 bg-gray-200" />
           <div className="min-w-0">
             <h3 className="truncate text-sm font-semibold text-ink">Product Details</h3>
-            <p className="mt-0.5 truncate text-[11px] text-gray-400">{p.sku || p.name}</p>
+            <p className="mt-0.5 truncate text-[11px] text-gray-400">{p.productId || p.sku || p.name}</p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -145,6 +145,8 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
           {/* Pricing */}
           <Section title="Pricing & Inventory">
             <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
+              <Field label="Product ID" value={p.productId} />
+              <Field label="SKU" value={p.sku} />
               <Field label="MRP" value={formatPrice(p.mrp)} />
               <Field label="Selling Price" value={formatPrice(p.sellingPrice)} />
               <Field label="Cost Price" value={formatPrice(p.costPrice)} />

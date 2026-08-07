@@ -4,7 +4,7 @@ import Header from '../../Header/Header';
 import Footer from '../../Footer/Footer';
 import StoreIcon from '../../../../components/store/StoreIcon';
 import { api } from '../../../../lib/api';
-import { useShop } from '../../../../context/ShopContext';
+import { useShop, FREE_SHIPPING_THRESHOLD } from '../../../../context/ShopContext';
 import { useAuth } from '../../../../context/AuthContext';
 import { OrderSummary } from '../Cart/Cart';
 import './Checkout.css';
@@ -31,7 +31,7 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const shipping = subtotal >= 999 ? 0 : 99;
+  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 99;
   const discount = subtotal >= 4999 ? Math.round(subtotal * 0.05) : 0;
   const total = subtotal + shipping - discount;
   const isEmpty = !cart.length;
@@ -77,11 +77,18 @@ export default function CheckoutPage() {
           }
         },
         modal: {
-          ondismiss: () => reject(new Error('Payment was cancelled. Your order is saved and awaiting payment.')),
+          onDismiss: () => {
+            // The user closed the payment widget without completing it.
+            // The order is reserved but still awaiting payment → cancelled screen.
+            navigate('/order-cancelled', { state: { order } });
+            reject(new Error('Payment was cancelled. Your order is saved and awaiting payment.'));
+          },
         },
       });
       razorpay.on('payment.failed', (response) => {
         api.recordPaymentFailure({ orderId: order.id, error: response.error?.description }).catch(() => {});
+        navigate('/order-failed', { state: { order } });
+        reject(new Error('Payment failed. No charges were made.'));
       });
       razorpay.open();
     });
@@ -94,7 +101,9 @@ export default function CheckoutPage() {
     try {
       const orderResponse = await api.createOrder(token, { customer, items: itemRows, paymentMethod });
       const order = orderResponse.data;
-      if (paymentMethod === 'ONLINE') await startOnlinePayment(order);
+      if (paymentMethod === 'ONLINE') {
+        await startOnlinePayment(order);
+      }
       clearCart();
       navigate('/order-success', { state: { order } });
     } catch (requestError) { setError(requestError.message || 'Unable to place your order.'); } finally { setLoading(false); }

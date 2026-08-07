@@ -57,7 +57,7 @@ function ProductTable({ products, onView, onEdit, onDelete, loading, refreshing,
             <ProductImage product={product} />
             <div className="min-w-0">
               <b className="block max-w-[220px] truncate text-[13px] text-ink">{product.name}</b>
-              <small className="block text-[10px] text-muted">{product.sku || 'No SKU'}</small>
+              <small className="block text-[10px] text-muted">{product.productId || product.sku || 'No ID'}</small>
             </div>
           </div>
         ),

@@ -51,6 +51,10 @@ export const api = {
     return request(`/api/website/products${query ? `?${query}` : ''}`);
   },
   getProduct: (id) => request(`/api/website/products/${id}`),
+  getRelatedProducts: (id) => request(`/api/website/products/${id}/related`),
+  getBestSellers: (limit = 8) => request(`/api/website/products/best-seller?limit=${limit}`),
+  getRecommended: (limit = 8) => request(`/api/website/products/recommended?limit=${limit}`),
+  checkDelivery: (payload) => request('/api/website/products/check-delivery', { method: 'POST', body: payload }),
   createOrder: (token, payload) => request('/api/website/orders', { method: 'POST', token, body: payload }),
   createPaymentOrder: (orderId) => request('/api/website/payments/create-order', { method: 'POST', body: { orderId } }),
   verifyPayment: (payload) => request('/api/website/payments/verify', { method: 'POST', body: payload }),

@@ -1,0 +1,9 @@
+/* Order Failed — reuses .success-page / .success-icon / .eyebrow from styles.css */
+.status-failed .status-icon {
+  background: #fbe6e4;
+  color: #a53232;
+}
+
+.status-failed .store-secondary-button {
+  margin-bottom: 12px;
+}

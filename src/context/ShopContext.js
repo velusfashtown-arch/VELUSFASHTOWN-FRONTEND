@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 const ShopContext = createContext(null);
 const CART_STORAGE_KEY = 'velus-fashtown-cart';
 const WISHLIST_STORAGE_KEY = 'velus-fashtown-wishlist';
+export const FREE_SHIPPING_THRESHOLD = 999;
 
 function loadStorage(key) {
   try {
@@ -28,26 +29,35 @@ export function ShopProvider({ children }) {
     const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * item.quantity, 0);
 
+    // Cart line items are keyed by product id + optional variant id, so the
+    // same saree in two different colours/sizes lands as two separate lines.
+    function sameLine(item, productId, variantId) {
+      return item.id === productId && (item.variantId || null) === (variantId || null);
+    }
+
     function addToCart(product, quantity = 1) {
       if (!product?.id) return;
+      const variantId = product.variantId || null;
       setCart((items) => {
-        const existing = items.find((item) => item.id === product.id);
+        const existing = items.find((item) => sameLine(item, product.id, variantId));
         const availableStock = Number(product.stock || 0);
         if (existing) {
           const nextQuantity = availableStock ? Math.min(existing.quantity + quantity, availableStock) : existing.quantity + quantity;
-          return items.map((item) => item.id === product.id ? { ...item, ...product, quantity: nextQuantity } : item);
+          return items.map((item) => sameLine(item, product.id, variantId) ? { ...item, ...product, quantity: nextQuantity } : item);
         }
         return [...items, { ...product, quantity: availableStock ? Math.min(quantity, availableStock) : quantity }];
       });
     }
 
-    function updateQuantity(productId, quantity) {
+    function updateQuantity(productId, quantity, variantId = null) {
       setCart((items) => items
-        .map((item) => item.id === productId ? { ...item, quantity: Math.max(0, Math.min(Number(quantity) || 0, Number(item.stock || 99))) } : item)
+        .map((item) => sameLine(item, productId, variantId) ? { ...item, quantity: Math.max(0, Math.min(Number(quantity) || 0, Number(item.stock || 99))) } : item)
         .filter((item) => item.quantity > 0));
     }
 
-    function removeFromCart(productId) { setCart((items) => items.filter((item) => item.id !== productId)); }
+    function removeFromCart(productId, variantId = null) {
+      setCart((items) => items.filter((item) => !sameLine(item, productId, variantId)));
+    }
     function clearCart() { setCart([]); }
     function toggleWishlist(product) {
       if (!product?.id) return;
