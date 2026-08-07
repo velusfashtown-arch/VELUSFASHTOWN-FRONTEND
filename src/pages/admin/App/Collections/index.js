@@ -143,74 +143,8 @@ export default function AdminCollections() {
           { key: 'isFeatured', header: 'Featured', render: (collection) => collection.isFeatured ? 'Yes' : '—' },
           { key: 'isActive', header: 'Status', render: (collection) => collection.isActive !== false ? 'Active' : 'Inactive' },
         ]}
-        rowActions={[{ label: 'Edit', onClick: openEdit }, { label: 'Delete', danger: true, onClick: (collection) => handleDelete(collection.id) }]}
+rowActions={[{ label: 'Edit', onClick: openEdit }, { label: 'Delete', danger: true, onClick: (collection) => handleDelete(collection.id) }]}
       />
-
-      <div className="hidden overflow-hidden rounded-xl border border-line bg-paper">
-        <div className="flex flex-col gap-3 border-b border-[rgba(47,31,25,0.08)] px-5 py-[18px] sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <h2 className="m-0 text-sm font-semibold text-ink">Collections</h2>
-            <span className="rounded-full bg-[rgba(47,31,25,0.06)] px-2.5 py-0.5 text-[10px] font-semibold tracking-[0.05em] text-muted">{collections.length} total</span>
-          </div>
-          <button className="admin-btn-primary w-full justify-center sm:w-auto" onClick={openAdd}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-            Add Collection
-          </button>
-        </div>
-
-        {collections.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-[13px]">
-              <thead>
-                <tr className="bg-[rgba(47,31,25,0.03)] text-left text-[10px] font-bold uppercase tracking-[0.08em] text-muted">
-                  <th className="border-b border-[rgba(47,31,25,0.08)] px-5 py-3">Name</th>
-                  <th className="border-b border-[rgba(47,31,25,0.08)] px-5 py-3">Slug</th>
-                  <th className="border-b border-[rgba(47,31,25,0.08)] px-5 py-3">Products</th>
-                  <th className="border-b border-[rgba(47,31,25,0.08)] px-5 py-3">Featured</th>
-                  <th className="border-b border-[rgba(47,31,25,0.08)] px-5 py-3">Status</th>
-                  <th className="border-b border-[rgba(47,31,25,0.08)] px-5 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {collections.map(col => (
-                  <tr key={col.id} className="hover:bg-[rgba(167,78,62,0.03)]">
-                    <td className="border-b border-[rgba(47,31,25,0.06)] px-5 py-3">
-                      <b className="text-ink">{col.name}</b>
-                      {col.description && <small className="block text-[11px] text-muted truncate max-w-[200px]">{col.description}</small>}
-                    </td>
-                    <td className="border-b border-[rgba(47,31,25,0.06)] px-5 py-3 text-muted text-[12px] font-mono">{col.slug}</td>
-                    <td className="border-b border-[rgba(47,31,25,0.06)] px-5 py-3 text-ink font-semibold">
-                      {col.products?.length || 0}
-                    </td>
-                    <td className="border-b border-[rgba(47,31,25,0.06)] px-5 py-3">
-                      {col.isFeatured ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold bg-[#fef7e0] text-[#b47c2e]">
-                          <span className="h-[6px] w-[6px] rounded-full bg-current" /> Featured
-                        </span>
-                      ) : <span className="text-muted text-[12px]">—</span>}
-                    </td>
-                    <td className="border-b border-[rgba(47,31,25,0.06)] px-5 py-3">
-                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${col.isActive !== false ? 'bg-[#e6f4ea] text-[#1e8e3e]' : 'bg-[#f0edf5] text-[#6b4fa0]'}`}>
-                        <span className="h-[6px] w-[6px] rounded-full bg-current" />
-                        {col.isActive !== false ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="border-b border-[rgba(47,31,25,0.06)] px-5 py-3 text-right">
-                      <button className="admin-btn-ghost" onClick={() => openEdit(col)}>Edit</button>
-                      <button className="admin-btn-ghost danger ml-1" onClick={() => handleDelete(col.id)}>Delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="py-10 text-center text-sm text-muted">
-            <svg className="mx-auto mb-3 h-10 w-10 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-            <p className="m-0">No collections yet. Click "Add Collection" to create one.</p>
-          </div>
-        )}
-      </div>
     </div>
   );
 }
