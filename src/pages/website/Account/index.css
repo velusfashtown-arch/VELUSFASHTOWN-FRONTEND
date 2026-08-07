@@ -1,0 +1,177 @@
+.account-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 45px 20px 90px;
+}
+
+.account-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  margin: 28px 0 32px;
+  overflow-x: auto;
+}
+
+.account-tab {
+  border: 0;
+  background: transparent;
+  padding: 12px 4px;
+  margin-right: 24px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.account-tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--terra);
+}
+
+.account-card {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.account-card h2 {
+  margin: 0 0 18px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+
+.account-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.account-form-grid .span-two {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 620px) {
+  .account-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.account-address-list {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.account-address-card {
+  border: 1px solid var(--line);
+  padding: 16px;
+  position: relative;
+}
+
+.account-address-card.default {
+  border-color: var(--terra);
+}
+
+.account-address-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--terra);
+  border: 1px solid var(--terra);
+  padding: 2px 8px;
+  margin-bottom: 8px;
+}
+
+.account-address-card .name {
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+
+.account-address-card p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.account-address-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.account-address-actions button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--terra);
+  cursor: pointer;
+}
+
+.account-address-actions button.danger {
+  color: #a53232;
+}
+
+.account-orders-list {
+  display: grid;
+  gap: 14px;
+}
+
+.account-order-row {
+  border: 1px solid var(--line);
+  padding: 16px;
+}
+
+.account-order-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.account-order-head b {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.account-order-status {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 9px;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.account-order-items {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.account-order-tracking {
+  font-size: 12px;
+  color: var(--terra);
+  margin: 0;
+}
+
+.account-empty {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 30px 0;
+}

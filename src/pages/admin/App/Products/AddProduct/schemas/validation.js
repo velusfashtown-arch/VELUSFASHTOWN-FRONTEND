@@ -1,0 +1,76 @@
+import { z } from 'zod';
+
+const requiredNumber = (label) => z.string()
+  .min(1, `${label} is required`)
+  .refine((value) => Number.isFinite(Number(value)) && Number(value) >= 0, `${label} must be a valid number`);
+
+const optionalNumber = z.string()
+  .refine((value) => !value || (Number.isFinite(Number(value)) && Number(value) >= 0), 'Must be a valid number')
+  .optional();
+
+const booleanValue = z.union([z.boolean(), z.enum(['true', 'false'])])
+  .transform((value) => value === true || value === 'true');
+
+export function getAddProductSchema() {
+  return z.object({
+  productName: z.string().min(2, 'Product name must be at least 2 characters').max(200, 'Product name too long'),
+  slug: z.string().optional(),
+  sku: z.string().optional(),
+category: z.string().min(1, 'Category is required'),
+  subCategory: z.string().optional(),
+
+  mrp: requiredNumber('MRP'),
+  sellingPrice: requiredNumber('Selling price'),
+  costPrice: optionalNumber,
+  gst: optionalNumber,
+
+  stock: requiredNumber('Stock quantity'),
+  lowStockAlert: optionalNumber,
+
+  sareeFabric: z.string().optional(),
+  blouseFabric: z.string().optional(),
+  workType: z.string().optional(),
+  borderType: z.string().optional(),
+  palluType: z.string().optional(),
+  sareeLength: z.string().optional(),
+  blouseLength: z.string().optional(),
+  weight: optionalNumber,
+  primaryColor: z.string().optional(),
+  secondaryColor: z.string().optional(),
+  pattern: z.string().optional(),
+  printType: z.string().optional(),
+  style: z.string().optional(),
+
+  blouseIncluded: z.boolean().optional(),
+  blouseType: z.string().optional(),
+  blouseColor: z.string().optional(),
+
+  images: z.array(z.string()).min(1, 'Upload at least one image').max(20, 'Maximum 20 images allowed'),
+  productVideo: z.string().url('Invalid video URL').optional().or(z.literal('')),
+  youtubeUrl: z.string().url('Invalid YouTube URL').optional().or(z.literal('')),
+  instagramReelUrl: z.string().url('Invalid Instagram URL').optional().or(z.literal('')),
+
+shortDescription: z.string().max(300, 'Short description too long').optional(),
+  longDescription: z.string().optional(),
+
+  shippingWeight: optionalNumber,
+  shippingLength: optionalNumber,
+  shippingWidth: optionalNumber,
+  shippingHeight: optionalNumber,
+  shippingCharge: optionalNumber,
+  codAvailable: booleanValue,
+
+  tags: z.array(z.string()).optional(),
+  variants: z.array(z.object({
+    color: z.string().min(1, 'Color name is required'),
+  })).optional(),
+
+  returnAvailable: booleanValue,
+  returnDays: optionalNumber,
+  exchangeAvailable: booleanValue,
+
+  countryOfOrigin: z.string().optional(),
+  manufacturer: z.string().optional(),
+  packer: z.string().optional(),
+});
+}
