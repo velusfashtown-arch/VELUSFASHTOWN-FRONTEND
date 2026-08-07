@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 
 const AUTOSAVE_DELAY = 30000; // 30 seconds
-const STORAGE_KEY = 'aytin_product_draft';
+const STORAGE_KEY = 'velusfashtown_product_draft';
 
 export function useAutoSave(formValues, isDirty, isEditMode) {
   const timerRef = useRef(null);
