@@ -2,6 +2,7 @@ import React from 'react';
 import { FiInfo } from 'react-icons/fi';
 import CollapsibleCard from '../components/CollapsibleCard';
 import FormField from '../../../../Common/Form/FormField';
+import { PRODUCT_STATUSES } from '../constants/options';
 
 export default function BasicInfo({ register, errors, formValues, categories = [] }) {
   const categoryOptions = categories
@@ -63,6 +64,16 @@ export default function BasicInfo({ register, errors, formValues, categories = [
           options={subCategoryOptions}
           placeholder="Select sub category"
           disabled={!formValues.category || subCategoryOptions.length === 0}
+        />
+        <FormField
+          label="Status"
+          name="status"
+          register={register}
+          value={formValues.status}
+          error={errors.status?.message}
+          type="select"
+          options={PRODUCT_STATUSES}
+          placeholder="Select status"
         />
       </div>
     </CollapsibleCard>

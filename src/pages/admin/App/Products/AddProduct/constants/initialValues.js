@@ -21,7 +21,6 @@ export const initialFormValues = {
   palluType: '',
   sareeLength: '',
   blouseLength: '',
-  weight: '',
   primaryColor: '',
   secondaryColor: '',
   pattern: '',

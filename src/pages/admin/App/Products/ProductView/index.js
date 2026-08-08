@@ -120,7 +120,7 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
                 </span>
               </div>
               <p className="mt-1 text-[12px] text-gray-400">SKU: {p.sku || '—'} · Slug: {p.slug || '—'}</p>
-              {p.shortDescription && <p className="mt-3 text-[13px] leading-relaxed text-gray-600">{p.shortDescription}</p>}
+              {p.shortDescription && <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{p.shortDescription}</p>}
               <div className="mt-4 flex flex-wrap items-center gap-4">
                 <div>
                   <span className="text-[10px] font-semibold uppercase tracking-wide text-muted">Price</span>

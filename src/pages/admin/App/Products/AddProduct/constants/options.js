@@ -1,3 +1,10 @@
+export const PRODUCT_STATUSES = [
+  { value: 'Draft', label: 'Draft' },
+  { value: 'Published', label: 'Published' },
+  { value: 'Unpublished', label: 'Unpublished' },
+  { value: 'Archived', label: 'Archived' },
+];
+
 export const CATEGORIES = [
   { value: 'Sarees', label: 'Sarees' },
   { value: 'Lehengas', label: 'Lehengas' },

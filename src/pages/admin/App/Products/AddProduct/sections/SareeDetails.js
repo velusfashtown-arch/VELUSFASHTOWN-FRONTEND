@@ -78,15 +78,6 @@ export default function SareeDetails({ register, errors, formValues }) {
           error={errors.blouseLength?.message}
           placeholder="e.g. 0.80"
         />
-        <FormField
-          label="Weight (gms)"
-          name="weight"
-          type="number"
-          register={register}
-          error={errors.weight?.message}
-          placeholder="e.g. 500"
-          min="0"
-        />
 <FormField
           label="Primary Color"
           name="primaryColor"
