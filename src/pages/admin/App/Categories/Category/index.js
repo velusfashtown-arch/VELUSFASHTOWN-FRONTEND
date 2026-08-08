@@ -129,8 +129,8 @@ export default function AdminCategory() {
 
   return (
     <div>
-      {success && <div className="fixed top-4 right-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)] admin-toast">{success}</div>}
-      {(error || localError) && <div className="fixed top-4 right-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)] admin-toast">{(error || localError)}</div>}
+      {success && <div className="fixed left-4 right-4 top-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)] sm:left-auto sm:w-auto admin-toast">{success}</div>}
+      {(error || localError) && <div className="fixed left-4 right-4 top-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)] sm:left-auto sm:w-auto admin-toast">{(error || localError)}</div>}
 
       {modalOpen && (
         <CategoryModal category={editingCategory} onClose={closeModal} onSaved={() => { loadCategory(); showSuccess(editingCategory ? 'Category updated!' : 'Category created!'); }} />

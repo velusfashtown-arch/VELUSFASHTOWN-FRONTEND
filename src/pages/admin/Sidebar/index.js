@@ -132,7 +132,7 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
             className="h-auto w-[83px] brightness-[10] transition-all duration-200"
             style={sidebarIsCollapsed ? { width: '40px' } : {}}
           />
-          <button type="button" onClick={onMobileClose} className="absolute right-3 flex h-9 w-9 items-center justify-center rounded-md text-[rgba(255,249,241,0.7)] transition-colors hover:bg-[rgba(255,249,241,0.1)] hover:text-white lg:hidden" aria-label="Close sidebar">
+          <button type="button" onClick={onMobileClose} className="absolute right-3 flex h-9 w-9 items-center justify-center rounded-md text-[rgba(255,249,241,0.7)] transition-colors hover:bg-[rgba(255,249,241,0.1)] hover:text-white md:hidden" aria-label="Close sidebar">
             <CloseIcon />
           </button>
         </div>

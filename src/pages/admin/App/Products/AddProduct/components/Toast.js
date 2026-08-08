@@ -53,7 +53,7 @@ export default function Toast({ message, type = 'success', onClose, duration = 4
           animate={{ opacity: 1, x: 0, y: 0 }}
           exit={{ opacity: 0, x: 100, y: -20 }}
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-          className={`fixed top-4 right-4 z-[200] flex items-center gap-3 px-4 py-3 rounded-xl border shadow-lg ${colors.bg}`}
+          className={`fixed left-4 right-4 top-4 z-[200] flex items-center gap-3 px-4 py-3 rounded-xl border shadow-lg sm:left-auto sm:w-auto ${colors.bg}`}
         >
           <Icon className={`w-5 h-5 flex-shrink-0 ${colors.icon}`} />
           <span className={`text-[13px] font-medium ${colors.text}`}>{message}</span>

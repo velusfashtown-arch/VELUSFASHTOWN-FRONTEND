@@ -175,7 +175,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* ─── Charts Grid ────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         
         {/* Order Trend Chart */}
         <div className="bg-paper border border-line rounded-xl p-5">
@@ -234,7 +234,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* ─── Bottom Grid ────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {/* Order Status Breakdown */}
         <div className="bg-paper border border-line rounded-xl p-5">
@@ -242,8 +242,8 @@ export default function AdminDashboard() {
             <h3 className="m-0 text-sm font-semibold text-ink">Order Status</h3>
           </div>
           {statusPieData.length > 0 ? (
-            <div className="flex items-center gap-4">
-              <ResponsiveContainer width="50%" height={160}>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <ResponsiveContainer className="w-full sm:w-1/2" width="100%" height={160}>
                 <PieChart>
                   <Pie data={statusPieData} cx="50%" cy="50%" innerRadius={35} outerRadius={65} dataKey="value" paddingAngle={2}>
                     {statusPieData.map((entry, idx) => (

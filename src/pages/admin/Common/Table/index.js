@@ -174,7 +174,7 @@ export default function Table({
         </div>
       )}
 
-      <div className="flex flex-col gap-4 border-b border-[rgba(47,31,25,0.08)] bg-[linear-gradient(115deg,rgba(255,255,255,0.92),rgba(250,245,239,0.92))] px-4 py-4 lg:flex-row lg:items-center lg:justify-between sm:px-5 sm:py-[18px]">
+      <div className="flex flex-col gap-4 border-b border-[rgba(47,31,25,0.08)] bg-[linear-gradient(115deg,rgba(255,255,255,0.92),rgba(250,245,239,0.92))] px-4 py-4 md:flex-row md:items-center md:justify-between sm:px-5 sm:py-[18px]">
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(167,78,62,0.1)] text-terra">
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 6h16M4 12h16M4 18h9" strokeLinecap="round" /></svg>
@@ -184,7 +184,7 @@ export default function Table({
             <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted">Manage your records</p>
           </div>
         </div>
-        <div className="flex flex-col gap-2 md:flex-row lg:items-center">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center">
           {searchable &&
             <AdminInput
               icon={<svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" strokeLinecap="round" /></svg>}

@@ -25,7 +25,7 @@ export default function AdminHeader({ pageTitle, onLogout, onMenuToggle }) {
         {/* Hamburger menu button - visible on mobile only */}
         <button
           onClick={onMenuToggle}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border-none bg-transparent text-muted transition-colors hover:bg-[rgba(47,31,25,0.06)] hover:text-ink lg:hidden"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border-none bg-transparent text-muted transition-colors hover:bg-[rgba(47,31,25,0.06)] hover:text-ink md:hidden"
           aria-label="Toggle sidebar menu"
         >
           <MenuIcon />

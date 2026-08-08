@@ -30,7 +30,7 @@ export default function AdminCustomers() {
 
   return (
     <div>
-      {error && <div className="fixed top-4 right-4 z-50 rounded-lg border border-[rgba(197,34,31,0.15)] bg-[#fce8e6] px-5 py-3 text-[13px] font-medium text-[#c5221f] shadow-[0_4px_16px_rgba(47,31,25,0.12)] admin-toast">{error}</div>}
+      {error && <div className="fixed left-4 right-4 top-4 z-50 rounded-lg border border-[rgba(197,34,31,0.15)] bg-[#fce8e6] px-5 py-3 text-[13px] font-medium text-[#c5221f] shadow-[0_4px_16px_rgba(47,31,25,0.12)] sm:left-auto sm:w-auto admin-toast">{error}</div>}
 
       <div className="mb-6 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
         <div className="rounded-lg border border-line bg-paper px-4 py-3.5"><span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">Total Customers</span><b className="font-playfair text-[22px] font-semibold text-ink">{pagination.total}</b></div>

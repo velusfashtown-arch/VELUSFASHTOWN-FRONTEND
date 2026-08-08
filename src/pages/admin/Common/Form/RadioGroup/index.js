@@ -24,7 +24,7 @@ export default function AdminRadioGroup({
               className="h-4 w-4 accent-terra"
               {...(register ? register(name) : {})}
             />
-            <span className="text-[13px] text-gray-700">{optionLabel}</span>
+            <span className="text-[13px] text-ink">{optionLabel}</span>
           </label>
         ))}
       </div>

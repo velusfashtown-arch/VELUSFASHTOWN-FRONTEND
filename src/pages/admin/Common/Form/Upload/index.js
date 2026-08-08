@@ -74,7 +74,7 @@ export default function AdminUpload({
       <div
         onDragOver={e => e.preventDefault()}
         onDrop={handleDrop}
-        className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors cursor-pointer ${
+        className={`border-2 border-dashed rounded-md p-4 text-center transition-colors cursor-pointer ${
           remaining <= 0 ? 'border-[#c5221f] opacity-50 cursor-not-allowed' : 'border-line hover:border-terra'
         }`}
         onClick={() => remaining > 0 && fileInputRef.current?.click()}

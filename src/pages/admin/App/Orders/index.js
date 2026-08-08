@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../../../lib/api';
 import { getToken } from '../../../../lib/auth';
 import Listbox from '../../../../components/shared/form/Listbox';
+import AdminModal from '../../Common/Modal';
+import ConfirmDeleteModal from '../../Common/ConfirmDeleteModal';
+import AdminInput from '../../Common/Form/Input';
+import AdminTextarea from '../../Common/Form/Textarea';
 
 const statusOptions = ['Placed', 'Confirmed', 'Packed', 'Shipped', 'Delivered', 'Cancelled', 'RTO'];
 const paymentOptions = ['Pending', 'Paid'];
@@ -19,10 +23,13 @@ const paidColors = { Paid: 'bg-[#e6f4ea] text-[#1e8e3e]', Pending: 'bg-[#fef7e0]
 function CourierModal({ order, onClose, onUpdate }) {
   const token = getToken();
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState('');
   const [couriers, setCouriers] = useState([]);
   const [shiprocket, setShiprocket] = useState(order?.shiprocket || null);
   const [shiprocketLoading, setShiprocketLoading] = useState(false);
   const [shiprocketError, setShiprocketError] = useState('');
+  const [notesMessage, setNotesMessage] = useState('');
+  const [confirmingCancelRto, setConfirmingCancelRto] = useState(false);
   const [form, setForm] = useState({
     courierName: order?.courierName || '',
     trackingNumber: order?.trackingNumber || '',
@@ -72,12 +79,13 @@ function CourierModal({ order, onClose, onUpdate }) {
     e.preventDefault();
     if (!form.courierName || !form.trackingNumber) return;
     setLoading(true);
+    setFormError('');
     try {
       await api.adminAssignCourier(token, order.id, form);
       onUpdate();
       onClose();
     } catch (err) {
-      alert('Failed to assign courier: ' + err.message);
+      setFormError('Failed to assign courier: ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -86,169 +94,193 @@ function CourierModal({ order, onClose, onUpdate }) {
   async function handleUpdateRTO(e) {
     e.preventDefault();
     setLoading(true);
+    setFormError('');
     try {
       await api.adminManageRTO(token, order.id, rtoForm);
       onUpdate();
       onClose();
     } catch (err) {
-      alert('Failed to update RTO: ' + err.message);
+      setFormError('Failed to update RTO: ' + err.message);
     } finally {
       setLoading(false);
     }
   }
 
   async function handleCancelRTO() {
-    if (!window.confirm('Cancel this RTO and restore order to Shipped?')) return;
+    if (!confirmingCancelRto) {
+      setConfirmingCancelRto(true);
+      return;
+    }
     setLoading(true);
+    setFormError('');
     try {
       await api.adminCancelRTO(token, order.id);
       onUpdate();
       onClose();
     } catch (err) {
-      alert('Failed to cancel RTO: ' + err.message);
+      setFormError('Failed to cancel RTO: ' + err.message);
     } finally {
       setLoading(false);
+      setConfirmingCancelRto(false);
+    }
+  }
+
+  async function handleSaveNotes() {
+    setNotesMessage('');
+    try {
+      await api.adminUpdateOrder(token, order.id, { notes: form.notes });
+      setNotesMessage('Notes saved!');
+    } catch (err) {
+      setNotesMessage('Failed to save notes');
+    } finally {
+      setTimeout(() => setNotesMessage(''), 3000);
     }
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] p-4 backdrop-blur-sm" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="bg-paper border border-line rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] w-full max-w-2xl max-h-[90vh] overflow-y-auto" style={{ animation: 'admin-modal-in 0.2s ease' }}>
-        <div className="flex items-center justify-between px-5 py-[18px] border-b border-[rgba(47,31,25,0.08)]">
-          <h3 className="m-0 text-sm font-semibold text-ink">Shipping / Courier — {order?.orderNumber}</h3>
-          <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-md text-muted hover:text-ink hover:bg-[rgba(47,31,25,0.06)] transition-colors">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-          </button>
-        </div>
+    <AdminModal isOpen onClose={onClose} title={`Shipping / Courier — ${order?.orderNumber}`} size="lg">
+      <div className="space-y-6">
+        {formError && <p className="text-[12px] text-[#c5221f] m-0 -mt-2">{formError}</p>}
 
-        <div className="p-5 space-y-6">
-          {/* ─── Shiprocket ─────────────────────────────────────────── */}
-          <div>
-            <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">Shiprocket</h4>
-            {shiprocketError && <p className="text-[12px] text-[#c5221f] mb-2">{shiprocketError}</p>}
-            {shiprocket?.shipmentId ? (
-              <div className="bg-[rgba(47,31,25,0.03)] rounded-lg p-3 text-[12px] space-y-1">
-                <div><span className="text-muted">Status:</span> <b className="text-ink">{shiprocket.status || 'Pushed'}</b></div>
-                {shiprocket.courierName && <div><span className="text-muted">Courier:</span> <b className="text-ink">{shiprocket.courierName}</b></div>}
-                {shiprocket.awbCode && <div><span className="text-muted">AWB:</span> <b className="text-ink">{shiprocket.awbCode}</b></div>}
-                <button type="button" className="admin-btn-secondary admin-btn-sm mt-2" onClick={handleShiprocketTrack} disabled={shiprocketLoading}>
-                  {shiprocketLoading ? 'Refreshing...' : 'Refresh Tracking'}
-                </button>
-              </div>
-            ) : (
-              <button type="button" className="admin-btn-primary" onClick={handleShiprocketPush} disabled={shiprocketLoading}>
-                {shiprocketLoading ? 'Pushing to Shiprocket...' : 'Ship via Shiprocket'}
-              </button>
-            )}
-          </div>
-
-          {/* ─── Assign Courier (manual fallback) ──────────────────────── */}
-          <div className="border-t border-line pt-5">
-            <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">Assign Courier Manually</h4>
-            <form onSubmit={handleAssignCourier} className="grid grid-cols-2 gap-3">
-              <div className="col-span-2 md:col-span-1 flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold tracking-[0.05em] text-muted">Courier</label>
-                <Listbox
-                  value={{ value: form.courierName, label: form.courierName || 'Select courier...' }}
-                  onChange={(option) => setForm(f => ({ ...f, courierName: option.value }))}
-                  data={couriers.map(c => ({ value: c.name, label: c.name })).concat([{ value: 'Others', label: 'Others' }])}
-                  size="sm"
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold tracking-[0.05em] text-muted">Tracking Number *</label>
-                <input value={form.trackingNumber} onChange={e => setForm(f => ({ ...f, trackingNumber: e.target.value }))}
-                  className="px-3 py-2 border border-line rounded text-[12px] text-ink bg-paper outline-none focus:border-terra" placeholder="e.g. DHL123456" required />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold tracking-[0.05em] text-muted">AWB Number</label>
-                <input value={form.awbNumber} onChange={e => setForm(f => ({ ...f, awbNumber: e.target.value }))}
-                  className="px-3 py-2 border border-line rounded text-[12px] text-ink bg-paper outline-none focus:border-terra" placeholder="Optional" />
-              </div>
-              <div className="col-span-2 flex items-center gap-2 mt-1">
-                <button type="submit" disabled={loading || !form.courierName || !form.trackingNumber} className="admin-btn-primary">
-                  {loading ? 'Assigning...' : 'Assign Courier'}
-                </button>
-                <button type="button" className="admin-btn-secondary" onClick={onClose}>Cancel</button>
-              </div>
-            </form>
-          </div>
-
-          {/* ─── RTO Management ────────────────────────────────────────── */}
-          <div className="border-t border-line pt-5">
-            <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">
-              RTO Management {order?.isRTO ? <span className="text-[#c5221f] ml-2">(Active RTO)</span> : ''}
-            </h4>
-            <form onSubmit={handleUpdateRTO} className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold tracking-[0.05em] text-muted">RTO Status</label>
-                <Listbox
-                  value={{ value: rtoForm.rtoStatus, label: rtoForm.rtoStatus }}
-                  onChange={(option) => setRtoForm(f => ({ ...f, rtoStatus: option.value }))}
-                  data={rtoStatusOptions.map(opt => ({ value: opt, label: opt }))}
-                  size="sm"
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold tracking-[0.05em] text-muted">RTO Reason</label>
-                <input value={rtoForm.rtoReason} onChange={e => setRtoForm(f => ({ ...f, rtoReason: e.target.value }))}
-                  className="px-3 py-2 border border-line rounded text-[12px] text-ink bg-paper outline-none focus:border-terra" placeholder="e.g. Customer refused, Wrong address" />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold tracking-[0.05em] text-muted">RTO Tracking Number</label>
-                <input value={rtoForm.rtoTrackingNumber} onChange={e => setRtoForm(f => ({ ...f, rtoTrackingNumber: e.target.value }))}
-                  className="px-3 py-2 border border-line rounded text-[12px] text-ink bg-paper outline-none focus:border-terra" placeholder="Optional" />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold tracking-[0.05em] text-muted">RTO Courier</label>
-                <input value={rtoForm.rtoCourierName} onChange={e => setRtoForm(f => ({ ...f, rtoCourierName: e.target.value }))}
-                  className="px-3 py-2 border border-line rounded text-[12px] text-ink bg-paper outline-none focus:border-terra" placeholder="e.g. Delhivery" />
-              </div>
-              <div className="col-span-2 flex items-center gap-2 mt-1">
-                <button type="submit" disabled={loading} className="admin-btn-primary">{loading ? 'Saving...' : 'Update RTO'}</button>
-                {order?.isRTO && (
-                  <button type="button" className="admin-btn-danger admin-btn-sm" onClick={handleCancelRTO} disabled={loading}>
-                    Cancel RTO
-                  </button>
-                )}
-              </div>
-            </form>
-          </div>
-
-          {/* ─── Notes ──────────────────────────────────────────────────── */}
-          <div className="border-t border-line pt-5">
-            <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">Order Notes</h4>
-            <textarea value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-              className="w-full px-3 py-2 border border-line rounded text-[12px] text-ink bg-paper outline-none focus:border-terra resize-none"
-              rows={3} placeholder="Add internal notes about this order..." />
-            <div className="mt-2">
-              <button type="button" className="admin-btn-secondary admin-btn-sm"
-                onClick={async () => {
-                  try { await api.adminUpdateOrder(token, order.id, { notes: form.notes }); alert('Notes saved!'); }
-                  catch (err) { alert('Failed to save notes'); }
-                }}>
-                Save Notes
+        {/* ─── Shiprocket ─────────────────────────────────────────── */}
+        <div>
+          <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">Shiprocket</h4>
+          {shiprocketError && <p className="text-[12px] text-[#c5221f] mb-2">{shiprocketError}</p>}
+          {shiprocket?.shipmentId ? (
+            <div className="bg-[rgba(47,31,25,0.03)] rounded-lg p-3 text-[12px] space-y-1">
+              <div><span className="text-muted">Status:</span> <b className="text-ink">{shiprocket.status || 'Pushed'}</b></div>
+              {shiprocket.courierName && <div><span className="text-muted">Courier:</span> <b className="text-ink">{shiprocket.courierName}</b></div>}
+              {shiprocket.awbCode && <div><span className="text-muted">AWB:</span> <b className="text-ink">{shiprocket.awbCode}</b></div>}
+              <button type="button" className="admin-btn-secondary admin-btn-sm mt-2" onClick={handleShiprocketTrack} disabled={shiprocketLoading}>
+                {shiprocketLoading ? 'Refreshing...' : 'Refresh Tracking'}
               </button>
             </div>
-          </div>
-
-          {/* ─── Print Label ────────────────────────────────────────────── */}
-          <div className="border-t border-line pt-5">
-            <button type="button" className="admin-btn-primary"
-              onClick={() => {
-                const labelUrl = `${process.env.REACT_APP_API_BASE_URL || ''}/api/admin/shipping/${order.id}/label?token=${token}`;
-                window.open(labelUrl, '_blank');
-              }}>
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M6 9V2h12v7" /><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
-                <path d="M6 14h12v8H6z" />
-              </svg>
-              Generate Shipping Label & Print
+          ) : (
+            <button type="button" className="admin-btn-primary" onClick={handleShiprocketPush} disabled={shiprocketLoading}>
+              {shiprocketLoading ? 'Pushing to Shiprocket...' : 'Ship via Shiprocket'}
             </button>
+          )}
+        </div>
+
+        {/* ─── Assign Courier (manual fallback) ──────────────────────── */}
+        <div className="border-t border-line pt-5">
+          <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">Assign Courier Manually</h4>
+          <form onSubmit={handleAssignCourier} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="sm:col-span-2 md:col-span-1 flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold tracking-[0.05em] text-muted">Courier</label>
+              <Listbox
+                value={{ value: form.courierName, label: form.courierName || 'Select courier...' }}
+                onChange={(option) => setForm(f => ({ ...f, courierName: option.value }))}
+                data={couriers.map(c => ({ value: c.name, label: c.name })).concat([{ value: 'Others', label: 'Others' }])}
+                size="sm"
+              />
+            </div>
+            <AdminInput
+              label="Tracking Number"
+              required
+              value={form.trackingNumber}
+              onChange={e => setForm(f => ({ ...f, trackingNumber: e.target.value }))}
+              placeholder="e.g. DHL123456"
+            />
+            <AdminInput
+              label="AWB Number"
+              value={form.awbNumber}
+              onChange={e => setForm(f => ({ ...f, awbNumber: e.target.value }))}
+              placeholder="Optional"
+            />
+            <div className="sm:col-span-2 flex items-center gap-2 mt-1">
+              <button type="submit" disabled={loading || !form.courierName || !form.trackingNumber} className="admin-btn-primary">
+                {loading ? 'Assigning...' : 'Assign Courier'}
+              </button>
+              <button type="button" className="admin-btn-secondary" onClick={onClose}>Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        {/* ─── RTO Management ────────────────────────────────────────── */}
+        <div className="border-t border-line pt-5">
+          <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">
+            RTO Management {order?.isRTO ? <span className="text-[#c5221f] ml-2">(Active RTO)</span> : ''}
+          </h4>
+          <form onSubmit={handleUpdateRTO} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold tracking-[0.05em] text-muted">RTO Status</label>
+              <Listbox
+                value={{ value: rtoForm.rtoStatus, label: rtoForm.rtoStatus }}
+                onChange={(option) => setRtoForm(f => ({ ...f, rtoStatus: option.value }))}
+                data={rtoStatusOptions.map(opt => ({ value: opt, label: opt }))}
+                size="sm"
+              />
+            </div>
+            <AdminInput
+              label="RTO Reason"
+              value={rtoForm.rtoReason}
+              onChange={e => setRtoForm(f => ({ ...f, rtoReason: e.target.value }))}
+              placeholder="e.g. Customer refused, Wrong address"
+            />
+            <AdminInput
+              label="RTO Tracking Number"
+              value={rtoForm.rtoTrackingNumber}
+              onChange={e => setRtoForm(f => ({ ...f, rtoTrackingNumber: e.target.value }))}
+              placeholder="Optional"
+            />
+            <AdminInput
+              label="RTO Courier"
+              value={rtoForm.rtoCourierName}
+              onChange={e => setRtoForm(f => ({ ...f, rtoCourierName: e.target.value }))}
+              placeholder="e.g. Delhivery"
+            />
+            <div className="sm:col-span-2 flex flex-wrap items-center gap-2 mt-1">
+              <button type="submit" disabled={loading} className="admin-btn-primary">{loading ? 'Saving...' : 'Update RTO'}</button>
+              {order?.isRTO && (
+                <>
+                  <button type="button" className="admin-btn-danger admin-btn-sm" onClick={handleCancelRTO} disabled={loading}>
+                    {confirmingCancelRto ? 'Confirm cancel?' : 'Cancel RTO'}
+                  </button>
+                  {confirmingCancelRto && (
+                    <button type="button" className="admin-btn-secondary admin-btn-sm" onClick={() => setConfirmingCancelRto(false)} disabled={loading}>
+                      Never mind
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+          </form>
+        </div>
+
+        {/* ─── Notes ──────────────────────────────────────────────────── */}
+        <div className="border-t border-line pt-5">
+          <AdminTextarea
+            label="Order Notes"
+            value={form.notes}
+            onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
+            rows={3}
+            placeholder="Add internal notes about this order..."
+          />
+          <div className="mt-2 flex items-center gap-3">
+            <button type="button" className="admin-btn-secondary admin-btn-sm" onClick={handleSaveNotes}>
+              Save Notes
+            </button>
+            {notesMessage && <span className="text-[11px] text-muted">{notesMessage}</span>}
           </div>
         </div>
+
+        {/* ─── Print Label ────────────────────────────────────────────── */}
+        <div className="border-t border-line pt-5">
+          <button type="button" className="admin-btn-primary"
+            onClick={() => {
+              const labelUrl = `${process.env.REACT_APP_API_BASE_URL || ''}/api/admin/shipping/${order.id}/label?token=${token}`;
+              window.open(labelUrl, '_blank');
+            }}>
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M6 9V2h12v7" /><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
+              <path d="M6 14h12v8H6z" />
+            </svg>
+            Generate Shipping Label & Print
+          </button>
+        </div>
       </div>
-    </div>
+    </AdminModal>
   );
 }
 
@@ -256,101 +288,93 @@ function CourierModal({ order, onClose, onUpdate }) {
 function OrderDetailModal({ order, onClose }) {
   if (!order) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] p-4 backdrop-blur-sm" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="bg-paper border border-line rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] w-full max-w-3xl max-h-[90vh] overflow-y-auto" style={{ animation: 'admin-modal-in 0.2s ease' }}>
-        <div className="flex items-center justify-between px-5 py-[18px] border-b border-[rgba(47,31,25,0.08)]">
-          <h3 className="m-0 text-sm font-semibold text-ink">Order Details — {order.orderNumber}</h3>
-          <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-md text-muted hover:text-ink hover:bg-[rgba(47,31,25,0.06)] transition-colors">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-          </button>
+    <AdminModal isOpen onClose={onClose} title={`Order Details — ${order.orderNumber}`} size="xl">
+      <div className="space-y-5 text-[13px]">
+        {/* Customer Info */}
+        <div>
+          <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted mb-2">Customer Information</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[rgba(47,31,25,0.03)] rounded-lg p-4">
+            <div><span className="text-muted text-[11px]">Name</span><br /><b className="text-ink">{order.customer?.name}</b></div>
+            <div><span className="text-muted text-[11px]">Phone</span><br /><b className="text-ink">{order.customer?.phone}</b></div>
+            <div className="sm:col-span-2"><span className="text-muted text-[11px]">Address</span><br /><b className="text-ink">{order.customer?.address}{order.customer?.landmark ? `, ${order.customer.landmark}` : ''}</b></div>
+            <div><span className="text-muted text-[11px]">City/State</span><br /><b className="text-ink">{order.customer?.city}, {order.customer?.state}</b></div>
+            <div><span className="text-muted text-[11px]">Pincode</span><br /><b className="text-ink">{order.customer?.pincode}</b></div>
+          </div>
         </div>
-        <div className="p-5 space-y-5 text-[13px]">
-          {/* Customer Info */}
-          <div>
-            <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted mb-2">Customer Information</h4>
-            <div className="grid grid-cols-2 gap-3 bg-[rgba(47,31,25,0.03)] rounded-lg p-4">
-              <div><span className="text-muted text-[11px]">Name</span><br /><b className="text-ink">{order.customer?.name}</b></div>
-              <div><span className="text-muted text-[11px]">Phone</span><br /><b className="text-ink">{order.customer?.phone}</b></div>
-              <div className="col-span-2"><span className="text-muted text-[11px]">Address</span><br /><b className="text-ink">{order.customer?.address}{order.customer?.landmark ? `, ${order.customer.landmark}` : ''}</b></div>
-              <div><span className="text-muted text-[11px]">City/State</span><br /><b className="text-ink">{order.customer?.city}, {order.customer?.state}</b></div>
-              <div><span className="text-muted text-[11px]">Pincode</span><br /><b className="text-ink">{order.customer?.pincode}</b></div>
-            </div>
-          </div>
 
-          {/* Order Items */}
-          <div>
-            <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted mb-2">Order Items ({order.items?.length || 0})</h4>
-            <div className="divide-y divide-[rgba(47,31,25,0.06)]">
-              {(order.items || []).map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3 py-2">
-                  {item.image && <img src={item.image} alt="" className="w-10 h-12 rounded object-cover bg-sand" />}
-                  <div className="flex-1 min-w-0">
-                    <span className="block text-ink truncate">{item.name}</span>
-                    <span className="text-[11px] text-muted">Qty: {item.quantity} × ₹{Number(item.price).toLocaleString('en-IN')}</span>
-                  </div>
-                  <b className="text-ink shrink-0">₹{Number(item.price * item.quantity).toLocaleString('en-IN')}</b>
+        {/* Order Items */}
+        <div>
+          <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted mb-2">Order Items ({order.items?.length || 0})</h4>
+          <div className="divide-y divide-[rgba(47,31,25,0.06)]">
+            {(order.items || []).map((item, idx) => (
+              <div key={idx} className="flex items-center gap-3 py-2">
+                {item.image && <img src={item.image} alt="" className="w-10 h-12 rounded object-cover bg-sand" />}
+                <div className="flex-1 min-w-0">
+                  <span className="block text-ink truncate">{item.name}</span>
+                  <span className="text-[11px] text-muted">Qty: {item.quantity} × ₹{Number(item.price).toLocaleString('en-IN')}</span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Pricing */}
-          <div className="grid grid-cols-2 gap-3 bg-[rgba(47,31,25,0.03)] rounded-lg p-4">
-            <div><span className="text-muted text-[11px]">Subtotal</span><br /><b className="text-ink">₹{Number(order.subtotal || 0).toLocaleString('en-IN')}</b></div>
-            <div><span className="text-muted text-[11px]">Shipping</span><br /><b className="text-ink">₹{Number(order.shipping || 0).toLocaleString('en-IN')}</b></div>
-            <div><span className="text-muted text-[11px]">Discount</span><br /><b className="text-[#137333]">-₹{Number(order.discount || 0).toLocaleString('en-IN')}</b></div>
-            <div><span className="text-muted text-[11px]">Total</span><br /><b className="text-lg text-ink">₹{Number(order.total || 0).toLocaleString('en-IN')}</b></div>
-          </div>
-
-          {/* Status & Payment */}
-          <div className="grid grid-cols-2 gap-3">
-            <div><span className="text-muted text-[11px]">Status</span><br />
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${statusColors[order.status] || statusColors.Placed}`}>
-                <span className="w-[6px] h-[6px] rounded-full bg-current" /> {order.status}
-              </span>
-            </div>
-            <div><span className="text-muted text-[11px]">Payment</span><br />
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${paidColors[order.paymentStatus] || paidColors.Pending}`}>
-                <span className="w-[6px] h-[6px] rounded-full bg-current" /> {order.paymentStatus} ({order.paymentMethod})
-              </span>
-            </div>
-          </div>
-
-          {/* Courier / RTO Info */}
-          {(order.courierName || order.isRTO) && (
-            <div className="border-t border-line pt-3">
-              <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted mb-2">Shipping Info</h4>
-              <div className="grid grid-cols-2 gap-2 text-[12px]">
-                {order.courierName && <div><span className="text-muted">Courier:</span> <b className="text-ink">{order.courierName}</b></div>}
-                {order.trackingNumber && <div><span className="text-muted">Tracking:</span> <b className="text-ink">{order.trackingNumber}</b></div>}
-                {order.awbNumber && <div><span className="text-muted">AWB:</span> <b className="text-ink">{order.awbNumber}</b></div>}
-                {order.isRTO && (
-                  <>
-                    <div className="text-[#c5221f]"><span className="text-muted">RTO Status:</span> <b className="text-[#c5221f]">{order.rtoStatus}</b></div>
-                    {order.rtoReason && <div className="col-span-2"><span className="text-muted">RTO Reason:</span> <b className="text-ink">{order.rtoReason}</b></div>}
-                  </>
-                )}
+                <b className="text-ink shrink-0">₹{Number(item.price * item.quantity).toLocaleString('en-IN')}</b>
               </div>
-            </div>
-          )}
-
-          {/* Notes */}
-          {order.notes && (
-            <div className="border-t border-line pt-3">
-              <span className="text-muted text-[11px]">Notes:</span>
-              <p className="m-0 mt-1 text-ink text-[12px]">{order.notes}</p>
-            </div>
-          )}
-
-          {/* Dates */}
-          <div className="text-[11px] text-muted border-t border-line pt-3">
-            <span>Placed: {new Date(order.createdAt).toLocaleString('en-IN')}</span>
-            {order.shippedDate && <span className="ml-4">Shipped: {new Date(order.shippedDate).toLocaleString('en-IN')}</span>}
-            {order.deliveredDate && <span className="ml-4">Delivered: {new Date(order.deliveredDate).toLocaleString('en-IN')}</span>}
+            ))}
           </div>
+        </div>
+
+        {/* Pricing */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[rgba(47,31,25,0.03)] rounded-lg p-4">
+          <div><span className="text-muted text-[11px]">Subtotal</span><br /><b className="text-ink">₹{Number(order.subtotal || 0).toLocaleString('en-IN')}</b></div>
+          <div><span className="text-muted text-[11px]">Shipping</span><br /><b className="text-ink">₹{Number(order.shipping || 0).toLocaleString('en-IN')}</b></div>
+          <div><span className="text-muted text-[11px]">Discount</span><br /><b className="text-[#137333]">-₹{Number(order.discount || 0).toLocaleString('en-IN')}</b></div>
+          <div><span className="text-muted text-[11px]">Total</span><br /><b className="text-lg text-ink">₹{Number(order.total || 0).toLocaleString('en-IN')}</b></div>
+        </div>
+
+        {/* Status & Payment */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div><span className="text-muted text-[11px]">Status</span><br />
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${statusColors[order.status] || statusColors.Placed}`}>
+              <span className="w-[6px] h-[6px] rounded-full bg-current" /> {order.status}
+            </span>
+          </div>
+          <div><span className="text-muted text-[11px]">Payment</span><br />
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${paidColors[order.paymentStatus] || paidColors.Pending}`}>
+              <span className="w-[6px] h-[6px] rounded-full bg-current" /> {order.paymentStatus} ({order.paymentMethod})
+            </span>
+          </div>
+        </div>
+
+        {/* Courier / RTO Info */}
+        {(order.courierName || order.isRTO) && (
+          <div className="border-t border-line pt-3">
+            <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted mb-2">Shipping Info</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[12px]">
+              {order.courierName && <div><span className="text-muted">Courier:</span> <b className="text-ink">{order.courierName}</b></div>}
+              {order.trackingNumber && <div><span className="text-muted">Tracking:</span> <b className="text-ink">{order.trackingNumber}</b></div>}
+              {order.awbNumber && <div><span className="text-muted">AWB:</span> <b className="text-ink">{order.awbNumber}</b></div>}
+              {order.isRTO && (
+                <>
+                  <div className="text-[#c5221f]"><span className="text-muted">RTO Status:</span> <b className="text-[#c5221f]">{order.rtoStatus}</b></div>
+                  {order.rtoReason && <div className="sm:col-span-2"><span className="text-muted">RTO Reason:</span> <b className="text-ink">{order.rtoReason}</b></div>}
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Notes */}
+        {order.notes && (
+          <div className="border-t border-line pt-3">
+            <span className="text-muted text-[11px]">Notes:</span>
+            <p className="m-0 mt-1 text-ink text-[12px]">{order.notes}</p>
+          </div>
+        )}
+
+        {/* Dates */}
+        <div className="text-[11px] text-muted border-t border-line pt-3">
+          <span>Placed: {new Date(order.createdAt).toLocaleString('en-IN')}</span>
+          {order.shippedDate && <span className="ml-4">Shipped: {new Date(order.shippedDate).toLocaleString('en-IN')}</span>}
+          {order.deliveredDate && <span className="ml-4">Delivered: {new Date(order.deliveredDate).toLocaleString('en-IN')}</span>}
         </div>
       </div>
-    </div>
+    </AdminModal>
   );
 }
 
@@ -363,6 +387,8 @@ export default function AdminOrders() {
   const [loading, setLoading] = useState(false);
   const [detailedOrder, setDetailedOrder] = useState(null);
   const [shippingOrder, setShippingOrder] = useState(null);
+  const [orderToDelete, setOrderToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => { loadOrders(); }, []);
 
@@ -391,17 +417,18 @@ export default function AdminOrders() {
     }
   }
 
-  async function deleteOrder(order) {
-    if (!window.confirm(`Delete order ${order.orderNumber} permanently?`)) return;
-    setLoading(true);
+  async function handleDeleteOrder() {
+    if (!orderToDelete) return;
+    setDeleting(true);
     try {
-      await api.adminDeleteOrder(token, order.id);
-      setOrders(items => items.filter(item => item.id !== order.id));
+      await api.adminDeleteOrder(token, orderToDelete.id);
+      setOrders(items => items.filter(item => item.id !== orderToDelete.id));
+      setOrderToDelete(null);
       setSuccess('Order deleted!');
     } catch (err) {
       setError(err.message || 'Failed to delete order');
     } finally {
-      setLoading(false);
+      setDeleting(false);
       setTimeout(() => setSuccess(''), 3000);
     }
   }
@@ -416,12 +443,19 @@ export default function AdminOrders() {
 
   return (
     <div>
-      {success && <div className="fixed top-4 right-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)] admin-toast">{success}</div>}
-      {error && <div className="fixed top-4 right-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)] admin-toast">{error}</div>}
+      {success && <div className="fixed left-4 right-4 top-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)] sm:left-auto sm:w-auto admin-toast">{success}</div>}
+      {error && <div className="fixed left-4 right-4 top-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)] sm:left-auto sm:w-auto admin-toast">{error}</div>}
 
       {/* Modals */}
       {detailedOrder && <OrderDetailModal order={detailedOrder} onClose={() => setDetailedOrder(null)} />}
       {shippingOrder && <CourierModal order={shippingOrder} onClose={() => setShippingOrder(null)} onUpdate={loadOrders} />}
+      <ConfirmDeleteModal
+        isOpen={Boolean(orderToDelete)}
+        onClose={() => setOrderToDelete(null)}
+        onConfirm={handleDeleteOrder}
+        loading={deleting}
+        itemName={orderToDelete?.orderNumber ? `order ${orderToDelete.orderNumber}` : 'this order'}
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3 mb-6">
@@ -450,7 +484,7 @@ export default function AdminOrders() {
       {/* Orders */}
       <div className="flex flex-col gap-3">
         {orders.length > 0 ? orders.map(order => (
-          <div key={order.id} className="bg-paper border border-line rounded-xl p-4 md:p-5 grid grid-cols-[auto_1fr_auto] gap-4 items-start hover:shadow-[0_2px_8px_rgba(47,31,25,0.06)] transition-shadow">
+          <div key={order.id} className="bg-paper border border-line rounded-xl p-4 md:p-5 grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 items-start hover:shadow-[0_2px_8px_rgba(47,31,25,0.06)] transition-shadow">
             <div>
               <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${statusColors[order.status] || statusColors.Placed}`}>
                 <span className="w-[6px] h-[6px] rounded-full bg-current" />
@@ -529,7 +563,7 @@ export default function AdminOrders() {
                     <circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
                   </svg>
                 </button>
-                <button className="admin-btn-ghost danger" onClick={() => deleteOrder(order)} title="Delete order">
+                <button className="admin-btn-ghost danger" onClick={() => setOrderToDelete(order)} title="Delete order">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
                   </svg>
@@ -547,4 +581,3 @@ export default function AdminOrders() {
     </div>
   );
 }
-

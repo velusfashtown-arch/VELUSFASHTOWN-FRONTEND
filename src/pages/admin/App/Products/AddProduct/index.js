@@ -97,7 +97,7 @@ useEffect(() => {
     setLoading(true);
     try {
       if (isEdit) {
-        await productService.update(editProduct.id, data);
+        await productService.update(editProduct.productId || editProduct.id, data);
         showToast('Product updated successfully!');
       } else {
         await productService.create(data);
@@ -124,9 +124,13 @@ useEffect(() => {
   }, [showToast]);
 
   const handlePreview = useCallback(() => {
-    const previewData = encodeURIComponent(JSON.stringify(getValues()));
-    window.open(`/product/preview?data=${previewData}`, '_blank');
-  }, [getValues]);
+    const productId = getValues('productId');
+    if (!productId) {
+      showToast('Save the product before previewing its live page', 'error');
+      return;
+    }
+    window.open(`/product/${productId}`, '_blank');
+  }, [getValues, showToast]);
 
   if (initialLoading) {
     return (

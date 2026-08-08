@@ -47,7 +47,7 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
   useEffect(() => {
     if (product?.id) {
       setLoading(true);
-      api.adminGetProduct(token, product.id)
+      api.adminGetProduct(token, product.productId || product.id)
         .then((res) => {
           const data = res?.data || res?.product || res;
           if (data) setFullProduct(data);
@@ -91,7 +91,7 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
           <button
             type="button"
             disabled={deleting}
-            onClick={() => onDelete(p.id)}
+            onClick={() => onDelete(p)}
             className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-2 text-[11px] font-semibold text-red-500 transition-all hover:bg-red-50 disabled:opacity-50"
           >
             🗑 Delete

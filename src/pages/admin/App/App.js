@@ -28,7 +28,7 @@ export default function AdminLayout({ children, pageTitle }) {
   }, []);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 1023px)');
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
     const closeOnDesktop = () => {
       if (!mediaQuery.matches) setMobileSidebarOpen(false);
     };

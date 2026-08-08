@@ -3,6 +3,7 @@ import { getToken } from '../../../../lib/auth';
 import { api } from '../../../../lib/api';
 import Table from '../../Common/Table';
 import useTableData from '../../Common/Table/useTableData';
+import ConfirmDeleteModal from '../../Common/ConfirmDeleteModal';
 import AddProduct from './AddProduct';
 import ProductView from './ProductView';
 
@@ -32,7 +33,7 @@ function ProductImage({ product }) {
   );
 }
 
-function ProductTable({ products, onView, onEdit, onDelete, loading, refreshing, pagination, onPageChange, onPageSizeChange, onServerSearch, onAdd }) {
+function ProductTable({ products, onView, onEdit, onDelete, loading, deleting, refreshing, pagination, onPageChange, onPageSizeChange, onServerSearch, onAdd }) {
   return <Table
     title="All Products"
     rows={products}
@@ -72,7 +73,7 @@ function ProductTable({ products, onView, onEdit, onDelete, loading, refreshing,
     rowActions={[
       { label: 'View', onClick: onView },
       { label: 'Edit', onClick: onEdit },
-      { label: 'Delete', danger: true, disabled: loading, onClick: (product) => onDelete(product.id) },
+      { label: 'Delete', danger: true, disabled: deleting, onClick: (product) => onDelete(product) },
     ]}
   />;
 }
@@ -84,6 +85,8 @@ export default function AdminProducts() {
   const [view, setView] = useState('list'); // 'list' | 'form' | 'detail'
   const [editingProduct, setEditingProduct] = useState(null);
   const [viewingProduct, setViewingProduct] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const {
     rows: products,
@@ -123,17 +126,23 @@ export default function AdminProducts() {
     setEditingProduct(null);
   }
 
-  async function onDelete(id, returnToList = true) {
-    if (!window.confirm('Delete this product permanently?')) return;
+  function confirmDelete(product, returnToList = true) {
+    setProductToDelete({ id: product.productId || product.id, name: product.name, returnToList });
+  }
 
+  async function onDelete() {
+    if (!productToDelete) return;
+    setDeleting(true);
     try {
-      await api.adminDeleteProduct(token, id);
-      if (returnToList) goToList();
+      await api.adminDeleteProduct(token, productToDelete.id);
+      if (productToDelete.returnToList) goToList();
       await loadProducts();
+      setProductToDelete(null);
       setSuccess('Product deleted successfully!');
     } catch (requestError) {
       setLocalError(requestError.message || 'Unable to delete product');
     } finally {
+      setDeleting(false);
       setTimeout(() => { setSuccess(''); setLocalError(''); }, 3000);
     }
   }
@@ -151,15 +160,24 @@ export default function AdminProducts() {
         </div>
       )}
 
+      <ConfirmDeleteModal
+        isOpen={Boolean(productToDelete)}
+        onClose={() => setProductToDelete(null)}
+        onConfirm={onDelete}
+        loading={deleting}
+        itemName={productToDelete?.name ? `the product “${productToDelete.name}”` : 'this product'}
+      />
+
       {view === 'list' && (
         <div className="overflow-hidden">
           <ProductTable
             products={products}
             onView={openView}
             onEdit={(product) => openEditForm(product)}
-            onDelete={onDelete}
+            onDelete={(product) => confirmDelete(product, true)}
             onAdd={openAddForm}
             loading={loading}
+            deleting={deleting}
             refreshing={refreshing}
             pagination={pagination}
             onPageChange={goToPage}
@@ -178,8 +196,8 @@ export default function AdminProducts() {
           product={viewingProduct}
           onBack={goToList}
           onEdit={(p) => openEditForm(p, true)}
-          onDelete={(id) => onDelete(id)}
-          deleting={loading}
+          onDelete={(product) => confirmDelete(product, false)}
+          deleting={deleting}
         />
       )}
     </div>

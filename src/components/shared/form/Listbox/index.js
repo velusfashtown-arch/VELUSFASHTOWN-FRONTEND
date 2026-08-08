@@ -23,7 +23,9 @@ export default function Listbox({
   size = "md",
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const containerRef = useRef(null);
+  const buttonRef = useRef(null);
   const mergedClassNames = { ...defaultClassNames, ...customClassNames };
 
   // Close dropdown on outside click
@@ -64,8 +66,20 @@ const sizeClasses = {
         </label>
       )}
       <button
+        ref={buttonRef}
         type="button"
-        onClick={() => !disabled && setIsOpen((prev) => !prev)}
+        onClick={() => {
+          if (disabled) return;
+          setIsOpen((prev) => {
+            const next = !prev;
+            if (next && buttonRef.current) {
+              const rect = buttonRef.current.getBoundingClientRect();
+              const spaceBelow = window.innerHeight - rect.bottom;
+              setOpenUpward(spaceBelow < 250 && rect.top > 250);
+            }
+            return next;
+          });
+        }}
         disabled={disabled}
         className={`
           inline-flex w-full items-center justify-between gap-2 whitespace-nowrap border font-sans transition-colors outline-none
@@ -96,7 +110,8 @@ const sizeClasses = {
       {isOpen && (
         <div
           className={`
-            absolute z-50 mt-1.5 w-full origin-top-right rounded-lg border bg-white shadow-[0_8px_24px_rgba(47,31,25,0.12)] overflow-hidden
+            absolute z-50 w-full rounded-lg border bg-white shadow-[0_8px_24px_rgba(47,31,25,0.12)] overflow-hidden
+            ${openUpward ? 'bottom-full mb-1.5 origin-bottom-right' : 'top-full mt-1.5 origin-top-right'}
             ${mergedClassNames.menu || 'border-[rgba(47,31,25,0.12)]'}
           `}
         >
