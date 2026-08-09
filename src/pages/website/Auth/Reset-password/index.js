@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../../../../lib/api';
 import Header from '../../Header/Header';
 import Footer from '../../Footer/Footer';
-import '../Login/index.css';
 
 export default function ResetPasswordPage() {
   const { state } = useLocation();
@@ -46,37 +45,37 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="storefront-shell">
+<div className="overflow-hidden bg-paper">
       <Header />
-      <main className="auth-page">
-        <div className="auth-card">
-          <div className="auth-heading">
-            <p className="eyebrow">NEW PASSWORD</p>
-            <h1>Reset <em>password</em></h1>
+      <main className="flex min-h-[70vh] items-center justify-center bg-cream p-[60px_20px_80px]">
+        <div className="w-full max-w-[420px] border border-line bg-paper p-[45px_35px_40px] max-[620px]:p-[35px_22px_30px]">
+          <div className="mb-8 text-center">
+            <p className="mb-3 text-[10px] font-bold tracking-[0.19em] text-terra">NEW PASSWORD</p>
+            <h1 className="m-0 font-playfair text-[clamp(32px,5vw,42px)] font-medium leading-none tracking-[-0.05em] text-ink">Reset <em>password</em></h1>
           </div>
           {done ? (
-            <div className="auth-form">
-              <p className="auth-success">✓ Password reset successful! Redirecting to login...</p>
+            <div className="flex flex-col gap-4">
+              <p className="m-0 border border-[rgba(42,122,59,0.25)] bg-[#e6f0df] p-2.5 text-center text-[12px] text-[#2a7a3b]">✓ Password reset successful! Redirecting to login...</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="auth-form">
-              <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.6, margin: 0 }}>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <p className="m-0 text-[13px] leading-[1.6] text-muted">
                 Choose a new password for your account.
               </p>
-              <label className="auth-field">
-                <span>New password</span>
-                <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" />
+              <label className="m-0 flex flex-col gap-1.5">
+                <span className="text-[10px] font-bold tracking-[0.12em] text-muted">New password</span>
+                <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" className="h-11 w-full border border-line bg-white px-3 text-sm text-ink outline-terra" />
               </label>
-              <label className="auth-field">
-                <span>Confirm new password</span>
-                <input type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Re-enter new password" />
+              <label className="m-0 flex flex-col gap-1.5">
+                <span className="text-[10px] font-bold tracking-[0.12em] text-muted">Confirm new password</span>
+                <input type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Re-enter new password" className="h-11 w-full border border-line bg-white px-3 text-sm text-ink outline-terra" />
               </label>
-              {error ? <p className="auth-error">{error}</p> : null}
-              <button className="store-primary-button full" type="submit" disabled={loading || !resetToken}>
+              {error ? <p className="m-0 border border-[rgba(155,53,49,0.25)] bg-[#fcf1ef] p-2.5 text-center text-[12px] text-[#a53232]">{error}</p> : null}
+              <button className="inline-flex min-h-[46px] w-full items-center justify-center border border-terra bg-terra px-5 py-3 text-[10px] font-bold tracking-[0.14em] text-[#fffaf5] no-underline transition hover:border-wine hover:bg-wine disabled:cursor-not-allowed disabled:border-muted disabled:bg-muted" type="submit" disabled={loading || !resetToken}>
                 {loading ? 'RESETTING...' : 'RESET PASSWORD'}
               </button>
-              <p className="auth-switch">
-                <Link to="/login">Back to sign in</Link>
+              <p className="m-0 mt-1 text-center text-[12px] text-muted">
+                <Link to="/login" className="font-bold text-terra no-underline hover:underline">Back to sign in</Link>
               </p>
             </form>
           )}

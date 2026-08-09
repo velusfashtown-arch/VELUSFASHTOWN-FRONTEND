@@ -30,13 +30,13 @@ function OccasionCard({ occasion, index }) {
     <Link
       ref={cardRef}
       to={`/shop?occasion=${occasion.title}`}
-      className={`group block min-h-[205px] relative overflow-hidden bg-[#b76e52] p-0 text-center text-white no-underline max-[620px]:min-h-[160px] ${occasion.title !== 'Haldi' && occasion.title !== 'Wedding' ? 'translate-y-6 max-[620px]:translate-y-[14px]' : ''} reveal reveal-up ${isVisible ? 'reveal-visible' : ''}`}
+className={`group block min-h-[205px] relative overflow-hidden bg-[#b76e52] p-0 text-center text-white no-underline max-[620px]:min-h-[160px] ${occasion.title !== 'Haldi' && occasion.title !== 'Wedding' ? 'translate-y-6 max-[620px]:translate-y-[14px]' : 'translate-y-0'} transition-[opacity,transform] duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
       style={{ transitionDelay: `${index * 120}ms` }}
     >
       <img
         src={occasion.image}
         alt=""
-        className="h-full w-full object-cover saturate-[.85] transition-all duration-[800ms] group-hover:scale-[1.12] group-hover:saturate-[1.1]"
+        className={`h-full w-full object-cover saturate-[.85] transition-all duration-[800ms] group-hover:scale-[1.12] group-hover:saturate-[1.1] ${occasion.title === 'Haldi' ? 'occasion-filter-haldi' : occasion.title === 'Mehendi' ? 'occasion-filter-mehendi' : occasion.title === 'Sangeet' ? 'occasion-filter-sangeet' : 'occasion-filter-wedding'}`}
         style={{ objectPosition: occasion.position }}
       />
       <span className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent transition-opacity duration-500 group-hover:opacity-80" />
@@ -67,7 +67,7 @@ export default function Occasions() {
     <section className="py-[clamp(65px,8vw,120px)] px-[7vw] bg-[#e7d7c6] grid grid-cols-[1fr_1.52fr] items-center gap-[clamp(38px,7vw,120px)] max-[900px]:grid-cols-1 max-[620px]:px-[18px] max-[620px]:py-[61px] max-[620px]:gap-[33px]">
       <div
         ref={contentRef}
-        className={`max-w-[410px] max-[900px]:max-w-[520px] reveal reveal-up ${contentVisible ? 'reveal-visible' : ''}`}
+className={`max-w-[410px] max-[900px]:max-w-[520px] transition-[opacity,transform] duration-700 ${contentVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
       >
         <p className="text-terra font-bold text-[10px] tracking-[0.19em] mb-[12px]">DRESS FOR THE MOMENT</p>
         <h2 className="m-0 font-playfair font-medium tracking-[-.055em] leading-[.95] text-[clamp(42px,4.15vw,66px)] max-[620px]:text-[42px]">

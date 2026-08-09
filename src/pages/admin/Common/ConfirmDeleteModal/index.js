@@ -1,5 +1,6 @@
 import React from 'react';
 import AdminModal from '../Modal';
+import { adminBtnSecondary as secondaryBtn, adminBtnDanger as dangerBtn } from '../buttonClasses';
 
 export default function ConfirmDeleteModal({
   isOpen,
@@ -35,10 +36,10 @@ export default function ConfirmDeleteModal({
         </p>
 
         <div className="mt-7 flex flex-col-reverse justify-center gap-3 sm:mt-10 sm:flex-row">
-          <button type="button" className="admin-btn-secondary w-full justify-center sm:w-auto sm:min-w-[137px]" onClick={onClose} disabled={loading}>
+<button type="button" className={`${secondaryBtn} w-full justify-center sm:w-auto sm:min-w-[137px]`} onClick={onClose} disabled={loading}>
             Cancel
           </button>
-          <button type="button" className="admin-btn-danger w-full justify-center sm:w-auto sm:min-w-[137px]" onClick={onConfirm} disabled={loading}>
+          <button type="button" className={`${dangerBtn} w-full justify-center sm:w-auto sm:min-w-[137px]`} onClick={onConfirm} disabled={loading}>
             {loading ? 'Deleting...' : 'Delete'}
           </button>
         </div>

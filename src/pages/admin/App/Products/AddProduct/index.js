@@ -144,7 +144,7 @@ useEffect(() => {
     <div ref={formRef} className="relative min-w-0">
       {toast && <Toast key={toast.id} message={toast.message} type={toast.type} onClose={closeToast} />}
 
-      <div className="admin-product-form-toolbar overflow-hidden rounded-xl border border-gray-200 bg-white/95 shadow-sm backdrop-blur-sm">
+<div className="sticky top-[60px] z-10 overflow-hidden rounded-xl border border-gray-200 bg-white/95 shadow-sm backdrop-blur-sm">
         <div className="flex flex-col gap-3 px-4 py-3 sm:px-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex min-w-0 items-center gap-3">
             <button

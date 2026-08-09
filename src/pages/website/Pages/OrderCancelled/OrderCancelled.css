@@ -1,9 +1,0 @@
-/* Order Cancelled — reuses .success-page / .success-icon / .eyebrow from styles.css */
-.status-cancelled .status-icon {
-  background: #f9f1e3;
-  color: #b47c2e;
-}
-
-.status-cancelled .store-secondary-button {
-  margin-bottom: 12px;
-}

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { scrollToTop } from '../../../../utils/scrollToTop';
 
 /**
  * Reusable hook for smooth, race-condition-safe table data loading.
@@ -82,10 +83,12 @@ export default function useTableData({
 
   const goToPage = useCallback((page) => {
     load(page, pagination.limit, search);
+    scrollToTop();
   }, [load, pagination.limit, search]);
 
   const changePageSize = useCallback((limit) => {
     load(1, limit, search);
+    scrollToTop();
   }, [load, search]);
 
   const searchTable = useCallback((searchTerm) => {

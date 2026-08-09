@@ -6,7 +6,7 @@ function NavItem({ to, icon: Icon, label, isCollapsed, onNavigate }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `nav-item-link flex items-center w-full  px-3.5 py-2.5 rounded-lg text-sm font-medium no-underline transition-all ${
+        `flex items-center w-full px-3.5 py-2.5 rounded-lg text-sm font-medium no-underline transition-all ${
           isActive
             ? 'bg-[rgba(167,78,62,0.2)] text-white'
             : 'text-[rgba(255,249,241,0.65)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white'
@@ -16,7 +16,7 @@ function NavItem({ to, icon: Icon, label, isCollapsed, onNavigate }) {
       onClick={onNavigate}
     >
       <Icon />
-      {!isCollapsed && <span className="sidebar-label">{label}</span>}
+      {!isCollapsed && <span>{label}</span>}
     </NavLink>
   );
 }
@@ -113,24 +113,26 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
     <>
       {/* Mobile backdrop */}
       <div
-        className={`admin-sidebar-backdrop ${isMobileOpen ? 'is-visible' : ''}`}
+        className={`fixed inset-0 z-45 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 ${
+          isMobileOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+        }`}
         onClick={onMobileClose}
       />
 
-      <aside
-        className={`
-          admin-sidebar bg-[#241b18] text-[#fff9f1] flex flex-col fixed top-0 left-0 bottom-0 z-50
-          ${sidebarIsCollapsed ? 'collapsed' : 'expanded'}
-          ${isMobileOpen ? 'is-open' : ''}
-        `}
+<aside
+        className="bg-[#241b18] text-[#fff9f1] flex flex-col fixed top-0 left-0 bottom-0 z-50 overflow-x-hidden whitespace-nowrap transition-[width,transform] duration-200 ease-in-out"
+        style={{
+          width: isMobileOpen ? 'min(84vw,300px)' : sidebarIsCollapsed ? '72px' : '220px',
+          transform: isMobileOpen ? 'translateX(0)' : 'translateX(-100%)',
+        }}
       >
         {/* Logo */}
-        <div className="sidebar-logo-wrap relative flex min-h-[60px] items-center justify-center border-b border-[rgba(255,249,241,0.1)] px-3 md:px-7">
+        <div className={`relative flex min-h-[60px] items-center border-b border-[rgba(255,249,241,0.1)] ${sidebarIsCollapsed ? 'justify-center px-0 py-3' : 'px-3 md:px-7'}`}>
           <img
             src="/images/Logo/LOGO.png"
             alt="Velu's Fashtown"
-            className="h-auto w-[83px] brightness-[10] transition-all duration-200"
-            style={sidebarIsCollapsed ? { width: '40px' } : {}}
+            className="h-auto brightness-[10] transition-all duration-200"
+            style={sidebarIsCollapsed ? { width: '40px' } : { width: '83px' }}
           />
           <button type="button" onClick={onMobileClose} className="absolute right-3 flex h-9 w-9 items-center justify-center rounded-md text-[rgba(255,249,241,0.7)] transition-colors hover:bg-[rgba(255,249,241,0.1)] hover:text-white md:hidden" aria-label="Close sidebar">
             <CloseIcon />
@@ -143,12 +145,12 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
           <NavItem to="/admin/products" icon={ProductsIcon} label="Products" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
           <NavItem to="/admin/orders" icon={OrdersIcon} label="Orders" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
           <NavItem to="/admin/customers" icon={CustomersIcon} label="Customers" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
-          
+
           {/* Category Dropdown */}
           {sidebarIsCollapsed ? (
             <button
               onClick={() => { onToggle(); setTimeout(() => setCategoryOpen(true), 200); }}
-              className="nav-item-link flex w-full items-center justify-center rounded-lg px-0 py-2.5 text-sm font-medium text-[rgba(255,249,241,0.65)] no-underline transition-all hover:bg-[rgba(255,249,241,0.08)] hover:text-white"
+              className="flex w-full items-center justify-center rounded-lg px-0 py-2.5 text-sm font-medium text-[rgba(255,249,241,0.65)] no-underline transition-all hover:bg-[rgba(255,249,241,0.08)] hover:text-white border-none bg-transparent cursor-pointer"
               title="Category"
             >
               <CategoryIcon />
@@ -157,10 +159,10 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
             <div className="flex flex-col">
               <button
                 onClick={() => setCategoryOpen(!CategoryOpen)}
-                className={`nav-item-link flex items-center w-full px-3.5 py-2.5 rounded-lg text-sm font-medium no-underline transition-all text-[rgba(255,249,241,0.65)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white gap-3`}
+                className="flex items-center w-full gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium no-underline transition-all text-[rgba(255,249,241,0.65)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white border-none bg-transparent cursor-pointer"
               >
                 <CategoryIcon />
-                <span className="sidebar-label flex-1 text-left">Category</span>
+                <span className="flex-1 text-left">Category</span>
                 <svg
                   className={`w-3.5 h-3.5 transition-transform duration-200 ${CategoryOpen ? 'rotate-180' : ''}`}
                   viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -174,11 +176,11 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
                     to="/admin/Category"
                     onClick={onMobileClose}
                     className={({ isActive }) =>
-                      `nav-item-link flex items-center w-full px-3 py-2 rounded-lg text-xs font-medium no-underline transition-all ${
+                      `flex items-center w-full gap-2 px-3 py-2 rounded-lg text-xs font-medium no-underline transition-all ${
                         isActive
                           ? 'bg-[rgba(167,78,62,0.2)] text-white'
                           : 'text-[rgba(255,249,241,0.55)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white'
-                      } gap-2`
+                      }`
                     }
                   >
                     <span className="w-1 h-1 rounded-full bg-current opacity-50" />
@@ -188,11 +190,11 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
                     to="/admin/sub-Category"
                     onClick={onMobileClose}
                     className={({ isActive }) =>
-                      `nav-item-link flex items-center w-full px-3 py-2 rounded-lg text-xs font-medium no-underline transition-all ${
+                      `flex items-center w-full gap-2 px-3 py-2 rounded-lg text-xs font-medium no-underline transition-all ${
                         isActive
                           ? 'bg-[rgba(167,78,62,0.2)] text-white'
                           : 'text-[rgba(255,249,241,0.55)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white'
-                      } gap-2`
+                      }`
                     }
                   >
                     <span className="w-1 h-1 rounded-full bg-current opacity-50" />
@@ -202,7 +204,7 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
               )}
             </div>
           )}
-          
+
           <NavItem to="/admin/collections" icon={CollectionsIcon} label="Collections" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
         </nav>
 
@@ -213,29 +215,28 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className={`nav-item-link flex items-center rounded-lg text-[12px] font-medium text-[rgba(255,249,241,0.5)] no-underline hover:bg-[rgba(255,249,241,0.08)] hover:text-white transition-colors ${
+            className={`flex items-center rounded-lg text-[12px] font-medium text-[rgba(255,249,241,0.5)] no-underline hover:bg-[rgba(255,249,241,0.08)] hover:text-white transition-colors ${
               sidebarIsCollapsed ? 'justify-center px-0 py-2.5' : 'gap-2.5 px-3.5 py-2.5'
             }`}
             title={sidebarIsCollapsed ? 'View Store' : undefined}
           >
             <StoreIcon />
-            {!sidebarIsCollapsed && <span className="sidebar-label">View Store</span>}
+            {!sidebarIsCollapsed && <span>View Store</span>}
           </a>
 
           {/* Collapse toggle button */}
           <button
             onClick={onToggle}
-            className={`nav-item-link flex items-center rounded-lg text-[12px] font-medium text-[rgba(255,249,241,0.5)] no-underline hover:bg-[rgba(255,249,241,0.08)] hover:text-white transition-colors cursor-pointer w-full border-none bg-transparent ${
+            className={`flex items-center rounded-lg text-[12px] font-medium text-[rgba(255,249,241,0.5)] no-underline hover:bg-[rgba(255,249,241,0.08)] hover:text-white transition-colors cursor-pointer w-full border-none bg-transparent ${
               sidebarIsCollapsed ? 'justify-center px-0 py-2.5' : 'gap-2.5 px-3.5 py-2.5'
             }`}
             title={sidebarIsCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <CollapseIcon isCollapsed={sidebarIsCollapsed} />
-            {!sidebarIsCollapsed && <span className="sidebar-label">Collapse</span>}
+            {!sidebarIsCollapsed && <span>Collapse</span>}
           </button>
         </div>
       </aside>
     </>
   );
 }
-

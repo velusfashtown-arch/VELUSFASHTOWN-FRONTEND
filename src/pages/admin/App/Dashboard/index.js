@@ -92,7 +92,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16 gap-2.5 text-muted text-sm">
-        <div className="w-5 h-5 border-2 border-[rgba(47,31,25,0.12)] border-t-terra rounded-full admin-spinner" />
+<div className="w-5 h-5 border-2 border-[rgba(47,31,25,0.12)] border-t-terra rounded-full animate-spin" />
         Loading dashboard...
       </div>
     );

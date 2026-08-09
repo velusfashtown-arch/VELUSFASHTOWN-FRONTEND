@@ -6,6 +6,8 @@ import useTableData from '../../Common/Table/useTableData';
 import ConfirmDeleteModal from '../../Common/ConfirmDeleteModal';
 import AddProduct from './AddProduct';
 import ProductView from './ProductView';
+import { scrollToTop } from '../../../../utils/scrollToTop';
+import { adminToast } from '../../Common/buttonClasses';
 
 function formatPrice(value) {
   return `₹${Number(value || 0).toLocaleString('en-IN')}`;
@@ -106,24 +108,28 @@ export default function AdminProducts() {
     setView('list');
     setEditingProduct(null);
     setViewingProduct(null);
+    scrollToTop();
   }
 
   function openAddForm() {
     setView('form');
     setEditingProduct(null);
     setViewingProduct(null);
+    scrollToTop();
   }
 
   function openEditForm(product, fromDetail = false) {
     setView('form');
     setEditingProduct(product);
     if (fromDetail) setViewingProduct(product);
+    scrollToTop();
   }
 
   function openView(product) {
     setView('detail');
     setViewingProduct(product);
     setEditingProduct(null);
+    scrollToTop();
   }
 
   function confirmDelete(product, returnToList = true) {
@@ -149,13 +155,13 @@ export default function AdminProducts() {
 
   return (
     <div className="min-w-0">
-      {success && (
-        <div className="admin-toast fixed left-4 right-4 top-4 z-50 rounded-lg border border-[rgba(19,115,51,0.15)] bg-[#e6f4ea] px-5 py-3 text-[13px] font-medium text-[#137333] shadow-[0_4px_16px_rgba(47,31,25,0.12)] sm:left-auto sm:w-auto">
+{success && (
+        <div className={`${adminToast} rounded-lg border border-[rgba(19,115,51,0.15)] bg-[#e6f4ea] px-5 py-3 text-[13px] font-medium text-[#137333]`}>
           {success}
         </div>
       )}
       {(error || localError) && (
-        <div className="admin-toast fixed left-4 right-4 top-4 z-50 rounded-lg border border-[rgba(197,34,31,0.15)] bg-[#fce8e6] px-5 py-3 text-[13px] font-medium text-[#c5221f] shadow-[0_4px_16px_rgba(47,31,25,0.12)] sm:left-auto sm:w-auto">
+        <div className={`${adminToast} rounded-lg border border-[rgba(197,34,31,0.15)] bg-[#fce8e6] px-5 py-3 text-[13px] font-medium text-[#c5221f]`}>
           {(error || localError)}
         </div>
       )}

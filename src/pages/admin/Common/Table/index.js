@@ -18,10 +18,10 @@ function getValue(value, row, index) {
 function SkeletonRow({ colCount }) {
   const cells = Array.from({ length: colCount });
   return (
-    <tr className="admin-skeleton-row">
+    <tr>
       {cells.map((_, i) => (
         <td key={i} className="border-b border-[rgba(47,31,25,0.04)] px-4 py-3">
-          <div className="admin-skeleton-block" style={{ width: i === 0 ? '62%' : `${Math.max(30, 70 - i * 9)}%` }} />
+          <div className="h-4 animate-admin-shimmer rounded-md bg-[linear-gradient(90deg,rgba(47,31,25,0.06)_25%,rgba(167,78,62,0.10)_37%,rgba(47,31,25,0.06)_63%)] bg-[length:800px_100%] bg-no-repeat" style={{ width: i === 0 ? '62%' : `${Math.max(30, 70 - i * 9)}%` }} />
         </td>
       ))}
     </tr>
@@ -55,21 +55,21 @@ function getActionIcon(action, row, index) {
 function SkeletonRows({ columns, rowCount = 5, rowActions }) {
   return (
     <>
-      {Array.from({ length: rowCount }).map((_, rowIndex) => (
-        <tr key={`skeleton-${rowIndex}`} className="admin-skeleton-row">
+{Array.from({ length: rowCount }).map((_, rowIndex) => (
+        <tr key={`skeleton-${rowIndex}`}>
           {columns.map((column, columnIndex) => {
             const alignment = columnIndex === 0 ? 'text-left' : rowActions.length === 0 && columnIndex === columns.length - 1 ? 'text-right' : 'text-center';
             const isFirst = columnIndex === 0;
             return (
               <td key={column.key} className={`border-b border-[rgba(47,31,25,0.06)] px-4 py-2.5 ${alignment}`}>
-                <span className={`admin-skeleton-block inline-block h-3 rounded-md bg-[rgba(47,31,25,0.08)] ${isFirst ? 'w-32' : 'w-16'}`} />
-                {isFirst && <span className="admin-skeleton-block mt-1.5 block h-2 w-40 rounded-md bg-[rgba(47,31,25,0.06)]" />}
+                <span className={`inline-block h-3 animate-admin-shimmer rounded-md bg-[linear-gradient(90deg,rgba(47,31,25,0.06)_25%,rgba(167,78,62,0.10)_37%,rgba(47,31,25,0.06)_63%)] bg-[length:800px_100%] bg-no-repeat ${isFirst ? 'w-32' : 'w-16'}`} />
+                {isFirst && <span className="mt-1.5 block h-2 w-40 animate-admin-shimmer rounded-md bg-[linear-gradient(90deg,rgba(47,31,25,0.06)_25%,rgba(167,78,62,0.10)_37%,rgba(47,31,25,0.06)_63%)] bg-[length:800px_100%] bg-no-repeat" />}
               </td>
             );
           })}
           {rowActions.length > 0 && (
             <td className="border-b border-[rgba(47,31,25,0.06)] px-4 py-2.5 text-right">
-              <span className="admin-skeleton-block inline-block h-3 w-12 rounded-md bg-[rgba(47,31,25,0.08)]" />
+              <span className="inline-block h-3 w-12 animate-admin-shimmer rounded-md bg-[linear-gradient(90deg,rgba(47,31,25,0.06)_25%,rgba(167,78,62,0.10)_37%,rgba(47,31,25,0.06)_63%)] bg-[length:800px_100%] bg-no-repeat" />
             </td>
           )}
         </tr>
@@ -90,7 +90,7 @@ function TableActionButtons({ row, index, rowActions, isBusy }) {
         title={label}
         aria-label={label}
         disabled={getValue(action.disabled, row, index) || isBusy}
-        className={`admin-action-icon ${action.danger ? 'danger' : ''}`}
+        className={`ml-1 inline-flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-md border border-[rgba(47,31,25,0.06)] bg-transparent align-middle text-muted transition-all duration-200 hover:bg-[rgba(167,78,62,0.08)] hover:text-terra active:scale-[0.92] disabled:cursor-not-allowed disabled:opacity-40 ${action.danger ? 'hover:bg-[#fce8e6] hover:text-danger' : ''}`}
         onClick={() => action.onClick(row, index)}
       >
         <Icon className="size-4" />
@@ -168,9 +168,9 @@ export default function Table({
   return (
     <section className="overflow-hidden rounded-2xl border border-[rgba(47,31,25,0.1)] bg-paper shadow-[0_12px_32px_rgba(47,31,25,0.06)]">
       {/* Thin progress bar shown during background refresh/search/page change */}
-      {(refreshing) && (
-        <div className="admin-table-progress" aria-hidden="true">
-          <span />
+{(refreshing) && (
+        <div className="relative h-[3px] overflow-hidden bg-[rgba(167,78,62,0.08)]" aria-hidden="true">
+          <span className="absolute left-0 top-0 h-full w-[40%] rounded-full animate-admin-progress-slide bg-[linear-gradient(90deg,transparent,#a74e3e,transparent)]" />
         </div>
       )}
 
@@ -192,16 +192,16 @@ export default function Table({
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />}
-          {onAdd && <button type="button" className="admin-btn-primary min-h-[38px] justify-center px-4" onClick={onAdd}><span className="text-base leading-none">+</span> {addLabel}</button>}
-          {onRefresh && <button type="button" className="admin-btn-secondary min-h-[38px] min-w-[38px] justify-center px-2.5" onClick={onRefresh} disabled={isBusy} aria-label="Refresh table" title="Refresh table"><ArrowPathIcon className={`size-5 ${isBusy ? 'animate-spin' : ''}`} /></button>}
+{onAdd && <button type="button" className="inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-md border-none bg-terra px-4 py-3 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-[#fffaf5] no-underline transition-all duration-200 hover:bg-wine active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50" onClick={onAdd}><span className="text-base leading-none">+</span> {addLabel}</button>}
+          {onRefresh && <button type="button" className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-1.5 rounded-md border border-[rgba(47,31,25,0.16)] bg-transparent px-2.5 py-3 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-muted no-underline transition-all duration-200 hover:border-[rgba(47,31,25,0.24)] hover:bg-[rgba(47,31,25,0.06)] hover:text-ink active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40" onClick={onRefresh} disabled={isBusy} aria-label="Refresh table" title="Refresh table"><ArrowPathIcon className={`size-5 ${isBusy ? 'animate-spin' : ''}`} /></button>}
         </div>
       </div>
       <div className="space-y-3 p-3 md:hidden">
-        {showSkeleton && Array.from({ length: skeletonRows }).map((_, index) => (
+{showSkeleton && Array.from({ length: skeletonRows }).map((_, index) => (
           <div key={`mobile-skeleton-${index}`} className="rounded-xl border border-[rgba(47,31,25,0.08)] p-4">
-            <span className="admin-skeleton-block block h-4 w-1/2 rounded-md" />
-            <span className="admin-skeleton-block mt-4 block h-3 w-full rounded-md" />
-            <span className="admin-skeleton-block mt-2 block h-3 w-3/4 rounded-md" />
+            <span className="block h-4 w-1/2 animate-admin-shimmer rounded-md bg-[linear-gradient(90deg,rgba(47,31,25,0.06)_25%,rgba(167,78,62,0.10)_37%,rgba(47,31,25,0.06)_63%)] bg-[length:800px_100%] bg-no-repeat" />
+            <span className="mt-4 block h-3 w-full animate-admin-shimmer rounded-md bg-[linear-gradient(90deg,rgba(47,31,25,0.06)_25%,rgba(167,78,62,0.10)_37%,rgba(47,31,25,0.06)_63%)] bg-[length:800px_100%] bg-no-repeat" />
+            <span className="mt-2 block h-3 w-3/4 animate-admin-shimmer rounded-md bg-[linear-gradient(90deg,rgba(47,31,25,0.06)_25%,rgba(167,78,62,0.10)_37%,rgba(47,31,25,0.06)_63%)] bg-[length:800px_100%] bg-no-repeat" />
           </div>
         ))}
         {!showSkeleton && !isBusy && filteredRows.map((row, index) => (
@@ -227,7 +227,7 @@ export default function Table({
         ))}
         {!showSkeleton && !isBusy && filteredRows.length === 0 && <p className="m-0 py-8 text-center text-sm text-muted">{emptyMessage}</p>}
       </div>
-      <div className="admin-table-wrap hidden overflow-x-auto md:block">
+<div className="hidden overflow-x-auto md:block">
         <table className="w-full min-w-[720px] border-collapse text-[13px]">
           <thead>
             <tr className="bg-[rgba(47,31,25,0.035)] text-left text-[12px] font-bold uppercase tracking-[0.1em] text-muted">
@@ -240,8 +240,8 @@ export default function Table({
           </thead>
           <tbody>
             {showSkeleton ? <SkeletonRows columns={columns} rowCount={skeletonRows} rowActions={rowActions} /> : null}
-            {!showSkeleton && !isBusy && filteredRows.map((row, index) => (
-              <tr key={typeof rowKey === 'function' ? rowKey(row, index) : row[rowKey]} className={`group transition-colors odd:bg-white even:bg-[rgba(250,245,239,0.45)] hover:bg-[rgba(167,78,62,0.055)] admin-table-row-fade`}>
+{!showSkeleton && !isBusy && filteredRows.map((row, index) => (
+              <tr key={typeof rowKey === 'function' ? rowKey(row, index) : row[rowKey]} className="group animate-admin-row-fade transition-colors odd:bg-white even:bg-[rgba(250,245,239,0.45)] hover:bg-[rgba(167,78,62,0.055)]">
                 {columns.map((column, columnIndex) => {
                   const value = column.render ? column.render(row, index) : row[column.key];
                   const alignment = columnIndex === 0 ? 'text-left' : rowActions.length === 0 && columnIndex === columns.length - 1 ? 'text-right' : 'text-center';
@@ -269,12 +269,12 @@ export default function Table({
                 classNames={{ root: 'min-w-[70px]' }}
               />
             </label>
-            <button type="button" onClick={() => onPageChange?.(currentPage - 1)} disabled={isBusy || currentPage <= 1} className="admin-btn-secondary min-h-[32px] px-2.5 text-[12px] disabled:cursor-not-allowed disabled:opacity-45">Previous</button>
+<button type="button" onClick={() => onPageChange?.(currentPage - 1)} disabled={isBusy || currentPage <= 1} className="inline-flex min-h-[32px] items-center justify-center gap-1.5 rounded-md border border-[rgba(47,31,25,0.16)] bg-transparent px-2.5 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-muted no-underline transition-all duration-200 hover:border-[rgba(47,31,25,0.24)] hover:bg-[rgba(47,31,25,0.06)] hover:text-ink active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-45">Previous</button>
             <span className="text-[12px] font-medium text-muted sm:hidden">{currentPage} / {totalPages}</span>
             <div className="hidden items-center gap-1 sm:flex">
               {pageNumbers.map((pageNumber) => <button key={pageNumber} type="button" onClick={() => onPageChange?.(pageNumber)} disabled={isBusy} className={`min-h-[32px] min-w-[32px] rounded-md px-2 text-[12px] font-semibold transition-colors ${pageNumber === currentPage ? 'bg-terra text-white shadow-[0_3px_8px_rgba(167,78,62,0.25)]' : 'border border-[rgba(47,31,25,0.12)] bg-white text-ink hover:border-terra hover:text-terra'} disabled:cursor-not-allowed disabled:opacity-45`}>{pageNumber}</button>)}
             </div>
-            <button type="button" onClick={() => onPageChange?.(currentPage + 1)} disabled={isBusy || currentPage >= totalPages} className="admin-btn-secondary min-h-[32px] px-2.5 text-[12px] disabled:cursor-not-allowed disabled:opacity-45">Next</button>
+<button type="button" onClick={() => onPageChange?.(currentPage + 1)} disabled={isBusy || currentPage >= totalPages} className="inline-flex min-h-[32px] items-center justify-center gap-1.5 rounded-md border border-[rgba(47,31,25,0.16)] bg-transparent px-2.5 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-muted no-underline transition-all duration-200 hover:border-[rgba(47,31,25,0.24)] hover:bg-[rgba(47,31,25,0.06)] hover:text-ink active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-45">Next</button>
           </div>
         </div>
       )}

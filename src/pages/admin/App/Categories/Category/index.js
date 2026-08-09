@@ -7,6 +7,7 @@ import AdminTable from '../../../Common/Table';
 import useTableData from '../../../Common/Table/useTableData';
 import AdminInput from '../../../Common/Form/Input';
 import AdminTextarea from '../../../Common/Form/Textarea';
+import { adminBtnPrimary, adminBtnSecondary, adminToast } from '../../../Common/buttonClasses';
 
 function CategoryModal({ category, onClose, onSaved }) {
   const token = getToken();
@@ -49,8 +50,8 @@ function CategoryModal({ category, onClose, onSaved }) {
       title={category ? 'Edit Category' : 'Add Category'}
       footer={
         <div className="flex items-center justify-end gap-2">
-          <button type="submit" form="category-form" disabled={loading} className="admin-btn-primary">{loading ? 'Saving...' : 'Save Category'}</button>
-          <button type="button" className="admin-btn-secondary" onClick={onClose}>Cancel</button>
+<button type="submit" form="category-form" disabled={loading} className={adminBtnPrimary}>{loading ? 'Saving...' : 'Save Category'}</button>
+          <button type="button" className={adminBtnSecondary} onClick={onClose}>Cancel</button>
         </div>
       }
     >
@@ -129,8 +130,8 @@ export default function AdminCategory() {
 
   return (
     <div>
-      {success && <div className="fixed left-4 right-4 top-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)] sm:left-auto sm:w-auto admin-toast">{success}</div>}
-      {(error || localError) && <div className="fixed left-4 right-4 top-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)] sm:left-auto sm:w-auto admin-toast">{(error || localError)}</div>}
+{success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
+      {(error || localError) && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{(error || localError)}</div>}
 
       {modalOpen && (
         <CategoryModal category={editingCategory} onClose={closeModal} onSaved={() => { loadCategory(); showSuccess(editingCategory ? 'Category updated!' : 'Category created!'); }} />

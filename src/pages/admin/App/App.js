@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { clearToken } from '../../../lib/auth';
 import AdminHeader from '../Header/index';
 import AdminSidebar from '../Sidebar/index';
-import '../admin.css';
 
 export default function AdminLayout({ children, pageTitle }) {
   const nav = useNavigate();
@@ -59,8 +58,8 @@ export default function AdminLayout({ children, pageTitle }) {
       />
 
       {/* Main Content */}
-      <div
-        className="admin-main-content flex min-h-screen min-w-0 flex-1 flex-col transition-all duration-200"
+<div
+        className="flex min-h-screen min-w-0 flex-1 flex-col transition-all duration-200"
         style={{ marginLeft: sidebarWidth + 'px' }}
       >
         <AdminHeader

@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { clearToken, getToken, isTokenExpired, getCustomerToken, clearCustomerToken } from '../lib/auth';
+import ScrollToTop from '../components/shared/ScrollToTop';
 
 // Lazy-loaded page components for performance
 const Website = lazy(() => import('../pages/website/Website'));
@@ -57,15 +58,16 @@ function RequireCustomer({ children }) {
 
 function PageLoader() {
   return (
-    <div className="page-loader">
-      <div className="page-loader-spinner" />
+    <div className="flex min-h-screen items-center justify-center bg-cream">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-[rgba(47,31,25,0.16)] border-t-terra" />
     </div>
   );
 }
 
 export default function AppRouter() {
-  return (
+return (
     <Suspense fallback={<PageLoader />}>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Website />} />
         <Route path="/shop" element={<ShopPage />} />

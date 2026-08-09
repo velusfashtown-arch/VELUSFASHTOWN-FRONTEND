@@ -156,8 +156,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .lightbox-close { @apply absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full border-0 bg-paper/90 text-ink; }
   .image-lightbox img { @apply max-h-[88vh] max-w-[92vw] object-contain; }
 
-  /* Related products (nested inside .product-page, which already has the
-     page's horizontal padding — no extra max-w/px here or it doubles up) */
+  /* Related products (nested inside .product-page) */
   .related-products { @apply mt-[clamp(60px,7vw,110px)]; }
   .related-products h2 { @apply m-0 mb-6 border-b border-line pb-6 font-playfair text-[clamp(28px,3vw,40px)] font-medium tracking-[-.05em] text-ink; }
   .related-products-row { @apply grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 md:gap-x-5 lg:grid-cols-4; }
@@ -191,57 +190,133 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .success-copy { @apply mx-auto mb-6 mt-6 max-w-lg text-sm leading-6 text-muted; }
   .success-order-card { @apply mb-7 grid min-w-[min(100%,330px)] gap-2 border border-line bg-[#fbf7f0] px-7 py-5; }
   .success-order-card span { @apply text-[10px] font-bold tracking-[0.13em] text-muted; }
-  .success-order-card b { @apply text-xl text-ink; }
+.success-order-card b { @apply text-xl text-ink; }
+
+/* ── Order status pages ── */
+  .status-cancelled .status-icon { background: #f9f1e3; color: #b47c2e; }
+  .status-cancelled .store-secondary-button { @apply mb-3; }
+  .status-failed .status-icon { background: #fbe6e4; color: #a53232; }
+  .status-failed .store-secondary-button { @apply mb-3; }
+
+  /* ── Website Auth shared ── */
+  .auth-page { @apply flex min-h-[70vh] items-center justify-center bg-cream p-[60px_20px_80px]; }
+  .auth-card { @apply w-full max-w-[420px] border border-line bg-paper p-[45px_35px_40px] max-[620px]:p-[35px_22px_30px]; }
+  .auth-heading { @apply mb-8 text-center; }
+  .auth-heading .eyebrow { @apply mb-2; }
+  .auth-heading h1 { @apply m-0 font-playfair text-[clamp(32px,5vw,42px)] font-medium leading-none tracking-[-0.05em] text-ink; }
+  .auth-heading h1 em { @apply italic; }
+  .auth-form { @apply flex flex-col gap-4; }
+  .auth-field { @apply m-0 flex flex-col gap-1.5; }
+  .auth-field span { @apply text-[10px] font-bold tracking-[0.12em] text-muted; }
+  .auth-field input { @apply h-11 w-full border border-line bg-white px-3 text-sm text-ink outline-terra; }
+  .auth-field input::placeholder { color: #b9b0a8; }
+  .auth-error { @apply m-0 border border-[rgba(155,53,49,0.25)] bg-[#fcf1ef] p-2.5 text-center text-[12px] text-[#a53232]; }
+  .auth-links { @apply -mt-1.5 text-center; }
+  .auth-links a { @apply text-[11px] font-semibold text-terra no-underline hover:underline; }
+  .auth-switch { @apply m-0 mt-1 text-center text-[12px] text-muted; }
+  .auth-switch a { @apply font-bold text-terra no-underline hover:underline; }
+  .auth-success { @apply m-0 border border-[rgba(42,122,59,0.25)] bg-[#e6f0df] p-2.5 text-center text-[12px] text-[#2a7a3b]; }
+
+  /* ── Account ── */
+  .account-page { @apply mx-auto max-w-[1000px] px-5 py-[45px_20px_90px]; }
+  .account-tabs { @apply mb-8 mt-7 flex gap-2 overflow-x-auto border-b border-line; }
+  .account-tab { @apply mr-6 cursor-pointer border-0 bg-transparent p-[12px_4px] text-[11px] font-bold whitespace-nowrap tracking-[0.1em] text-muted; }
+  .account-tab.active { @apply border-b-2 border-terra text-ink; }
+  .account-card { @apply mb-5 border border-line bg-paper p-6; }
+  .account-card h2 { @apply m-0 mb-4 text-[11px] font-bold tracking-[0.12em] text-ink; }
+  .account-form-grid { @apply grid grid-cols-1 gap-4 md:grid-cols-2; }
+  .account-form-grid .span-two { @apply col-span-1 md:col-span-2; }
+  .account-address-list { @apply mb-5 grid gap-3.5; }
+  .account-address-card { @apply relative border border-line p-4; }
+  .account-address-card.default { @apply border-terra; }
+  .account-address-badge { @apply mb-2 inline-block border border-terra p-[2px_8px] text-[9px] font-bold tracking-[0.08em] text-terra; }
+  .account-address-card .name { @apply m-0 mb-1 font-bold text-ink; }
+  .account-address-card p { @apply m-0 text-[13px] leading-[1.5] text-muted; }
+  .account-address-actions { @apply mt-3 flex gap-3.5; }
+  .account-address-actions button { @apply cursor-pointer border-0 bg-transparent p-0 text-[11px] font-bold tracking-[0.06em] text-terra; }
+  .account-address-actions button.danger { @apply text-[#a53232]; }
+  .account-orders-list { @apply grid gap-3.5; }
+  .account-order-row { @apply border border-line p-4; }
+  .account-order-head { @apply mb-2.5 flex flex-wrap items-center justify-between gap-2.5; }
+  .account-order-head b { @apply text-[13px] text-ink; }
+  .account-order-status { @apply inline-block bg-cream p-[3px_9px] text-[9px] font-bold tracking-[0.08em] text-ink; }
+  .account-order-items { @apply m-0 mb-2 text-[12px] text-muted; }
+  .account-order-tracking { @apply m-0 text-[12px] text-terra; }
+  .account-empty { @apply p-[30px_0] text-center text-[13px] text-muted; }
+
+  /* ── Store shell / toast ── */
+  .storefront-shell { @apply overflow-hidden bg-paper; }
+  .store-toast { @apply fixed bottom-[19px] right-[19px] z-25 flex max-w-[min(380px,calc(100vw-38px))] items-center gap-3.5 border-0 bg-ink p-[13px_13px_13px_17px] text-left text-[12px] text-[#fff9f1] shadow-[0_10px_30px_rgba(41,20,13,.18)]; }
+
+/* ── Admin Layout ── */
+  .admin-main-content { --admin-header-height: 60px; min-width: 0; }
+  .admin-header { min-height: 60px; }
+  .admin-product-form-toolbar { position: sticky; top: 60px; z-index: 10; }
+
+  /* ── Home reveal / shimmer helpers ── */
+  .reveal { @apply opacity-0 transition-[opacity,transform] duration-700; }
+  .reveal-up { transform: translateY(40px); }
+  .reveal-down { transform: translateY(-40px); }
+  .reveal-left { transform: translateX(-40px); }
+  .reveal-right { transform: translateX(40px); }
+  .reveal-scale { transform: scale(.92); }
+  .reveal-visible { @apply translate-x-0 translate-y-0 scale-100 opacity-100; }
+  .animate-shimmer { background: linear-gradient(90deg,#ece2d4 25%,#f5efe6 50%,#ece2d4 75%); background-size: 200% 100%; border-radius: 6px; animation: shimmer 1.5s ease-in-out infinite; }
+  .service-icon { @apply inline-flex h-9 w-9 items-center justify-center transition-all duration-300; }
+
+  /* ── Admin buttons ── */
+  .admin-btn-primary { @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border-none bg-terra px-[18px] py-3 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-[#fffaf5] no-underline transition-all duration-200 hover:bg-wine active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50; }
+  .admin-btn-primary svg { @apply size-3.5 shrink-0; }
+  .admin-btn-secondary { @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-[rgba(47,31,25,0.16)] bg-transparent px-[18px] py-3 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-muted no-underline transition-all duration-200 hover:border-[rgba(47,31,25,0.24)] hover:bg-[rgba(47,31,25,0.06)] hover:text-ink active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40; }
+  .admin-btn-secondary svg { @apply size-3.5 shrink-0; }
+  .admin-btn-back { @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-[rgba(47,31,25,0.1)] bg-[rgba(47,31,25,0.05)] px-3 py-1.5 text-[11px] font-semibold leading-none tracking-[0.04em] text-muted no-underline transition-all duration-200 hover:border-[rgba(167,78,62,0.2)] hover:bg-[rgba(167,78,62,0.06)] hover:text-terra active:scale-[0.97]; }
+  .admin-btn-back svg { @apply size-3.5 shrink-0 transition-transform duration-200; }
+  .admin-btn-back:hover svg { transform: translateX(-3px); }
+  .admin-btn-danger { @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border-none bg-danger px-[18px] py-2 text-[11px] font-bold uppercase leading-none tracking-[0.06em] text-white no-underline transition-all duration-200 hover:bg-[#a53232] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40; }
+  .admin-btn-danger svg { @apply size-3.5 shrink-0; }
+  .admin-btn-sm { @apply rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em]; }
+  .admin-btn-ghost { @apply inline-flex items-center gap-1 whitespace-nowrap rounded border-none bg-transparent px-2.5 py-1.5 text-[10px] font-semibold leading-none tracking-[0.04em] text-muted no-underline transition-colors duration-200 hover:bg-[rgba(167,78,62,0.06)] hover:text-terra; }
+  .admin-btn-ghost.danger:hover { @apply bg-[#fce8e6] text-danger; }
+  .admin-action-icon { @apply ml-1 inline-flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-md border border-[rgba(47,31,25,0.06)] bg-transparent align-middle text-muted transition-all duration-200 hover:bg-[rgba(167,78,62,0.08)] hover:text-terra active:scale-[0.92] disabled:cursor-not-allowed disabled:opacity-40; }
+  .admin-action-icon.danger:hover:not(:disabled) { @apply bg-[#fce8e6] text-danger; }
+
+  /* ── Admin toast / spinner / skeleton / table ── */
+  .admin-toast { animation: admin-slide-in 0.2s ease; }
+  .admin-spinner { animation: admin-spin 0.6s linear infinite; }
+  .admin-skeleton-block { background-image: linear-gradient(90deg, rgba(47,31,25,0.06) 25%, rgba(167,78,62,0.10) 37%, rgba(47,31,25,0.06) 63%); background-size: 800px 100%; background-repeat: no-repeat; animation: admin-shimmer 1.3s linear infinite; }
+  .admin-table-wrap::-webkit-scrollbar { height: 6px; }
+  .admin-table-wrap::-webkit-scrollbar-track { background: transparent; }
+  .admin-table-wrap::-webkit-scrollbar-thumb { background: rgba(47, 31, 25, 0.12); border-radius: 3px; }
+  .admin-table-progress { @apply relative h-[3px] overflow-hidden bg-[rgba(167,78,62,0.08)]; }
+  .admin-table-progress span { @apply absolute left-0 top-0 h-full w-[40%] rounded-full; background: linear-gradient(90deg, transparent, #a74e3e, transparent); animation: admin-progress-slide 0.9s ease-in-out infinite; }
+  .admin-table-row-fade { animation: admin-row-fade 0.25s ease; }
+
+  /* ── Admin sidebar ── */
+  .admin-sidebar { transition: width 0.25s ease-in-out; overflow-x: hidden; white-space: nowrap; }
+  .admin-sidebar.collapsed { width: 72px !important; }
+  .admin-sidebar.expanded { width: 220px !important; }
+  .admin-sidebar .sidebar-label { transition: opacity 0.2s ease, visibility 0.2s ease; }
+  .admin-sidebar.collapsed .sidebar-label { opacity: 0; visibility: hidden; width: 0; overflow: hidden; }
+  .admin-sidebar.collapsed .nav-item-link { justify-content: center; padding-left: 0 !important; padding-right: 0 !important; }
+  .admin-sidebar .sidebar-logo-wrap { transition: all 0.25s ease; }
+  .admin-sidebar.collapsed .sidebar-logo-wrap { justify-content: center; padding: 12px 0; min-height: 60px; }
+  .admin-sidebar.collapsed .sidebar-logo-wrap img { width: 40px; height: auto; }
+  .admin-sidebar.collapsed .sidebar-divider { margin: 8px 12px; }
+  .admin-sidebar-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 45; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+  .admin-sidebar-backdrop.is-visible { opacity: 1; visibility: visible; }
+.admin-sidebar-nav svg, .sidebar-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
+  /* ── Admin modal / auth helpers ── */
+  .admin-modal-in { animation: admin-modal-in 0.2s ease; }
+  .radial-pattern { background: radial-gradient(circle at 20% 30%, rgba(255,253,250,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,253,250,0.06) 0%, transparent 50%), repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,253,250,0.015) 30px, rgba(255,253,250,0.015) 31px); }
+  .auth-fade-up { animation: auth-fade-up 0.6s ease; }
 }
 
-@media (max-width: 1023px) {
-  .filter-sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 40; width: min(345px, 88vw); overflow-y: auto; transform: translateX(-102%); transition: transform 240ms ease; }
-  .filter-sidebar.is-open { transform: translateX(0); box-shadow: 12px 0 30px rgba(36, 27, 24, .18); }
-  .filter-close { display: inline; }
-  .mobile-filter-button { display: inline-flex; }
-}
-
-@media (min-width: 1024px) {
-  .filter-sidebar { position: sticky; top: 100px; }
-}
-
-@media (max-width: 620px) {
-  .listing-toolbar { align-items: flex-end; }
-  .listing-actions label { font-size: 0; }
-  .listing-actions select { max-width: 92px; }
-  .cart-item > strong { align-self: end; }
-}
-
-/* ===== Product page: sticky mobile buy bar replaces the inline
-   Buy Now / Add to Bag row below 768px, so the CTA stays reachable
-   while scrolling through specs/reviews without duplicating buttons. ===== */
 @media (max-width: 767px) {
-  .product-page { padding-bottom: 86px; }
-  .product-actions-detail { display: none; }
-  .mobile-buy-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 30;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
-    background: var(--paper);
-    border-top: 1px solid var(--line);
-    box-shadow: 0 -8px 24px rgba(36, 27, 24, .1);
-  }
-  .mobile-buy-bar-price { display: flex; flex-direction: column; margin-right: auto; min-width: 0; }
-  .mobile-buy-bar-price b { font-size: 15px; color: var(--ink); white-space: nowrap; }
-  .mobile-buy-bar-price del { font-size: 10px; color: var(--muted); }
-  .mobile-buy-bar .store-primary-button,
-  .mobile-buy-bar .store-secondary-button {
-    min-height: 42px;
-    padding: 0 14px;
-    font-size: 9px;
-    white-space: nowrap;
-  }
+  .admin-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; width: min(84vw, 300px) !important; box-shadow: 12px 0 32px rgba(0,0,0,0.2); }
+  .admin-sidebar.is-open { transform: translateX(0); }
+  .admin-sidebar.is-open.collapsed { transform: translateX(0); width: min(84vw, 300px) !important; }
+  .admin-main-content { margin-left: 0 !important; }
 }
 
 /* ===== Product Detail Page Animations ===== */
@@ -313,6 +388,41 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 @keyframes page-loader-spin {
   to { transform: rotate(360deg); }
+}
+
+/* ===== Home shimmer / reveal keyframes ===== */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ===== Admin keyframes ===== */
+@keyframes admin-slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes admin-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes admin-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+@keyframes admin-progress-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+@keyframes admin-row-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes admin-modal-in {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes auth-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== Occasion Filter Effects (CSS-only filters) ===== */

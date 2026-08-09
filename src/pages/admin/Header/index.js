@@ -20,7 +20,7 @@ function MenuIcon() {
 
 export default function AdminHeader({ pageTitle, onLogout, onMenuToggle }) {
   return (
-    <header className="admin-header sticky top-0 z-40 flex min-w-0 items-center justify-between gap-3 border-b border-line bg-paper px-3 py-2.5 sm:px-4 sm:py-3 lg:px-7">
+<header className="sticky top-0 z-40 flex min-h-[60px] min-w-0 items-center justify-between gap-3 border-b border-line bg-paper px-3 py-2.5 sm:px-4 sm:py-3 lg:px-7">
       <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
         {/* Hamburger menu button - visible on mobile only */}
         <button

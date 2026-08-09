@@ -21,10 +21,10 @@ function ServiceItem({ icon, title, description, index, border }) {
   return (
     <div
       ref={itemRef}
-      className={`flex flex-col items-center max-[620px]:items-start reveal reveal-up ${isVisible ? 'reveal-visible' : ''} ${border}`}
+className={`flex flex-col items-center max-[620px]:items-start transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} ${border}`}
       style={{ transitionDelay: `${index * 150}ms` }}
     >
-      <div className="service-icon w-6 h-6 mb-[11px] text-[#f3c997] transition-all duration-300 hover:scale-110 hover:text-[#f8d9aa] max-[620px]:mb-2">
+<div className="mb-[11px] inline-flex h-6 w-6 items-center justify-center text-[#f3c997] transition-all duration-300 hover:scale-110 hover:text-[#f8d9aa] max-[620px]:mb-2">
         {icon}
       </div>
       <strong className="block text-[#f3c997] text-[9px] tracking-[0.16em]">{title}</strong>

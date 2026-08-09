@@ -5,16 +5,18 @@ import Footer from '../Footer/Footer';
 import { useAuth } from '../../../context/AuthContext';
 import { formatPrice } from '../../../context/ShopContext';
 import { api } from '../../../lib/api';
-import '../Auth/Login/index.css';
-import './index.css';
+import { scrollToTop } from '../../../utils/scrollToTop';
 
 const emptyAddress = { name: '', phone: '', address: '', landmark: '', city: '', state: '', pincode: '', type: 'home', isDefault: false };
 
+const primaryBtn = 'inline-flex min-h-[46px] items-center justify-center border border-terra bg-terra px-5 py-3 text-[10px] font-bold tracking-[0.14em] text-[#fffaf5] no-underline transition hover:border-wine hover:bg-wine disabled:cursor-not-allowed disabled:border-muted disabled:bg-muted';
+const secondaryBtn = 'inline-flex min-h-[46px] items-center justify-center border border-ink bg-transparent px-5 py-3 text-[10px] font-bold tracking-[0.14em] text-ink no-underline transition hover:bg-ink hover:text-paper';
+
 function Field({ label, value, onChange, className = '', type = 'text', required = true }) {
   return (
-    <label className={`checkout-input ${className}`}>
-      <span>{label}</span>
-      <input type={type} required={required} value={value} onChange={(event) => onChange(event.target.value)} />
+    <label className={`flex flex-col gap-2 ${className}`}>
+      <span className="text-[10px] font-bold tracking-[0.1em] text-muted">{label}</span>
+      <input type={type} required={required} value={value} onChange={(event) => onChange(event.target.value)} className="h-11 border border-line bg-paper px-3 text-sm text-ink outline-terra" />
     </label>
   );
 }
@@ -114,31 +116,31 @@ export default function AccountPage() {
     }
   }
 
-  return (
-    <div className="storefront-shell">
+return (
+    <div className="overflow-hidden bg-paper">
       <Header />
-      <main className="account-page">
-        <p className="eyebrow">MY ACCOUNT</p>
-        <h1>Hello, <em>{fullProfile?.name || profile?.name || 'there'}</em></h1>
+      <main className="mx-auto max-w-[1000px] px-5 py-[45px_20px_90px]">
+        <p className="mb-3 text-[10px] font-bold tracking-[0.19em] text-terra">MY ACCOUNT</p>
+        <h1 className="m-0 font-playfair text-[clamp(42px,4.15vw,66px)] font-medium leading-[.95] tracking-[-.055em] text-ink">Hello, <em>{fullProfile?.name || profile?.name || 'there'}</em></h1>
 
-        <div className="account-tabs">
-          <button type="button" className={`account-tab ${tab === 'profile' ? 'active' : ''}`} onClick={() => setTab('profile')}>PROFILE</button>
-          <button type="button" className={`account-tab ${tab === 'addresses' ? 'active' : ''}`} onClick={() => setTab('addresses')}>ADDRESSES</button>
-          <button type="button" className={`account-tab ${tab === 'orders' ? 'active' : ''}`} onClick={() => setTab('orders')}>ORDERS</button>
+        <div className="mb-8 mt-7 flex gap-2 overflow-x-auto border-b border-line">
+          <button type="button" className={`mr-6 cursor-pointer border-0 bg-transparent p-[12px_4px] text-[11px] font-bold whitespace-nowrap tracking-[0.1em] ${tab === 'profile' ? 'border-b-2 border-terra text-ink' : 'text-muted'}`} onClick={() => { setTab('profile'); scrollToTop(); }}>PROFILE</button>
+          <button type="button" className={`mr-6 cursor-pointer border-0 bg-transparent p-[12px_4px] text-[11px] font-bold whitespace-nowrap tracking-[0.1em] ${tab === 'addresses' ? 'border-b-2 border-terra text-ink' : 'text-muted'}`} onClick={() => { setTab('addresses'); scrollToTop(); }}>ADDRESSES</button>
+          <button type="button" className={`mr-6 cursor-pointer border-0 bg-transparent p-[12px_4px] text-[11px] font-bold whitespace-nowrap tracking-[0.1em] ${tab === 'orders' ? 'border-b-2 border-terra text-ink' : 'text-muted'}`} onClick={() => { setTab('orders'); scrollToTop(); }}>ORDERS</button>
         </div>
 
-        {message ? <p className="auth-success">✓ {message}</p> : null}
-        {error ? <p className="auth-error">{error}</p> : null}
+        {message ? <p className="m-0 mb-5 border border-[rgba(42,122,59,0.25)] bg-[#e6f0df] p-2.5 text-center text-[12px] text-[#2a7a3b]">✓ {message}</p> : null}
+        {error ? <p className="m-0 mb-5 border border-[rgba(155,53,49,0.25)] bg-[#fcf1ef] p-2.5 text-center text-[12px] text-[#a53232]">{error}</p> : null}
 
         {tab === 'profile' && (
-          <form className="account-card" onSubmit={saveProfile}>
-            <h2>PROFILE DETAILS</h2>
-            <div className="account-form-grid">
+          <form className="mb-5 border border-line bg-paper p-6" onSubmit={saveProfile}>
+            <h2 className="m-0 mb-4 text-[11px] font-bold tracking-[0.12em] text-ink">PROFILE DETAILS</h2>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Field label="Full name" value={profileForm.name} onChange={(v) => setProfileForm((f) => ({ ...f, name: v }))} />
               <Field label="Phone number" type="tel" value={profileForm.phone} onChange={(v) => setProfileForm((f) => ({ ...f, phone: v }))} />
-              <Field label="Email address" className="span-two" value={fullProfile?.email || profile?.email || ''} onChange={() => {}} required={false} />
+              <Field label="Email address" className="col-span-1 md:col-span-2" value={fullProfile?.email || profile?.email || ''} onChange={() => {}} required={false} />
             </div>
-            <button className="store-primary-button" type="submit" disabled={saving} style={{ marginTop: 18 }}>
+            <button className={`${primaryBtn} mt-[18px]`} type="submit" disabled={saving}>
               {saving ? 'SAVING...' : 'SAVE CHANGES'}
             </button>
           </form>
@@ -147,77 +149,77 @@ export default function AccountPage() {
         {tab === 'addresses' && (
           <div>
             {addresses.length ? (
-              <div className="account-address-list">
+              <div className="mb-5 grid gap-3.5">
                 {addresses.map((addr) => (
-                  <div key={addr.id} className={`account-address-card ${addr.isDefault ? 'default' : ''}`}>
-                    {addr.isDefault ? <span className="account-address-badge">DEFAULT</span> : null}
-                    <p className="name">{addr.name} · {addr.phone}</p>
-                    <p>{addr.address}{addr.landmark ? `, ${addr.landmark}` : ''}</p>
-                    <p>{addr.city}, {addr.state} - {addr.pincode}</p>
-                    <div className="account-address-actions">
-                      <button type="button" onClick={() => openEditAddress(addr)}>EDIT</button>
-                      <button type="button" className="danger" onClick={() => removeAddress(addr.id)}>REMOVE</button>
+                  <div key={addr.id} className={`relative border p-4 ${addr.isDefault ? 'border-terra' : 'border-line'}`}>
+                    {addr.isDefault ? <span className="mb-2 inline-block border border-terra p-[2px_8px] text-[9px] font-bold tracking-[0.08em] text-terra">DEFAULT</span> : null}
+                    <p className="m-0 mb-1 font-bold text-ink">{addr.name} · {addr.phone}</p>
+                    <p className="m-0 text-[13px] leading-[1.5] text-muted">{addr.address}{addr.landmark ? `, ${addr.landmark}` : ''}</p>
+                    <p className="m-0 text-[13px] leading-[1.5] text-muted">{addr.city}, {addr.state} - {addr.pincode}</p>
+                    <div className="mt-3 flex gap-3.5">
+                      <button type="button" className="cursor-pointer border-0 bg-transparent p-0 text-[11px] font-bold tracking-[0.06em] text-terra" onClick={() => openEditAddress(addr)}>EDIT</button>
+                      <button type="button" className="cursor-pointer border-0 bg-transparent p-0 text-[11px] font-bold tracking-[0.06em] text-[#a53232]" onClick={() => removeAddress(addr.id)}>REMOVE</button>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="account-empty">No saved addresses yet.</p>
+              <p className="p-[30px_0] text-center text-[13px] text-muted">No saved addresses yet.</p>
             )}
 
             {editingAddress ? (
-              <form className="account-card" onSubmit={submitAddress}>
-                <h2>{editingAddress === 'new' ? 'ADD ADDRESS' : 'EDIT ADDRESS'}</h2>
-                <div className="account-form-grid">
+              <form className="mb-5 border border-line bg-paper p-6" onSubmit={submitAddress}>
+                <h2 className="m-0 mb-4 text-[11px] font-bold tracking-[0.12em] text-ink">{editingAddress === 'new' ? 'ADD ADDRESS' : 'EDIT ADDRESS'}</h2>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <Field label="Full name" value={addressForm.name} onChange={(v) => setAddressForm((f) => ({ ...f, name: v }))} />
                   <Field label="Phone number" type="tel" value={addressForm.phone} onChange={(v) => setAddressForm((f) => ({ ...f, phone: v }))} />
                   <Field label="Pincode" value={addressForm.pincode} onChange={(v) => setAddressForm((f) => ({ ...f, pincode: v }))} />
                   <Field label="City" value={addressForm.city} onChange={(v) => setAddressForm((f) => ({ ...f, city: v }))} />
                   <Field label="State" value={addressForm.state} onChange={(v) => setAddressForm((f) => ({ ...f, state: v }))} />
-                  <Field label="Address" className="span-two" value={addressForm.address} onChange={(v) => setAddressForm((f) => ({ ...f, address: v }))} />
-                  <Field label="Landmark (optional)" className="span-two" required={false} value={addressForm.landmark} onChange={(v) => setAddressForm((f) => ({ ...f, landmark: v }))} />
+                  <Field label="Address" className="col-span-1 md:col-span-2" value={addressForm.address} onChange={(v) => setAddressForm((f) => ({ ...f, address: v }))} />
+                  <Field label="Landmark (optional)" className="col-span-1 md:col-span-2" required={false} value={addressForm.landmark} onChange={(v) => setAddressForm((f) => ({ ...f, landmark: v }))} />
                 </div>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, fontSize: 12, color: 'var(--muted)' }}>
-                  <input type="checkbox" checked={addressForm.isDefault} onChange={(e) => setAddressForm((f) => ({ ...f, isDefault: e.target.checked }))} />
+                <label className="mt-[14px] flex items-center gap-2 text-[12px] text-muted">
+                  <input type="checkbox" className="accent-terra" checked={addressForm.isDefault} onChange={(e) => setAddressForm((f) => ({ ...f, isDefault: e.target.checked }))} />
                   Set as default address
                 </label>
-                <div style={{ display: 'flex', gap: 10, marginTop: 18 }}>
-                  <button className="store-primary-button" type="submit" disabled={saving}>{saving ? 'SAVING...' : 'SAVE ADDRESS'}</button>
-                  <button type="button" className="store-secondary-button" onClick={() => setEditingAddress(null)}>CANCEL</button>
+                <div className="mt-[18px] flex gap-2.5">
+                  <button className={primaryBtn} type="submit" disabled={saving}>{saving ? 'SAVING...' : 'SAVE ADDRESS'}</button>
+                  <button type="button" className={secondaryBtn} onClick={() => setEditingAddress(null)}>CANCEL</button>
                 </div>
               </form>
             ) : (
-              <button type="button" className="store-secondary-button" onClick={openNewAddress}>+ ADD NEW ADDRESS</button>
+              <button type="button" className={secondaryBtn} onClick={openNewAddress}>+ ADD NEW ADDRESS</button>
             )}
           </div>
         )}
 
         {tab === 'orders' && (
-          <div className="account-card">
-            <h2>ORDER HISTORY</h2>
+          <div className="mb-5 border border-line bg-paper p-6">
+            <h2 className="m-0 mb-4 text-[11px] font-bold tracking-[0.12em] text-ink">ORDER HISTORY</h2>
             {ordersLoading ? (
-              <p className="account-empty">Loading your orders...</p>
+              <p className="p-[30px_0] text-center text-[13px] text-muted">Loading your orders...</p>
             ) : orders.length ? (
-              <div className="account-orders-list">
+              <div className="grid gap-3.5">
                 {orders.map((order) => (
-                  <div className="account-order-row" key={order.id}>
-                    <div className="account-order-head">
-                      <b>{order.orderNumber}</b>
-                      <span className="account-order-status">{order.status}</span>
+                  <div className="border border-line p-4" key={order.id}>
+                    <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2.5">
+                      <b className="text-[13px] text-ink">{order.orderNumber}</b>
+                      <span className="inline-block bg-cream p-[3px_9px] text-[9px] font-bold tracking-[0.08em] text-ink">{order.status}</span>
                     </div>
-                    <p className="account-order-items">
+                    <p className="m-0 mb-2 text-[12px] text-muted">
                       {order.items?.length || 0} item{order.items?.length === 1 ? '' : 's'} · {formatPrice(order.total)} · {new Date(order.createdAt).toLocaleDateString('en-IN')}
                     </p>
                     {order.trackingNumber ? (
-                      <p className="account-order-tracking">Tracking: {order.courierName} — {order.trackingNumber}</p>
+                      <p className="m-0 text-[12px] text-terra">Tracking: {order.courierName} — {order.trackingNumber}</p>
                     ) : null}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="account-empty">
-                <p style={{ margin: '0 0 10px' }}>No orders yet.</p>
-                <Link className="store-primary-button" to="/shop">START SHOPPING</Link>
+              <div className="p-[30px_0] text-center text-[13px] text-muted">
+                <p className="mb-[10px]">No orders yet.</p>
+                <Link className={`${primaryBtn} mt-2`} to="/shop">START SHOPPING</Link>
               </div>
             )}
           </div>

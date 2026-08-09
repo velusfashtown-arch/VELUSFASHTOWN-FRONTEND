@@ -4,7 +4,6 @@ import { useAuth } from '../../../../context/AuthContext';
 import { api } from '../../../../lib/api';
 import Header from '../../Header/Header';
 import Footer from '../../Footer/Footer';
-import '../Login/index.css';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -48,41 +47,41 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="storefront-shell">
+<div className="overflow-hidden bg-paper">
       <Header />
-      <main className="auth-page">
-        <div className="auth-card">
-          <div className="auth-heading">
-            <p className="eyebrow">JOIN US</p>
-            <h1>Create <em>account</em></h1>
+      <main className="flex min-h-[70vh] items-center justify-center bg-cream p-[60px_20px_80px]">
+        <div className="w-full max-w-[420px] border border-line bg-paper p-[45px_35px_40px] max-[620px]:p-[35px_22px_30px]">
+          <div className="mb-8 text-center">
+            <p className="mb-3 text-[10px] font-bold tracking-[0.19em] text-terra">JOIN US</p>
+            <h1 className="m-0 font-playfair text-[clamp(32px,5vw,42px)] font-medium leading-none tracking-[-0.05em] text-ink">Create <em>account</em></h1>
           </div>
-          <form onSubmit={handleSubmit} className="auth-form">
-            <label className="auth-field">
-              <span>Full name</span>
-              <input type="text" required value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Your full name" />
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <label className="m-0 flex flex-col gap-1.5">
+              <span className="text-[10px] font-bold tracking-[0.12em] text-muted">Full name</span>
+              <input type="text" required value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Your full name" className="h-11 w-full border border-line bg-white px-3 text-sm text-ink outline-terra" />
             </label>
-            <label className="auth-field">
-              <span>Email</span>
-              <input type="email" required value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="your@email.com" />
+            <label className="m-0 flex flex-col gap-1.5">
+              <span className="text-[10px] font-bold tracking-[0.12em] text-muted">Email</span>
+              <input type="email" required value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="your@email.com" className="h-11 w-full border border-line bg-white px-3 text-sm text-ink outline-terra" />
             </label>
-            <label className="auth-field">
-              <span>Phone (optional)</span>
-              <input type="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} placeholder="+91 98765 43210" />
+            <label className="m-0 flex flex-col gap-1.5">
+              <span className="text-[10px] font-bold tracking-[0.12em] text-muted">Phone (optional)</span>
+              <input type="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} placeholder="+91 98765 43210" className="h-11 w-full border border-line bg-white px-3 text-sm text-ink outline-terra" />
             </label>
-            <label className="auth-field">
-              <span>Password</span>
-              <input type="password" required value={form.password} onChange={(e) => update('password', e.target.value)} placeholder="At least 6 characters" />
+            <label className="m-0 flex flex-col gap-1.5">
+              <span className="text-[10px] font-bold tracking-[0.12em] text-muted">Password</span>
+              <input type="password" required value={form.password} onChange={(e) => update('password', e.target.value)} placeholder="At least 6 characters" className="h-11 w-full border border-line bg-white px-3 text-sm text-ink outline-terra" />
             </label>
-            <label className="auth-field">
-              <span>Confirm password</span>
-              <input type="password" required value={form.confirm} onChange={(e) => update('confirm', e.target.value)} placeholder="Re-enter your password" />
+            <label className="m-0 flex flex-col gap-1.5">
+              <span className="text-[10px] font-bold tracking-[0.12em] text-muted">Confirm password</span>
+              <input type="password" required value={form.confirm} onChange={(e) => update('confirm', e.target.value)} placeholder="Re-enter your password" className="h-11 w-full border border-line bg-white px-3 text-sm text-ink outline-terra" />
             </label>
-            {error ? <p className="auth-error">{error}</p> : null}
-            <button className="store-primary-button full" type="submit" disabled={loading}>
+            {error ? <p className="m-0 border border-[rgba(155,53,49,0.25)] bg-[#fcf1ef] p-2.5 text-center text-[12px] text-[#a53232]">{error}</p> : null}
+            <button className="inline-flex min-h-[46px] w-full items-center justify-center border border-terra bg-terra px-5 py-3 text-[10px] font-bold tracking-[0.14em] text-[#fffaf5] no-underline transition hover:border-wine hover:bg-wine disabled:cursor-not-allowed disabled:border-muted disabled:bg-muted" type="submit" disabled={loading}>
               {loading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT'}
             </button>
-            <p className="auth-switch">
-              Already have an account? <Link to="/login">Sign in</Link>
+            <p className="m-0 mt-1 text-center text-[12px] text-muted">
+              Already have an account? <Link to="/login" className="font-bold text-terra no-underline hover:underline">Sign in</Link>
             </p>
           </form>
         </div>

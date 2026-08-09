@@ -6,6 +6,7 @@ import AdminModal from '../../Common/Modal';
 import ConfirmDeleteModal from '../../Common/ConfirmDeleteModal';
 import AdminInput from '../../Common/Form/Input';
 import AdminTextarea from '../../Common/Form/Textarea';
+import { adminBtnPrimary, adminBtnSecondary, adminBtnDanger, adminBtnGhost, adminToast } from '../../Common/buttonClasses';
 
 const statusOptions = ['Placed', 'Confirmed', 'Packed', 'Shipped', 'Delivered', 'Cancelled', 'RTO'];
 const paymentOptions = ['Pending', 'Paid'];
@@ -151,12 +152,12 @@ function CourierModal({ order, onClose, onUpdate }) {
               <div><span className="text-muted">Status:</span> <b className="text-ink">{shiprocket.status || 'Pushed'}</b></div>
               {shiprocket.courierName && <div><span className="text-muted">Courier:</span> <b className="text-ink">{shiprocket.courierName}</b></div>}
               {shiprocket.awbCode && <div><span className="text-muted">AWB:</span> <b className="text-ink">{shiprocket.awbCode}</b></div>}
-              <button type="button" className="admin-btn-secondary admin-btn-sm mt-2" onClick={handleShiprocketTrack} disabled={shiprocketLoading}>
+<button type="button" className={`${adminBtnSecondary} rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em] mt-2`} onClick={handleShiprocketTrack} disabled={shiprocketLoading}>
                 {shiprocketLoading ? 'Refreshing...' : 'Refresh Tracking'}
               </button>
             </div>
           ) : (
-            <button type="button" className="admin-btn-primary" onClick={handleShiprocketPush} disabled={shiprocketLoading}>
+<button type="button" className={adminBtnPrimary} onClick={handleShiprocketPush} disabled={shiprocketLoading}>
               {shiprocketLoading ? 'Pushing to Shiprocket...' : 'Ship via Shiprocket'}
             </button>
           )}
@@ -189,10 +190,10 @@ function CourierModal({ order, onClose, onUpdate }) {
               placeholder="Optional"
             />
             <div className="sm:col-span-2 flex items-center gap-2 mt-1">
-              <button type="submit" disabled={loading || !form.courierName || !form.trackingNumber} className="admin-btn-primary">
+<button type="submit" disabled={loading || !form.courierName || !form.trackingNumber} className={adminBtnPrimary}>
                 {loading ? 'Assigning...' : 'Assign Courier'}
               </button>
-              <button type="button" className="admin-btn-secondary" onClick={onClose}>Cancel</button>
+              <button type="button" className={adminBtnSecondary} onClick={onClose}>Cancel</button>
             </div>
           </form>
         </div>
@@ -231,14 +232,14 @@ function CourierModal({ order, onClose, onUpdate }) {
               placeholder="e.g. Delhivery"
             />
             <div className="sm:col-span-2 flex flex-wrap items-center gap-2 mt-1">
-              <button type="submit" disabled={loading} className="admin-btn-primary">{loading ? 'Saving...' : 'Update RTO'}</button>
+<button type="submit" disabled={loading} className={adminBtnPrimary}>{loading ? 'Saving...' : 'Update RTO'}</button>
               {order?.isRTO && (
                 <>
-                  <button type="button" className="admin-btn-danger admin-btn-sm" onClick={handleCancelRTO} disabled={loading}>
+                  <button type="button" className={`${adminBtnDanger} rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em]`} onClick={handleCancelRTO} disabled={loading}>
                     {confirmingCancelRto ? 'Confirm cancel?' : 'Cancel RTO'}
                   </button>
                   {confirmingCancelRto && (
-                    <button type="button" className="admin-btn-secondary admin-btn-sm" onClick={() => setConfirmingCancelRto(false)} disabled={loading}>
+                    <button type="button" className={`${adminBtnSecondary} rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em]`} onClick={() => setConfirmingCancelRto(false)} disabled={loading}>
                       Never mind
                     </button>
                   )}
@@ -258,7 +259,7 @@ function CourierModal({ order, onClose, onUpdate }) {
             placeholder="Add internal notes about this order..."
           />
           <div className="mt-2 flex items-center gap-3">
-            <button type="button" className="admin-btn-secondary admin-btn-sm" onClick={handleSaveNotes}>
+<button type="button" className={`${adminBtnSecondary} rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em]`} onClick={handleSaveNotes}>
               Save Notes
             </button>
             {notesMessage && <span className="text-[11px] text-muted">{notesMessage}</span>}
@@ -267,7 +268,7 @@ function CourierModal({ order, onClose, onUpdate }) {
 
         {/* ─── Print Label ────────────────────────────────────────────── */}
         <div className="border-t border-line pt-5">
-          <button type="button" className="admin-btn-primary"
+<button type="button" className={adminBtnPrimary}
             onClick={() => {
               const labelUrl = `${process.env.REACT_APP_API_BASE_URL || ''}/api/admin/shipping/${order.id}/label?token=${token}`;
               window.open(labelUrl, '_blank');
@@ -443,8 +444,8 @@ export default function AdminOrders() {
 
   return (
     <div>
-      {success && <div className="fixed left-4 right-4 top-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)] sm:left-auto sm:w-auto admin-toast">{success}</div>}
-      {error && <div className="fixed left-4 right-4 top-4 z-50 px-5 py-3 rounded-lg text-[13px] font-medium shadow-[0_4px_16px_rgba(47,31,25,0.12)] bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)] sm:left-auto sm:w-auto admin-toast">{error}</div>}
+{success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
+      {error && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{error}</div>}
 
       {/* Modals */}
       {detailedOrder && <OrderDetailModal order={detailedOrder} onClose={() => setDetailedOrder(null)} />}
@@ -552,18 +553,18 @@ export default function AdminOrders() {
                 />
               </div>
               <div className="flex items-center gap-1 mt-1">
-                <button className="admin-btn-ghost" onClick={() => viewOrderDetail(order)} title="View details">
+<button className={adminBtnGhost} onClick={() => viewOrderDetail(order)} title="View details">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
                   </svg>
                 </button>
-                <button className="admin-btn-ghost" onClick={() => setShippingOrder(order)} title="Shipping / Courier">
+                <button className={adminBtnGhost} onClick={() => setShippingOrder(order)} title="Shipping / Courier">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="1" y="3" width="15" height="13" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
                     <circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
                   </svg>
                 </button>
-                <button className="admin-btn-ghost danger" onClick={() => setOrderToDelete(order)} title="Delete order">
+                <button className={`${adminBtnGhost} danger`} onClick={() => setOrderToDelete(order)} title="Delete order">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
                   </svg>
