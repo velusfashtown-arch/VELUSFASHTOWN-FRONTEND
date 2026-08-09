@@ -44,10 +44,7 @@ export default function AdminLayout({ children, pageTitle }) {
     return () => { document.body.style.overflow = previousOverflow; };
   }, [mobileSidebarOpen]);
 
-  // Sidebar width: 72px when collapsed, 220px when expanded
-  const sidebarWidth = sidebarCollapsed ? 72 : 220;
-
-  return (
+return (
     <div className="flex min-h-screen bg-[#f5f0eb] font-sans">
       {/* Sidebar */}
       <AdminSidebar
@@ -57,10 +54,11 @@ export default function AdminLayout({ children, pageTitle }) {
         onMobileClose={closeMobileSidebar}
       />
 
-      {/* Main Content */}
-<div
-        className="flex min-h-screen min-w-0 flex-1 flex-col transition-all duration-200"
-        style={{ marginLeft: sidebarWidth + 'px' }}
+{/* Main Content */}
+      <div
+        className={`flex min-h-screen min-w-0 flex-1 flex-col transition-all duration-200 ${
+          sidebarCollapsed ? 'md:ml-[72px]' : 'md:ml-[220px]'
+        }`}
       >
         <AdminHeader
           pageTitle={pageTitle}

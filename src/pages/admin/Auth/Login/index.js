@@ -34,8 +34,8 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen bg-paper">
       {/* Left brand panel */}
-      <aside className="relative hidden min-h-screen w-[40%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[60px_40px] text-center md:flex">
-<div
+      <aside className="relative hidden min-h-screen w-[50%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[40px_20px] text-center md:flex">
+        <div
           className="pointer-events-none absolute inset-0"
           style={{ background: 'radial-gradient(circle at 20% 30%, rgba(255,253,250,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,253,250,0.06) 0%, transparent 50%), repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,253,250,0.015) 30px, rgba(255,253,250,0.015) 31px)' }}
           aria-hidden="true"
@@ -51,8 +51,8 @@ export default function AdminLoginPage() {
       </aside>
 
       {/* Right form panel */}
-      <main className="flex min-h-screen flex-1 flex-col items-center justify-center p-[50px_7vw]">
-<div className="w-full max-w-[400px] animate-auth-fade-up">
+      <main className="flex min-h-screen flex-1 flex-col items-center justify-center p-[40px_3vw]">
+        <div className="w-full max-w-[400px] animate-auth-fade-up">
           <p className="mb-2.5 m-0 text-[9px] font-bold uppercase tracking-[0.22em] text-terra">Welcome Back</p>
           <h1 className="m-0 mb-1.5 font-playfair text-[clamp(28px,3.5vw,36px)] font-medium leading-[1.1] tracking-[-0.04em] text-ink">Sign <em>in</em></h1>
           <p className="m-0 mb-8 text-[13px] leading-[1.5] text-muted">Sign in to manage your store</p>

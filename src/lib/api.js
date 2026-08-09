@@ -150,6 +150,59 @@ export const api = {
   },
   adminDeleteImage: (token, filename) => request('/api/admin/upload', { method: 'DELETE', token, body: { filename } }),
 
+// ─── Admin Websites (Multi-Tenant) ─────────────────────────────────────
+  adminListWebsites: (token, params) => {
+    const query = params ? '?' + new URLSearchParams(params).toString() : '';
+    return request(`/api/admin/websites${query}`, { token });
+  },
+  adminGetWebsite: (token, id) => request(`/api/admin/websites/${id}`, { token }),
+  adminCreateWebsite: (token, payload) => request('/api/admin/websites', { method: 'POST', token, body: payload }),
+  adminUpdateWebsite: (token, id, payload) => request(`/api/admin/websites/${id}`, { method: 'PUT', token, body: payload }),
+  adminDeleteWebsite: (token, id) => request(`/api/admin/websites/${id}`, { method: 'DELETE', token }),
+  adminActivateWebsite: (token, id) => request(`/api/admin/websites/${id}/activate`, { method: 'POST', token }),
+  adminDeactivateWebsite: (token, id) => request(`/api/admin/websites/${id}/deactivate`, { method: 'POST', token }),
+  adminListWebsiteDomains: (token, id) => request(`/api/admin/websites/${id}/domains`, { token }),
+  adminAddWebsiteDomain: (token, id, domain) => request(`/api/admin/websites/${id}/domains`, { method: 'POST', token, body: { domain } }),
+  adminRemoveWebsiteDomain: (token, id, domainId) => request(`/api/admin/websites/${id}/domains/${domainId}`, { method: 'DELETE', token }),
+  adminSetPrimaryDomain: (token, id, domainId) => request(`/api/admin/websites/${id}/domains/${domainId}/primary`, { method: 'POST', token }),
+
+  // ─── Admin Website Products (Assignment / Approval / Publish) ─────────
+  adminListWebsiteProducts: (token, websiteId, params) => {
+    const query = params ? '?' + new URLSearchParams(params).toString() : '';
+    return request(`/api/admin/websites/${websiteId}/products${query}`, { token });
+  },
+  adminGetWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}`, { token }),
+  adminGetWebsiteProductHistory: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}/history`, { token }),
+  adminAssignWebsiteProduct: (token, websiteId, payload) => request(`/api/admin/websites/${websiteId}/products`, { method: 'POST', token, body: payload }),
+  adminBulkAssignWebsiteProducts: (token, websiteId, productIds) => request(`/api/admin/websites/${websiteId}/products/bulk-assign`, { method: 'POST', token, body: { productIds } }),
+  adminUpdateWebsiteProduct: (token, websiteId, productId, payload) => request(`/api/admin/websites/${websiteId}/products/${productId}`, { method: 'PUT', token, body: payload }),
+  adminUnassignWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}`, { method: 'DELETE', token }),
+  adminApproveWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}/approve`, { method: 'POST', token }),
+  adminRejectWebsiteProduct: (token, websiteId, productId, reason) => request(`/api/admin/websites/${websiteId}/products/${productId}/reject`, { method: 'POST', token, body: { reason } }),
+  adminPublishWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}/publish`, { method: 'POST', token }),
+  adminUnpublishWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}/unpublish`, { method: 'POST', token }),
+adminBulkApproveWebsiteProducts: (token, websiteId, productIds) => request(`/api/admin/websites/${websiteId}/products/bulk-approve`, { method: 'POST', token, body: { productIds } }),
+  adminBulkPublishWebsiteProducts: (token, websiteId, productIds) => request(`/api/admin/websites/${websiteId}/products/bulk-publish`, { method: 'POST', token, body: { productIds } }),
+
+  // ─── Admin Website Content (Homepage Sections / Navigation / Banners) ──
+  adminListHomepageSections: (token, websiteId) => request(`/api/admin/websites/${websiteId}/homepage`, { token }),
+  adminCreateHomepageSection: (token, websiteId, payload) => request(`/api/admin/websites/${websiteId}/homepage`, { method: 'POST', token, body: payload }),
+  adminUpdateHomepageSection: (token, websiteId, sectionId, payload) => request(`/api/admin/websites/${websiteId}/homepage/${sectionId}`, { method: 'PUT', token, body: payload }),
+  adminDeleteHomepageSection: (token, websiteId, sectionId) => request(`/api/admin/websites/${websiteId}/homepage/${sectionId}`, { method: 'DELETE', token }),
+  adminReorderHomepageSections: (token, websiteId, orderedIds) => request(`/api/admin/websites/${websiteId}/homepage/reorder`, { method: 'POST', token, body: { orderedIds } }),
+  adminDuplicateHomepageSection: (token, websiteId, sectionId) => request(`/api/admin/websites/${websiteId}/homepage/${sectionId}/duplicate`, { method: 'POST', token }),
+
+  adminListNavigations: (token, websiteId) => request(`/api/admin/websites/${websiteId}/navigation`, { token }),
+  adminCreateNavigationItem: (token, websiteId, payload) => request(`/api/admin/websites/${websiteId}/navigation`, { method: 'POST', token, body: payload }),
+  adminUpdateNavigationItem: (token, websiteId, itemId, payload) => request(`/api/admin/websites/${websiteId}/navigation/${itemId}`, { method: 'PUT', token, body: payload }),
+  adminDeleteNavigationItem: (token, websiteId, itemId) => request(`/api/admin/websites/${websiteId}/navigation/${itemId}`, { method: 'DELETE', token }),
+  adminReorderNavigationItems: (token, websiteId, orderedIds) => request(`/api/admin/websites/${websiteId}/navigation/reorder`, { method: 'POST', token, body: { orderedIds } }),
+
+  adminListBanners: (token, websiteId) => request(`/api/admin/websites/${websiteId}/banners`, { token }),
+  adminCreateBanner: (token, websiteId, payload) => request(`/api/admin/websites/${websiteId}/banners`, { method: 'POST', token, body: payload }),
+  adminUpdateBanner: (token, websiteId, bannerId, payload) => request(`/api/admin/websites/${websiteId}/banners/${bannerId}`, { method: 'PUT', token, body: payload }),
+  adminDeleteBanner: (token, websiteId, bannerId) => request(`/api/admin/websites/${websiteId}/banners/${bannerId}`, { method: 'DELETE', token }),
+
   // ─── Dashboard ────────────────────────────────────────────────────────
   adminGetDashboard: (token) => request('/api/admin/dashboard', { token }),
 

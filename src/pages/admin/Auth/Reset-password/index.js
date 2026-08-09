@@ -91,7 +91,7 @@ export default function AdminResetPasswordPage() {
   return (
     <div className="flex min-h-screen bg-paper">
       {/* Left brand panel */}
-      <aside className="relative hidden min-h-screen w-[40%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[60px_40px] text-center md:flex">
+      <aside className="relative hidden min-h-screen w-[50%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[40px_20px] text-center md:flex">
         <div className="pointer-events-none absolute inset-0" style={{ background: RADIAL_PATTERN }} aria-hidden="true" />
         <img src="/images/Logo/LOGO.png" alt="Velu's Fashtown" className="relative z-[1] mb-4 h-auto w-[120px]" style={{ filter: 'brightness(0) invert(1)' }} />
         <p className="relative z-[1] m-0 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-[rgba(255,253,250,0.55)]">Admin Panel</p>
@@ -104,7 +104,7 @@ export default function AdminResetPasswordPage() {
       </aside>
 
       {/* Right form panel */}
-      <main className="flex min-h-screen flex-1 flex-col items-center justify-center p-[50px_7vw]">
+      <main className="flex min-h-screen flex-1 flex-col items-center justify-center p-[40px_3vw]">
         <div className="w-full max-w-[400px] animate-auth-fade-up">
           <Link to="/admin" className="group mb-6 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-muted no-underline transition-colors duration-200 hover:text-terra">
             <svg className="h-[14px] w-[14px] transition-transform duration-200 group-hover:-translate-x-[3px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

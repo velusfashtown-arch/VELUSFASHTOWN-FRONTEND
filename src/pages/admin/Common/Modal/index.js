@@ -50,7 +50,7 @@ export default function AdminModal({
       onClick={handleOverlayClick}
     >
       <div
-className={`flex max-h-[calc(100dvh-1rem)] w-full flex-col overflow-hidden rounded-lg border border-line bg-paper shadow-[0_8px_32px_rgba(0,0,0,0.12)] sm:max-h-[88vh] sm:rounded-xl ${sizeClasses[size] || sizeClasses.md} animate-modal-in`}
+className={`flex max-h-[calc(100dvh-1rem)] w-full flex-col overflow-hidden rounded-lg border border-line bg-paper shadow-[0_8px_32px_rgba(0,0,0,0.12)] sm:max-h-[88vh] sm:rounded-xl ${sizeClasses[size] || sizeClasses.md} animate-admin-modal-in`}
       >
         {/* Header */}
         {title && (

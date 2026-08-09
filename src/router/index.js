@@ -30,6 +30,11 @@ const AdminCategories = lazy(() => import('../pages/admin/App/Categories/Categor
 const AdminSubCategories = lazy(() => import('../pages/admin/App/Categories/Sub-category/index'));
 const AdminCollections = lazy(() => import('../pages/admin/App/Collections/index'));
 
+// Admin Websites (Multi-Tenant)
+const AdminWebsites = lazy(() => import('../pages/admin/App/Websites/List'));
+const AdminWebsiteForm = lazy(() => import('../pages/admin/App/Websites/Form'));
+const AdminWebsiteDetail = lazy(() => import('../pages/admin/App/Websites/Detail'));
+
 // Customer Auth pages
 const LoginPage = lazy(() => import('../pages/website/Auth/Login/index'));
 const RegisterPage = lazy(() => import('../pages/website/Auth/Register/index'));
@@ -170,12 +175,44 @@ return (
             </RequireAdmin>
           }
         />
-        <Route
+<Route
           path="/admin/collections"
           element={
             <RequireAdmin>
               <AdminLayout pageTitle="Collections">
                 <AdminCollections />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+
+        {/* Admin Websites (Multi-Tenant) */}
+        <Route
+          path="/admin/websites"
+          element={
+            <RequireAdmin>
+              <AdminLayout pageTitle="Websites">
+                <AdminWebsites />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/websites/new"
+          element={
+            <RequireAdmin>
+              <AdminLayout pageTitle="Create Website">
+                <AdminWebsiteForm />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/websites/:id"
+          element={
+            <RequireAdmin>
+              <AdminLayout pageTitle="Website">
+                <AdminWebsiteDetail />
               </AdminLayout>
             </RequireAdmin>
           }

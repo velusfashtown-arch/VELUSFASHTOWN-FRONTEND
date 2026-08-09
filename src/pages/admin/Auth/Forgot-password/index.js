@@ -26,8 +26,8 @@ export default function AdminForgotPasswordPage() {
   return (
     <div className="flex min-h-screen bg-paper">
       {/* Left brand panel */}
-      <aside className="relative hidden min-h-screen w-[40%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[60px_40px] text-center md:flex">
-<div
+      <aside className="relative hidden min-h-screen w-[50%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[40px_20px] text-center md:flex">
+        <div
           className="pointer-events-none absolute inset-0"
           style={{ background: 'radial-gradient(circle at 20% 30%, rgba(255,253,250,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,253,250,0.06) 0%, transparent 50%), repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,253,250,0.015) 30px, rgba(255,253,250,0.015) 31px)' }}
           aria-hidden="true"
@@ -43,8 +43,8 @@ export default function AdminForgotPasswordPage() {
       </aside>
 
       {/* Right form panel */}
-      <main className="flex min-h-screen flex-1 flex-col items-center justify-center p-[50px_7vw]">
-<div className="w-full max-w-[400px] animate-auth-fade-up">
+      <main className="flex min-h-screen flex-1 flex-col items-center justify-center p-[40px_3vw]">
+        <div className="w-full max-w-[400px] animate-auth-fade-up">
           <Link to="/admin" className="mb-6 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-muted no-underline transition-colors duration-200 hover:text-terra">
             <svg className="h-[14px] w-[14px] transition-transform duration-200 group-hover:-translate-x-[3px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="19" y1="12" x2="5" y2="12" />
