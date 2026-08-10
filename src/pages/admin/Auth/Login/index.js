@@ -17,7 +17,7 @@ export default function AdminLoginPage() {
     setLoading(true);
     try {
       const res = await authApi.login({ email, password });
-      const token = res?.data?.accessToken || '';
+      const token = res?.data?.token || '';
       if (!token) {
         throw new Error('No access token received from server');
       }
