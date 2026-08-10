@@ -1,57 +1,33 @@
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+// api.js
+//
+// Backward-compatible facade over the centralized API services.
+//
+// Existing pages import `api` from this module and call `api.adminXxx(...)`.
+// To keep every existing call site working without edits, this file maps the
+// legacy `adminXxx` method names onto the consolidated services:
+//   - admin.*      → adminApi (services/api/admin.api.js)
+//   - storefront.* → storefrontApi (services/api/storefrontApi.js)
+//   - website/customer → legacy website endpoints (kept here)
+//
+// This removes the duplicated request() logic that previously lived in this
+// file while preserving the full public surface the app already uses.
 
-// Default per-request timeout. If the server/DB is slow or down, the request
-// will fail fast with a clear error instead of hanging "pending" forever.
-const REQUEST_TIMEOUT_MS = 15000;
-
-async function request(path, { method = 'GET', token, body } = {}) {
-  const headers = {
-    'Content-Type': 'application/json'
-  };
-
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-
-  let res;
-  try {
-    res = await fetch(`${API_BASE_URL}${path}`, {
-      method,
-      headers,
-      body: body ? JSON.stringify(body) : undefined,
-      signal: controller.signal
-    });
-  } catch (err) {
-    if (err.name === 'AbortError') {
-      throw new Error('Request timed out. Please check your internet connection and try again.');
-    }
-    throw new Error('Network error. Unable to reach the server.');
-  } finally {
-    clearTimeout(timeoutId);
-  }
-
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    if (res.status === 401 && token && window.location.pathname.startsWith('/admin')) {
-      window.localStorage.removeItem('admin_token');
-      window.location.replace('/admin');
-    }
-    const message = data?.message || `Request failed: ${res.status}`;
-    throw new Error(message);
-  }
-
-  return data;
-}
+import { request } from '../services/api/apiClient';
+import { adminApi } from '../services/api/admin.api';
+import { storefrontApi } from '../services/api/storefrontApi';
 
 export const api = {
-  // ─── Website (Public) ────────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  // WEBSITE (storefront) — public
+  // ══════════════════════════════════════════════════════════════════
   listProducts: (params = {}) => {
-    const query = new URLSearchParams(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== '')).toString();
+    const query = new URLSearchParams(
+      Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== '')
+    ).toString();
     return request(`/api/website/products${query ? `?${query}` : ''}`);
   },
-  getProduct: (id) => request(`/api/website/products/${id}`),
-  getRelatedProducts: (id) => request(`/api/website/products/${id}/related`),
+  getProduct: (id) => request(`/api/website/products/${encodeURIComponent(id)}`),
+  getRelatedProducts: (id) => request(`/api/website/products/${encodeURIComponent(id)}/related`),
   getBestSellers: (limit = 8) => request(`/api/website/products/best-seller?limit=${limit}`),
   getRecommended: (limit = 8) => request(`/api/website/products/recommended?limit=${limit}`),
   checkDelivery: (payload) => request('/api/website/products/check-delivery', { method: 'POST', body: payload }),
@@ -60,7 +36,7 @@ export const api = {
   verifyPayment: (payload) => request('/api/website/payments/verify', { method: 'POST', body: payload }),
   recordPaymentFailure: (payload) => request('/api/website/payments/failed', { method: 'POST', body: payload }),
 
-  // ─── Website Auth (Public) ───────────────────────────────────────────
+  // Website customer auth
   register: (payload) => request('/api/website/auth/register', { method: 'POST', body: payload }),
   login: (payload) => request('/api/website/auth/login', { method: 'POST', body: payload }),
   forgotPassword: (payload) => request('/api/website/auth/forgot-password', { method: 'POST', body: payload }),
@@ -69,154 +45,150 @@ export const api = {
   getProfile: (token) => request('/api/website/auth/me', { token }),
   updateProfile: (token, payload) => request('/api/website/auth/me', { method: 'PUT', token, body: payload }),
   addAddress: (token, payload) => request('/api/website/auth/addresses', { method: 'POST', token, body: payload }),
-  updateAddress: (token, addressId, payload) => request(`/api/website/auth/addresses/${addressId}`, { method: 'PUT', token, body: payload }),
-  deleteAddress: (token, addressId) => request(`/api/website/auth/addresses/${addressId}`, { method: 'DELETE', token }),
+  updateAddress: (token, addressId, payload) => request(`/api/website/auth/addresses/${encodeURIComponent(addressId)}`, { method: 'PUT', token, body: payload }),
+  deleteAddress: (token, addressId) => request(`/api/website/auth/addresses/${encodeURIComponent(addressId)}`, { method: 'DELETE', token }),
   myOrders: (token, params) => {
-    const query = params ? '?' + new URLSearchParams(params).toString() : '';
+    const query = params ? toQuery(params) : '';
     return request(`/api/website/orders/mine${query}`, { token });
   },
 
-  // ─── Admin Auth ───────────────────────────────────────────────────────
-  adminLogin: (payload) => request('/api/admin/auth/login', { method: 'POST', body: payload }),
-  adminForgotPassword: (payload) => request('/api/admin/auth/forgot-password', { method: 'POST', body: payload }),
-  adminResetPassword: (payload) => request('/api/admin/auth/reset-password', { method: 'POST', body: payload }),
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN AUTH
+  // ══════════════════════════════════════════════════════════════════
+  adminLogin: (payload) => adminApi.login(payload),
+  adminForgotPassword: (payload) => adminApi.forgotPassword(payload),
+  adminResetPassword: (payload) => adminApi.resetPassword(payload),
+  adminChangePassword: (token, payload) => adminApi.changePassword(token, payload),
 
-  // ─── Admin Products ───────────────────────────────────────────────────
-  adminListProducts: (token, params) => {
-    const query = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request(`/api/admin/products${query}`, { token });
-  },
-  adminReserveProductId: (token) => request('/api/admin/products/reserve-id', { method: 'POST', token }),
-  adminCreateProduct: (token, payload) => request('/api/admin/products', { method: 'POST', token, body: payload }),
-  adminUpdateProduct: (token, id, payload) => request(`/api/admin/products/${id}`, { method: 'PUT', token, body: payload }),
-  adminDeleteProduct: (token, id) => request(`/api/admin/products/${id}`, { method: 'DELETE', token }),
-  adminGetProduct: (token, id) => request(`/api/admin/products/${id}`, { token }),
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN PRODUCTS
+  // ══════════════════════════════════════════════════════════════════
+  adminListProducts: (token, params) => adminApi.listProducts(token, params),
+  adminReserveProductId: (token) => adminApi.reserveProductId(token),
+  adminCreateProduct: (token, payload) => adminApi.createProduct(token, payload),
+  adminUpdateProduct: (token, id, payload) => adminApi.updateProduct(token, id, payload),
+  adminDeleteProduct: (token, id) => adminApi.deleteProduct(token, id),
+  adminGetProduct: (token, id) => adminApi.getProduct(token, id),
 
-  // ─── Admin Orders ─────────────────────────────────────────────────────
-  adminListOrders: (token, params) => {
-    const query = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request(`/api/admin/orders${query}`, { token });
-  },
-  adminGetOrder: (token, id) => request(`/api/admin/orders/${id}`, { token }),
-  adminUpdateOrder: (token, id, payload) => request(`/api/admin/orders/${id}`, { method: 'PATCH', token, body: payload }),
-  adminDeleteOrder: (token, id) => request(`/api/admin/orders/${id}`, { method: 'DELETE', token }),
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN CATEGORIES
+  // ══════════════════════════════════════════════════════════════════
+  adminListCategories: (token, params) => adminApi.listCategories(token, params),
+  adminGetCategoryTree: (token) => adminApi.getCategoryTree(token),
+  adminGetCategory: (token, id) => adminApi.getCategory(token, id),
+  adminGetCategoryChildren: (token, id) => adminApi.getCategoryChildren(token, id),
+  adminCreateCategory: (token, payload) => adminApi.createCategory(token, payload),
+  adminUpdateCategory: (token, id, payload) => adminApi.updateCategory(token, id, payload),
+  adminDeleteCategory: (token, id) => adminApi.deleteCategory(token, id),
 
-  // ─── Admin Customers ──────────────────────────────────────────────────
-  adminListCustomers: (token, params) => {
-    const query = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request(`/api/admin/customers${query}`, { token });
-  },
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN COLLECTIONS
+  // ══════════════════════════════════════════════════════════════════
+  adminListCollections: (token, params) => adminApi.listCollections(token, params),
+  adminGetCollection: (token, id) => adminApi.getCollection(token, id),
+  adminCreateCollection: (token, payload) => adminApi.createCollection(token, payload),
+  adminUpdateCollection: (token, id, payload) => adminApi.updateCollection(token, id, payload),
+  adminDeleteCollection: (token, id) => adminApi.deleteCollection(token, id),
+  adminAddProductsToCollection: (token, id, payload) => adminApi.addProductsToCollection(token, id, payload),
+  adminRemoveProductsFromCollection: (token, id, payload) => adminApi.removeProductsFromCollection(token, id, payload),
 
-  // ─── Admin Categories ─────────────────────────────────────────────────
-  adminListCategories: (token, params) => {
-    const query = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request(`/api/admin/categories${query}`, { token });
-  },
-  adminGetCategoryTree: (token) => request('/api/admin/categories/tree', { token }),
-  adminGetCategory: (token, id) => request(`/api/admin/categories/${id}`, { token }),
-  adminGetCategoryChildren: (token, id) => request(`/api/admin/categories/${id}/children`, { token }),
-  adminCreateCategory: (token, payload) => request('/api/admin/categories', { method: 'POST', token, body: payload }),
-  adminUpdateCategory: (token, id, payload) => request(`/api/admin/categories/${id}`, { method: 'PUT', token, body: payload }),
-  adminDeleteCategory: (token, id) => request(`/api/admin/categories/${id}`, { method: 'DELETE', token }),
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN ORDERS
+  // ══════════════════════════════════════════════════════════════════
+  adminListOrders: (token, params) => adminApi.listOrders(token, params),
+  adminGetOrder: (token, id) => adminApi.getOrder(token, id),
+  adminUpdateOrder: (token, id, payload) => adminApi.updateOrder(token, id, payload),
+  adminDeleteOrder: (token, id) => adminApi.deleteOrder(token, id),
 
-  // ─── Admin Collections ────────────────────────────────────────────────
-  adminListCollections: (token, params) => {
-    const query = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request(`/api/admin/collections${query}`, { token });
-  },
-  adminGetCollection: (token, id) => request(`/api/admin/collections/${id}`, { token }),
-  adminCreateCollection: (token, payload) => request('/api/admin/collections', { method: 'POST', token, body: payload }),
-  adminUpdateCollection: (token, id, payload) => request(`/api/admin/collections/${id}`, { method: 'PUT', token, body: payload }),
-  adminDeleteCollection: (token, id) => request(`/api/admin/collections/${id}`, { method: 'DELETE', token }),
-  adminAddProductsToCollection: (token, id, payload) => request(`/api/admin/collections/${id}/products`, { method: 'POST', token, body: payload }),
-  adminRemoveProductsFromCollection: (token, id, payload) => request(`/api/admin/collections/${id}/products`, { method: 'DELETE', token, body: payload }),
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN CUSTOMERS
+  // ══════════════════════════════════════════════════════════════════
+  adminListCustomers: (token, params) => adminApi.listCustomers(token, params),
 
-  // ─── Admin Management ─────────────────────────────────────────────────
-  adminListAdmins: (token) => request('/api/admin/auth/admins', { token }),
-  adminUpdateAdmin: (token, id, payload) => request(`/api/admin/auth/admins/${id}`, { method: 'PUT', token, body: payload }),
-  adminDeleteAdmin: (token, id) => request(`/api/admin/auth/admins/${id}`, { method: 'DELETE', token }),
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN DASHBOARD
+  // ══════════════════════════════════════════════════════════════════
+  adminGetDashboard: (token) => adminApi.getDashboard(token),
 
-  // ─── Image Upload ─────────────────────────────────────────────────────
-  adminUploadImages: (token, formData, productId) => {
-    return fetch(`${API_BASE_URL}/api/admin/upload/${productId}`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData
-    }).then(async (res) => {
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || 'Upload failed');
-      return data;
-    });
-  },
-  adminDeleteImage: (token, filename) => request('/api/admin/upload', { method: 'DELETE', token, body: { filename } }),
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN UPLOAD
+  // ══════════════════════════════════════════════════════════════════
+  adminUploadImages: (token, formData, productId) => adminApi.uploadImages(token, formData, productId),
+  adminDeleteImage: (token, filename) => adminApi.deleteImage(token, filename),
 
-// ─── Admin Websites (Multi-Tenant) ─────────────────────────────────────
-  adminListWebsites: (token, params) => {
-    const query = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request(`/api/admin/websites${query}`, { token });
-  },
-  adminGetWebsite: (token, id) => request(`/api/admin/websites/${id}`, { token }),
-  adminCreateWebsite: (token, payload) => request('/api/admin/websites', { method: 'POST', token, body: payload }),
-  adminUpdateWebsite: (token, id, payload) => request(`/api/admin/websites/${id}`, { method: 'PUT', token, body: payload }),
-  adminDeleteWebsite: (token, id) => request(`/api/admin/websites/${id}`, { method: 'DELETE', token }),
-  adminActivateWebsite: (token, id) => request(`/api/admin/websites/${id}/activate`, { method: 'POST', token }),
-  adminDeactivateWebsite: (token, id) => request(`/api/admin/websites/${id}/deactivate`, { method: 'POST', token }),
-  adminListWebsiteDomains: (token, id) => request(`/api/admin/websites/${id}/domains`, { token }),
-  adminAddWebsiteDomain: (token, id, domain) => request(`/api/admin/websites/${id}/domains`, { method: 'POST', token, body: { domain } }),
-  adminRemoveWebsiteDomain: (token, id, domainId) => request(`/api/admin/websites/${id}/domains/${domainId}`, { method: 'DELETE', token }),
-  adminSetPrimaryDomain: (token, id, domainId) => request(`/api/admin/websites/${id}/domains/${domainId}/primary`, { method: 'POST', token }),
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN SHIPPING / COURIER / RTO
+  // ══════════════════════════════════════════════════════════════════
+  adminListCouriers: (token) => adminApi.listCouriers(token),
+  adminAssignCourier: (token, orderId, payload) => adminApi.assignCourier(token, orderId, payload),
+  adminManageRTO: (token, orderId, payload) => adminApi.manageRTO(token, orderId, payload),
+  adminCancelRTO: (token, orderId) => adminApi.cancelRTO(token, orderId),
+  adminShiprocketPush: (token, orderId) => adminApi.shiprocketPush(token, orderId),
+  adminShiprocketTrack: (token, orderId) => adminApi.shiprocketTrack(token, orderId),
+  adminGenerateLabel: (token, orderId) => adminApi.generateLabel(token, orderId),
 
-  // ─── Admin Website Products (Assignment / Approval / Publish) ─────────
-  adminListWebsiteProducts: (token, websiteId, params) => {
-    const query = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request(`/api/admin/websites/${websiteId}/products${query}`, { token });
-  },
-  adminGetWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}`, { token }),
-  adminGetWebsiteProductHistory: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}/history`, { token }),
-  adminAssignWebsiteProduct: (token, websiteId, payload) => request(`/api/admin/websites/${websiteId}/products`, { method: 'POST', token, body: payload }),
-  adminBulkAssignWebsiteProducts: (token, websiteId, productIds) => request(`/api/admin/websites/${websiteId}/products/bulk-assign`, { method: 'POST', token, body: { productIds } }),
-  adminUpdateWebsiteProduct: (token, websiteId, productId, payload) => request(`/api/admin/websites/${websiteId}/products/${productId}`, { method: 'PUT', token, body: payload }),
-  adminUnassignWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}`, { method: 'DELETE', token }),
-  adminApproveWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}/approve`, { method: 'POST', token }),
-  adminRejectWebsiteProduct: (token, websiteId, productId, reason) => request(`/api/admin/websites/${websiteId}/products/${productId}/reject`, { method: 'POST', token, body: { reason } }),
-  adminPublishWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}/publish`, { method: 'POST', token }),
-  adminUnpublishWebsiteProduct: (token, websiteId, productId) => request(`/api/admin/websites/${websiteId}/products/${productId}/unpublish`, { method: 'POST', token }),
-adminBulkApproveWebsiteProducts: (token, websiteId, productIds) => request(`/api/admin/websites/${websiteId}/products/bulk-approve`, { method: 'POST', token, body: { productIds } }),
-  adminBulkPublishWebsiteProducts: (token, websiteId, productIds) => request(`/api/admin/websites/${websiteId}/products/bulk-publish`, { method: 'POST', token, body: { productIds } }),
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN WEBSITES (multi-tenant) — previously missing
+  // ══════════════════════════════════════════════════════════════════
+  adminListWebsites: (token, params) => adminApi.listWebsites(token, params),
+  adminGetWebsite: (token, id) => adminApi.getWebsite(token, id),
+  adminCreateWebsite: (token, payload) => adminApi.createWebsite(token, payload),
+  adminUpdateWebsite: (token, id, payload) => adminApi.updateWebsite(token, id, payload),
+  adminDeleteWebsite: (token, id) => adminApi.deleteWebsite(token, id),
+  adminActivateWebsite: (token, id) => adminApi.activateWebsite(token, id),
+  adminDeactivateWebsite: (token, id) => adminApi.deactivateWebsite(token, id),
 
-  // ─── Admin Website Content (Homepage Sections / Navigation / Banners) ──
-  adminListHomepageSections: (token, websiteId) => request(`/api/admin/websites/${websiteId}/homepage`, { token }),
-  adminCreateHomepageSection: (token, websiteId, payload) => request(`/api/admin/websites/${websiteId}/homepage`, { method: 'POST', token, body: payload }),
-  adminUpdateHomepageSection: (token, websiteId, sectionId, payload) => request(`/api/admin/websites/${websiteId}/homepage/${sectionId}`, { method: 'PUT', token, body: payload }),
-  adminDeleteHomepageSection: (token, websiteId, sectionId) => request(`/api/admin/websites/${websiteId}/homepage/${sectionId}`, { method: 'DELETE', token }),
-  adminReorderHomepageSections: (token, websiteId, orderedIds) => request(`/api/admin/websites/${websiteId}/homepage/reorder`, { method: 'POST', token, body: { orderedIds } }),
-  adminDuplicateHomepageSection: (token, websiteId, sectionId) => request(`/api/admin/websites/${websiteId}/homepage/${sectionId}/duplicate`, { method: 'POST', token }),
+  // ── Admin Website Domains ──
+  adminListWebsiteDomains: (token, id) => adminApi.listWebsiteDomains(token, id),
+  adminAddWebsiteDomain: (token, id, payload) => adminApi.addWebsiteDomain(token, id, payload),
+  adminRemoveWebsiteDomain: (token, id, domainId) => adminApi.removeWebsiteDomain(token, id, domainId),
+  adminSetPrimaryWebsiteDomain: (token, id, domainId) => adminApi.setPrimaryWebsiteDomain(token, id, domainId),
 
-  adminListNavigations: (token, websiteId) => request(`/api/admin/websites/${websiteId}/navigation`, { token }),
-  adminCreateNavigationItem: (token, websiteId, payload) => request(`/api/admin/websites/${websiteId}/navigation`, { method: 'POST', token, body: payload }),
-  adminUpdateNavigationItem: (token, websiteId, itemId, payload) => request(`/api/admin/websites/${websiteId}/navigation/${itemId}`, { method: 'PUT', token, body: payload }),
-  adminDeleteNavigationItem: (token, websiteId, itemId) => request(`/api/admin/websites/${websiteId}/navigation/${itemId}`, { method: 'DELETE', token }),
-  adminReorderNavigationItems: (token, websiteId, orderedIds) => request(`/api/admin/websites/${websiteId}/navigation/reorder`, { method: 'POST', token, body: { orderedIds } }),
+  // ── Admin Website Products (assignment / approval / publishing) ──
+  adminListWebsiteProducts: (token, id, params) => adminApi.listWebsiteProducts(token, id, params),
+  adminGetWebsiteProduct: (token, id, productId) => adminApi.getWebsiteProduct(token, id, productId),
+  adminAssignWebsiteProduct: (token, id, payload) => adminApi.assignWebsiteProduct(token, id, payload),
+  adminBulkAssignWebsiteProducts: (token, id, payload) => adminApi.bulkAssignWebsiteProducts(token, id, payload),
+  adminUpdateWebsiteProduct: (token, id, productId, payload) => adminApi.updateWebsiteProduct(token, id, productId, payload),
+  adminUnassignWebsiteProduct: (token, id, productId) => adminApi.unassignWebsiteProduct(token, id, productId),
+  adminApproveWebsiteProduct: (token, id, productId) => adminApi.approveWebsiteProduct(token, id, productId),
+  adminRejectWebsiteProduct: (token, id, productId, rejectReason) => adminApi.rejectWebsiteProduct(token, id, productId, rejectReason),
+  adminPublishWebsiteProduct: (token, id, productId) => adminApi.publishWebsiteProduct(token, id, productId),
+  adminUnpublishWebsiteProduct: (token, id, productId) => adminApi.unpublishWebsiteProduct(token, id, productId),
+  adminBulkApproveWebsiteProducts: (token, id, payload) => adminApi.bulkApproveWebsiteProducts(token, id, payload),
+  adminBulkPublishWebsiteProducts: (token, id, payload) => adminApi.bulkPublishWebsiteProducts(token, id, payload),
 
-  adminListBanners: (token, websiteId) => request(`/api/admin/websites/${websiteId}/banners`, { token }),
-  adminCreateBanner: (token, websiteId, payload) => request(`/api/admin/websites/${websiteId}/banners`, { method: 'POST', token, body: payload }),
-  adminUpdateBanner: (token, websiteId, bannerId, payload) => request(`/api/admin/websites/${websiteId}/banners/${bannerId}`, { method: 'PUT', token, body: payload }),
-  adminDeleteBanner: (token, websiteId, bannerId) => request(`/api/admin/websites/${websiteId}/banners/${bannerId}`, { method: 'DELETE', token }),
+  // ── Admin Website Homepage Sections ──
+  adminListHomepageSections: (token, id) => adminApi.listHomepageSections(token, id),
+  adminCreateHomepageSection: (token, id, payload) => adminApi.createHomepageSection(token, id, payload),
+  adminReorderHomepageSections: (token, id, payload) => adminApi.reorderHomepageSections(token, id, payload),
+  adminUpdateHomepageSection: (token, id, sectionId, payload) => adminApi.updateHomepageSection(token, id, sectionId, payload),
+  adminDeleteHomepageSection: (token, id, sectionId) => adminApi.deleteHomepageSection(token, id, sectionId),
+  adminDuplicateHomepageSection: (token, id, sectionId) => adminApi.duplicateHomepageSection(token, id, sectionId),
 
-  // ─── Dashboard ────────────────────────────────────────────────────────
-  adminGetDashboard: (token) => request('/api/admin/dashboard', { token }),
+  // ── Admin Website Navigation ──
+  adminListNavigations: (token, id) => adminApi.listNavigations(token, id),
+  adminCreateNavigationItem: (token, id, payload) => adminApi.createNavigationItem(token, id, payload),
+  adminReorderNavigationItems: (token, id, payload) => adminApi.reorderNavigationItems(token, id, payload),
+  adminUpdateNavigationItem: (token, id, itemId, payload) => adminApi.updateNavigationItem(token, id, itemId, payload),
+  adminDeleteNavigationItem: (token, id, itemId) => adminApi.deleteNavigationItem(token, id, itemId),
 
-  // ─── Shipping / Courier / RTO ─────────────────────────────────────────
-  adminListCouriers: (token) => request('/api/admin/shipping/couriers', { token }),
-  adminAssignCourier: (token, orderId, payload) => request(`/api/admin/shipping/${orderId}/assign`, { method: 'POST', token, body: payload }),
-  adminManageRTO: (token, orderId, payload) => request(`/api/admin/shipping/${orderId}/rto`, { method: 'POST', token, body: payload }),
-  adminCancelRTO: (token, orderId) => request(`/api/admin/shipping/${orderId}/cancel-rto`, { method: 'POST', token }),
-  adminShiprocketPush: (token, orderId) => request(`/api/admin/shipping/${orderId}/shiprocket/push`, { method: 'POST', token }),
-  adminShiprocketTrack: (token, orderId) => request(`/api/admin/shipping/${orderId}/shiprocket/track`, { token }),
-  adminGenerateLabel: (token, orderId) => {
-    // For HTML label, open in new window
-    const url = `${API_BASE_URL}/api/admin/shipping/${orderId}/label`;
-    window.open(url + '?token=' + token, '_blank');
-    return Promise.resolve({ ok: true });
-  },
+  // ── Admin Website Banners ──
+  adminListBanners: (token, id) => adminApi.listBanners(token, id),
+  adminCreateBanner: (token, id, payload) => adminApi.createBanner(token, id, payload),
+  adminUpdateBanner: (token, id, bannerId, payload) => adminApi.updateBanner(token, id, bannerId, payload),
+  adminDeleteBanner: (token, id, bannerId) => adminApi.deleteBanner(token, id, bannerId),
 };
+
+// Legacy storefront API surface (kept for components that import stores).
+export const storefrontApiForExport = storefrontApi;
+
+// Local helper used by myOrders above.
+function toQuery(params = {}) {
+  const query = new URLSearchParams(
+    Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== '')
+  ).toString();
+  return query ? `?${query}` : '';
+}
+
+export default api;

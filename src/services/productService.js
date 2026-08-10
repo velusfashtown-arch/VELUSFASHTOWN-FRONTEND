@@ -125,7 +125,7 @@ export const productService = {
         mrp: parseFloat(v.mrp) || 0,
         stock: parseInt(v.stock) || 0,
         images: normalizeImages(v.images),
-        isActive: true,
+        isActive: v.isActive !== false,
       })) : [],
 
       // Return Policy

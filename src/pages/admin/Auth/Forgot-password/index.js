@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../../../../lib/api';
+import { authApi } from '../auth.api';
 
 export default function AdminForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -14,8 +14,8 @@ export default function AdminForgotPasswordPage() {
     setSuccess('');
     setLoading(true);
     try {
-      const data = await api.adminForgotPassword({ email });
-      setSuccess(data.message || 'If this email is registered, a reset link has been sent.');
+      const res = await authApi.forgotPassword({ email });
+      setSuccess(res?.message || 'If this email is registered, a reset link has been sent.');
     } catch (err) {
       setError(err.message || 'Something went wrong');
     } finally {
@@ -24,9 +24,14 @@ export default function AdminForgotPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-paper">
-      {/* Left brand panel */}
-      <aside className="relative hidden min-h-screen w-[50%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[40px_20px] text-center md:flex">
+    <div className="flex min-h-screen flex-col bg-paper md:flex-row">
+      {/* Mobile brand header (below md) */}
+      <div className="flex items-center justify-center gap-2 bg-gradient-to-br from-wine to-ink px-5 py-5 md:hidden">
+        <img src="/images/Logo/LOGO.png" alt="Velu's Fashtown" className="h-auto w-[140px]" style={{ filter: 'brightness(0) invert(1)' }} />
+      </div>
+
+      {/* Left brand panel (md and up) */}
+      <aside className="relative hidden w-[50%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[40px_20px] text-center md:flex">
         <div
           className="pointer-events-none absolute inset-0"
           style={{ background: 'radial-gradient(circle at 20% 30%, rgba(255,253,250,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,253,250,0.06) 0%, transparent 50%), repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,253,250,0.015) 30px, rgba(255,253,250,0.015) 31px)' }}
@@ -43,18 +48,10 @@ export default function AdminForgotPasswordPage() {
       </aside>
 
       {/* Right form panel */}
-      <main className="flex min-h-screen flex-1 flex-col items-center justify-center p-[40px_3vw]">
+      <main className="flex flex-1 flex-col items-center justify-center px-6 py-10 sm:px-10 md:p-[40px_3vw]">
         <div className="w-full max-w-[400px] animate-auth-fade-up">
-          <Link to="/admin" className="mb-6 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-muted no-underline transition-colors duration-200 hover:text-terra">
-            <svg className="h-[14px] w-[14px] transition-transform duration-200 group-hover:-translate-x-[3px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            Back to login
-          </Link>
-
           <p className="m-0 mb-2.5 text-[9px] font-bold uppercase tracking-[0.22em] text-terra">Reset Password</p>
-          <h1 className="m-0 mb-1.5 font-playfair text-[clamp(28px,3.5vw,36px)] font-medium leading-[1.1] tracking-[-0.04em] text-ink">Forgot <em>password?</em></h1>
+          <h1 className="m-0 mb-1.5 font-playfair text-[clamp(26px,7vw,36px)] font-medium leading-[1.1] tracking-[-0.04em] text-ink">Forgot <em>password?</em></h1>
           <p className="m-0 mb-8 text-[13px] leading-[1.5] text-muted">Enter your email and we'll send you a reset link.</p>
 
           {success ? (
@@ -91,6 +88,14 @@ export default function AdminForgotPasswordPage() {
               >
                 {loading ? 'Sending...' : 'Send Reset Link'}
               </button>
+
+              <Link to="/admin" className="group mx-auto inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-muted no-underline transition-colors duration-200 hover:text-terra">
+                <svg className="h-[14px] w-[14px] transition-transform duration-200 group-hover:-translate-x-[3px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12" />
+                  <polyline points="12 19 5 12 12 5" />
+                </svg>
+                Back to login
+              </Link>
             </form>
           )}
         </div>

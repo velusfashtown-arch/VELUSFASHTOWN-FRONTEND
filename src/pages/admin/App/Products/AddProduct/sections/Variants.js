@@ -4,7 +4,7 @@ import CollapsibleCard from '../components/CollapsibleCard';
 import VariantRow from '../components/VariantRow';
 import { variantInitialValues } from '../constants/initialValues';
 
-export default function Variants({ variants, setVariants }) {
+export default function Variants({ variants, setVariants, token, productId, baseSku }) {
   const addVariant = () => {
     setVariants([...variants, { ...variantInitialValues }]);
   };
@@ -35,6 +35,9 @@ export default function Variants({ variants, setVariants }) {
             variant={variant}
             onUpdate={updateVariant}
             onRemove={removeVariant}
+            token={token}
+            productId={productId}
+            baseSku={baseSku}
           />
         ))}
 

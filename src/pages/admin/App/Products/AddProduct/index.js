@@ -227,7 +227,13 @@ useEffect(() => {
 <Description register={register} errors={errors} setValue={setValue} formValues={formValues} />
         <Shipping register={register} errors={errors} formValues={formValues} />
         <Tags tags={formValues.tags || []} setTags={setTags} />
-        <Variants variants={formValues.variants || []} setVariants={setVariants} />
+        <Variants
+          variants={formValues.variants || []}
+          setVariants={setVariants}
+          token={token}
+          productId={formValues.productId}
+          baseSku={formValues.sku}
+        />
 <ReturnPolicy register={register} errors={errors} formValues={formValues} />
         <AdditionalDetails register={register} errors={errors} />
 

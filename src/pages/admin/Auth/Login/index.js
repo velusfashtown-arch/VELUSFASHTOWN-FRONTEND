@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { setToken } from '../../../../lib/auth';
-import { api } from '../../../../lib/api';
+import { authApi } from '../auth.api';
 
 export default function AdminLoginPage() {
   const nav = useNavigate();
@@ -16,9 +16,8 @@ export default function AdminLoginPage() {
     setError('');
     setLoading(true);
     try {
-      const res = await api.adminLogin({ email, password });
-      // Response: { success: true, message: "Login successful", data: { accessToken, refreshToken, admin } }
-      const token = res?.data?.accessToken || res?.data?.token || res?.token || '';
+      const res = await authApi.login({ email, password });
+      const token = res?.data?.accessToken || '';
       if (!token) {
         throw new Error('No access token received from server');
       }
@@ -32,9 +31,14 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-paper">
-      {/* Left brand panel */}
-      <aside className="relative hidden min-h-screen w-[50%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[40px_20px] text-center md:flex">
+    <div className="flex min-h-screen flex-col bg-paper md:flex-row">
+      {/* Mobile brand header (below md) */}
+      <div className="flex items-center justify-center gap-2 bg-gradient-to-br from-wine to-ink px-5 py-5 md:hidden">
+        <img src="/images/Logo/LOGO.png" alt="Velu's Fashtown" className="h-auto w-[140px]" style={{ filter: 'brightness(0) invert(1)' }} />
+      </div>
+
+      {/* Left brand panel (md and up) */}
+      <aside className="relative hidden w-[50%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[40px_20px] text-center md:flex">
         <div
           className="pointer-events-none absolute inset-0"
           style={{ background: 'radial-gradient(circle at 20% 30%, rgba(255,253,250,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,253,250,0.06) 0%, transparent 50%), repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,253,250,0.015) 30px, rgba(255,253,250,0.015) 31px)' }}
@@ -51,10 +55,10 @@ export default function AdminLoginPage() {
       </aside>
 
       {/* Right form panel */}
-      <main className="flex min-h-screen flex-1 flex-col items-center justify-center p-[40px_3vw]">
+      <main className="flex flex-1 flex-col items-center justify-center px-6 py-10 sm:px-10 md:p-[40px_3vw]">
         <div className="w-full max-w-[400px] animate-auth-fade-up">
           <p className="mb-2.5 m-0 text-[9px] font-bold uppercase tracking-[0.22em] text-terra">Welcome Back</p>
-          <h1 className="m-0 mb-1.5 font-playfair text-[clamp(28px,3.5vw,36px)] font-medium leading-[1.1] tracking-[-0.04em] text-ink">Sign <em>in</em></h1>
+          <h1 className="m-0 mb-1.5 font-playfair text-[clamp(26px,7vw,36px)] font-medium leading-[1.1] tracking-[-0.04em] text-ink">Sign <em>in</em></h1>
           <p className="m-0 mb-8 text-[13px] leading-[1.5] text-muted">Sign in to manage your store</p>
 
           <form className="flex flex-col gap-5" onSubmit={onSubmit}>
@@ -82,7 +86,6 @@ export default function AdminLoginPage() {
                   placeholder="Enter your password"
                   required
                   className="h-[46px] w-full border border-line bg-paper px-3.5 pr-10 text-sm text-ink outline-none transition-[border-color,box-shadow] duration-200 focus:border-terra focus:shadow-[0_0_0_3px_rgba(167,78,62,0.08)]"
-                  style={{}}
                 />
                 <button
                   type="button"
@@ -110,7 +113,7 @@ export default function AdminLoginPage() {
               <p className="m-0 border border-[rgba(155,53,49,0.25)] bg-[#fcf1ef] p-[11px_14px] text-[12px] leading-[1.4] text-[#a53232]">{error}</p>
             )}
 
-            <div className="-mt-1 flex items-center justify-between">
+            <div className="-mt-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
               <label className="flex cursor-pointer items-center gap-2 text-[12px] text-muted">
                 <input type="checkbox" defaultChecked className="m-0 h-4 w-4 cursor-pointer accent-terra" />
                 Remember me
@@ -133,4 +136,3 @@ export default function AdminLoginPage() {
     </div>
   );
 }
-

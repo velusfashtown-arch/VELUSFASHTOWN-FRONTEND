@@ -61,4 +61,11 @@ shortDescription: '',
 
 export const variantInitialValues = {
   color: '',
+  colorCode: '',
+  sku: '',
+  price: '',
+  mrp: '',
+  stock: '',
+  images: [],
+  isActive: true,
 };

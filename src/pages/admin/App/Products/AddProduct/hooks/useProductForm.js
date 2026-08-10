@@ -47,7 +47,17 @@ images: Array.isArray(editProduct.images)
         instagramReelUrl: editProduct.instagramReelUrl || '',
         status: editProduct.status || 'Published',
         tags: Array.isArray(editProduct.tags) ? editProduct.tags : [],
-        variants: Array.isArray(editProduct.variants) ? editProduct.variants : [],
+        variants: Array.isArray(editProduct.variants)
+          ? editProduct.variants.map((v) => ({
+              ...v,
+              price: v.price != null ? String(v.price) : '',
+              mrp: v.mrp != null ? String(v.mrp) : '',
+              stock: v.stock != null ? String(v.stock) : '',
+              images: Array.isArray(v.images)
+                ? v.images.map((img) => (typeof img === 'string' ? img : (img.url || img.publicId || ''))).filter(Boolean)
+                : [],
+            }))
+          : [],
         returnAvailable: editProduct.returnAvailable,
         returnDays: editProduct.returnDays?.toString() || '',
         exchangeAvailable: editProduct.exchangeAvailable,
