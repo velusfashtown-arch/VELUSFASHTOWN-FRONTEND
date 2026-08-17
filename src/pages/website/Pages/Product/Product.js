@@ -17,20 +17,7 @@ function flattenImages(images) {
   return images.map((img) => (typeof img === 'string' ? img : img?.url || '')).filter(Boolean);
 }
 
-const SPEC_ROWS = [
-  ['Fabric', 'sareeFabric'],
-  ['Blouse Fabric', 'blouseFabric'],
-  ['Work', 'workType'],
-  ['Border', 'borderType'],
-  ['Pallu', 'palluType'],
-  ['Pattern', 'pattern'],
-  ['Print', 'printType'],
-  ['Style', 'style'],
-  ['Saree Length', 'sareeLength'],
-  ['Blouse Length', 'blouseLength'],
-  ['Primary Colour', 'primaryColor'],
-  ['Secondary Colour', 'secondaryColor'],
-];
+const SPEC_ROWS = [];
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -117,7 +104,7 @@ export default function ProductPage() {
       stock: displayStock,
       images,
       variantId: selectedVariant?.id || selectedVariant?._id || undefined,
-      variantLabel: selectedVariant ? [selectedVariant.color, selectedVariant.size].filter(Boolean).join(' / ') : undefined,
+      variantLabel: selectedVariant?.color || undefined,
     };
   }
 
@@ -142,7 +129,7 @@ export default function ProductPage() {
     }
     setDeliveryLoading(true);
     try {
-      const res = await api.checkDelivery({ pincode, productId: product.id });
+      const res = await api.checkDelivery({ pincode });
       setDelivery(res.data);
     } catch (err) {
       setDeliveryError(err.message || 'Could not check delivery for this pincode');
@@ -218,10 +205,9 @@ export default function ProductPage() {
                           type="button"
                           className={`grid h-11 w-11 place-items-center rounded-full border-2 border-transparent bg-sand p-0.5 text-[10px] font-bold uppercase text-ink outline outline-1 outline-offset-2 outline-line transition hover:outline-terra/50 ${selectedVariant === variant ? 'border-terra outline-terra' : ''}`}
                           title={variant.color}
-                          style={variant.colorCode ? { background: variant.colorCode } : undefined}
                           onClick={() => { setSelectedVariant(variant); setSelectedImage(0); }}
                         >
-                          {!variant.colorCode && <span className="grid h-full w-full place-items-center rounded-full bg-[#f0e9df]">{variant.color?.[0]}</span>}
+                          <span className="grid h-full w-full place-items-center rounded-full bg-[#f0e9df]">{variant.color?.[0]}</span>
                         </button>
                       ))}
                     </div>
@@ -247,8 +233,8 @@ export default function ProductPage() {
 
                 <div className="my-6 grid grid-cols-3 gap-3 border-t border-line pt-6">
                   <div className="flex flex-col items-center gap-2 text-center"><StoreIcon name="lock" /><span className="text-[9px] font-bold uppercase leading-tight tracking-[0.06em] text-muted">Secure Payments</span></div>
-                  <div className="flex flex-col items-center gap-2 text-center"><StoreIcon name="refresh" /><span className="text-[9px] font-bold uppercase leading-tight tracking-[0.06em] text-muted">{product.returnAvailable ? `${product.returnDays || 7}-Day Returns` : 'Quality Checked'}</span></div>
-                  <div className="flex flex-col items-center gap-2 text-center"><StoreIcon name="check" /><span className="text-[9px] font-bold uppercase leading-tight tracking-[0.06em] text-muted">{product.codAvailable ? 'Pay on Delivery' : 'Assured Quality'}</span></div>
+                  <div className="flex flex-col items-center gap-2 text-center"><StoreIcon name="refresh" /><span className="text-[9px] font-bold uppercase leading-tight tracking-[0.06em] text-muted">7-Day Returns</span></div>
+                  <div className="flex flex-col items-center gap-2 text-center"><StoreIcon name="check" /><span className="text-[9px] font-bold uppercase leading-tight tracking-[0.06em] text-muted">Pay on Delivery</span></div>
                 </div>
 
                 <form className="my-7 border-y border-line py-5" onSubmit={checkDelivery}>
@@ -281,7 +267,6 @@ export default function ProductPage() {
                         <dl className="grid grid-cols-2 gap-x-5 gap-y-4 pb-5 animate-accordion-in">
                           {specRows.map(([label, key]) => <div key={key} className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">{label}</dt><dd className="m-0 text-xs text-ink">{product[key]}</dd></div>)}
                           {product.occasion?.length ? <div className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">Occasion</dt><dd className="m-0 text-xs text-ink">{product.occasion.join(', ')}</dd></div> : null}
-                          {product.blouse ? <div className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">Blouse</dt><dd className="m-0 text-xs text-ink">{product.blouse}</dd></div> : null}
                           {product.sku ? <div className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">Product Code</dt><dd className="m-0 text-xs text-ink">{product.sku}</dd></div> : null}
                         </dl>
                       )}
@@ -292,9 +277,9 @@ export default function ProductPage() {
                     <button type="button" className="flex w-full items-center justify-between border-0 bg-transparent py-4 text-left text-[10px] font-bold tracking-[0.13em] text-ink" onClick={() => toggleSection('shipping')}><span>SHIPPING &amp; RETURNS</span><StoreIcon name="chevron" /></button>
                     {openSection === 'shipping' && (
                       <dl className="grid grid-cols-2 gap-x-5 gap-y-4 pb-5 animate-accordion-in">
-                        <div className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">Cash on Delivery</dt><dd className="m-0 text-xs text-ink">{product.codAvailable ? 'Available' : 'Not available — prepaid only'}</dd></div>
-                        <div className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">Returns</dt><dd className="m-0 text-xs text-ink">{product.returnAvailable ? `${product.returnDays || 7}-day easy returns` : 'This item is not eligible for return'}</dd></div>
-                        <div className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">Exchange</dt><dd className="m-0 text-xs text-ink">{product.exchangeAvailable ? 'Available' : 'Not available'}</dd></div>
+                        <div className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">Cash on Delivery</dt><dd className="m-0 text-xs text-ink">Available</dd></div>
+                        <div className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">Returns</dt><dd className="m-0 text-xs text-ink">7-day easy returns</dd></div>
+                        <div className="grid gap-1"><dt className="text-[9px] font-bold tracking-[0.1em] text-muted">Exchange</dt><dd className="m-0 text-xs text-ink">Available</dd></div>
                       </dl>
                     )}
                   </div>

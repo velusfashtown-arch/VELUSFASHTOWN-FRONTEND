@@ -119,7 +119,7 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
                   {p.isActive ? 'Live' : 'Hidden'} · {p.status || 'Draft'}
                 </span>
               </div>
-              <p className="mt-1 text-[12px] text-gray-400">SKU: {p.sku || '—'} · Slug: {p.slug || '—'}</p>
+              <p className="mt-1 text-[12px] text-gray-400">SKU: {p.sku || '—'}</p>
               {p.shortDescription && <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{p.shortDescription}</p>}
               <div className="mt-4 flex flex-wrap items-center gap-4">
                 <div>
@@ -163,40 +163,9 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
             <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
               <Field label="Category" value={p.category?.name} />
               <Field label="Sub Category" value={p.subCategory?.name} />
-              <Field label="Collection" value={p.collection?.name} />
             </dl>
           </Section>
 
-          {/* Saree Details */}
-          {(p.sareeFabric || p.primaryColor || p.workType) && (
-            <Section title="Saree Details">
-              <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
-                <Field label="Fabric" value={p.sareeFabric} />
-                <Field label="Blouse Fabric" value={p.blouseFabric} />
-                <Field label="Work Type" value={p.workType} />
-                <Field label="Border Type" value={p.borderType} />
-                <Field label="Pallu Type" value={p.palluType} />
-                <Field label="Saree Length" value={p.sareeLength} />
-                <Field label="Blouse Length" value={p.blouseLength} />
-                <Field label="Primary Color" value={p.primaryColor} />
-                <Field label="Secondary Color" value={p.secondaryColor} />
-                <Field label="Pattern" value={p.pattern} />
-                <Field label="Print Type" value={p.printType} />
-                <Field label="Style" value={p.style} />
-              </dl>
-            </Section>
-          )}
-
-          {/* Blouse */}
-          {(p.blouseType || p.blouseColor) && (
-            <Section title="Blouse Details">
-              <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
-                <Field label="Blouse Included" value={p.blouseIncluded ? 'Yes' : 'No'} />
-                <Field label="Blouse Type" value={p.blouseType} />
-                <Field label="Blouse Color" value={p.blouseColor} />
-              </dl>
-            </Section>
-          )}
 
           {/* Description */}
           {p.description && (
@@ -211,7 +180,7 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
               <div className="flex flex-wrap gap-3">
                 {p.images.map((image, i) => {
                   const url = typeof image === 'string' ? image : image.url;
-                  return <img key={i} src={url} alt={image.alt || p.name} className="h-24 w-20 rounded-lg border border-line object-cover" />;
+                  return <img key={i} src={url} alt={p.name} className="h-24 w-20 rounded-lg border border-line object-cover" />;
                 })}
               </div>
             </Section>
@@ -226,7 +195,6 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
                     <tr className="bg-[rgba(47,31,25,0.03)] text-left text-[10px] font-bold uppercase tracking-[0.06em] text-muted">
                       <th className="border-b border-[rgba(47,31,25,0.08)] px-3 py-2">SKU</th>
                       <th className="border-b border-[rgba(47,31,25,0.08)] px-3 py-2">Color</th>
-                      <th className="border-b border-[rgba(47,31,25,0.08)] px-3 py-2">Size</th>
                       <th className="border-b border-[rgba(47,31,25,0.08)] px-3 py-2">Price</th>
                       <th className="border-b border-[rgba(47,31,25,0.08)] px-3 py-2">MRP</th>
                       <th className="border-b border-[rgba(47,31,25,0.08)] px-3 py-2">Stock</th>
@@ -237,7 +205,6 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
                       <tr key={i} className="hover:bg-[rgba(167,78,62,0.03)]">
                         <td className="border-b border-[rgba(47,31,25,0.06)] px-3 py-2">{v.sku || '—'}</td>
                         <td className="border-b border-[rgba(47,31,25,0.06)] px-3 py-2">{v.color || '—'}</td>
-                        <td className="border-b border-[rgba(47,31,25,0.06)] px-3 py-2">{v.size || '—'}</td>
                         <td className="border-b border-[rgba(47,31,25,0.06)] px-3 py-2">{formatPrice(v.price)}</td>
                         <td className="border-b border-[rgba(47,31,25,0.06)] px-3 py-2">{formatPrice(v.mrp)}</td>
                         <td className="border-b border-[rgba(47,31,25,0.06)] px-3 py-2">{v.stock}</td>
@@ -260,16 +227,9 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
             </Section>
           )}
 
-{/* Shipping & Additional */}
-          <Section title="Shipping & Additional">
+{/* Additional Details */}
+          <Section title="Additional Details">
             <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
-              <Field label="Weight" value={p.weight || p.shippingWeight ? `${p.weight || p.shippingWeight} g` : ''} />
-              <Field label="Dimensions" value={[p.length, p.width, p.height].filter(Boolean).join(' × ')} />
-              <Field label="Shipping Charge" value={p.shippingCharge ? formatPrice(p.shippingCharge) : 'Free'} />
-              <Field label="COD Available" value={p.codAvailable ? 'Yes' : 'No'} />
-              <Field label="Return Available" value={p.returnAvailable ? 'Yes' : 'No'} />
-              <Field label="Exchange Available" value={p.exchangeAvailable ? 'Yes' : 'No'} />
-              <Field label="Return Days" value={p.returnDays} />
               <Field label="Country of Origin" value={p.countryOfOrigin} />
               <Field label="Manufacturer" value={p.manufacturer} />
               <Field label="Packer" value={p.packer} />

@@ -34,13 +34,6 @@ export default function VariantRow({ index, variant, onUpdate, onRemove, token, 
           <span className="text-[12px] font-semibold uppercase tracking-wide text-gray-500">
             Color Variant #{index + 1}
           </span>
-          {variant.colorCode && (
-            <span
-              className="h-4 w-4 rounded-full border border-gray-300"
-              style={{ background: variant.colorCode }}
-              title={variant.colorCode}
-            />
-          )}
         </div>
         <div className="flex items-center gap-3">
           <AdminCheckbox

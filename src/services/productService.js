@@ -49,7 +49,6 @@ export const productService = {
       // Core
       productId: formValues.productId || undefined,
       name: formValues.productName?.trim() || '',
-      slug: formValues.slug?.trim() || '',
       sku: formValues.sku?.trim() || '',
 
 // Relations
@@ -67,28 +66,9 @@ export const productService = {
       stock: stock,
       lowStockAlert: parseInt(formValues.lowStockAlert) || 5,
 
-      // Saree Details
-      sareeFabric: formValues.sareeFabric || '',
-      blouseFabric: formValues.blouseFabric || '',
-      workType: formValues.workType || '',
-      borderType: formValues.borderType || '',
-      palluType: formValues.palluType || '',
-      sareeLength: formValues.sareeLength || '5.5 Mtrs',
-      blouseLength: formValues.blouseLength || '0.80 Mtrs',
-      primaryColor: formValues.primaryColor || '',
-      secondaryColor: formValues.secondaryColor || '',
-      pattern: formValues.pattern || '',
-      printType: formValues.printType || '',
-      style: formValues.style || '',
-
-      // Blouse
-      blouseIncluded: Boolean(formValues.blouseIncluded),
-      blouseType: formValues.blouseType || '',
-      blouseColor: formValues.blouseColor || '',
-
       // Images
       images: normalizeImages(formValues.images),
-      mainImage: formValues.thumbnail || normalizeImages(formValues.images)[0]?.url || '',
+      mainImage: normalizeImages(formValues.images)[0]?.url || '',
 
       // Videos
       productVideo: formValues.productVideo || '',
@@ -98,14 +78,6 @@ export const productService = {
 // Description
       shortDescription: formValues.shortDescription || '',
       description: formValues.longDescription || '',
-
-      // Shipping
-      weight: parseFloat(formValues.shippingWeight) || 0,
-      length: parseFloat(formValues.shippingLength) || 0,
-      width: parseFloat(formValues.shippingWidth) || 0,
-      height: parseFloat(formValues.shippingHeight) || 0,
-      shippingCharge: parseFloat(formValues.shippingCharge) || 0,
-      codAvailable: formValues.codAvailable === 'true' || formValues.codAvailable === true,
 
       // Tags
       tags: Array.isArray(formValues.tags) ? formValues.tags : [],
@@ -118,20 +90,12 @@ export const productService = {
       variants: Array.isArray(formValues.variants) ? formValues.variants.map(v => ({
         sku: v.sku || '',
         color: v.color || '',
-        colorCode: v.colorCode || '',
-        fabric: v.fabric || '',
-        size: v.size || '',
         price: parseFloat(v.price) || 0,
         mrp: parseFloat(v.mrp) || 0,
         stock: parseInt(v.stock) || 0,
         images: normalizeImages(v.images),
         isActive: v.isActive !== false,
       })) : [],
-
-      // Return Policy
-      returnAvailable: formValues.returnAvailable === 'true' || formValues.returnAvailable === true,
-      returnDays: parseInt(formValues.returnDays) || 0,
-      exchangeAvailable: formValues.exchangeAvailable === 'true' || formValues.exchangeAvailable === true,
 
       // Additional Details
       countryOfOrigin: formValues.countryOfOrigin || 'India',

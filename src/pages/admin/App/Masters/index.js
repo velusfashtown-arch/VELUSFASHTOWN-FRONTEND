@@ -27,7 +27,7 @@ function slugifyKey(label) {
   return label.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 }
 
-function MasterModal({ field, onClose, onSaved, groupOptions = [] }) {
+function MasterModal({ field, onClose, onSaved, groupOptions = [], categories = [] }) {
   const token = getToken();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -43,6 +43,7 @@ function MasterModal({ field, onClose, onSaved, groupOptions = [] }) {
     maxLength: field?.maxLength ?? '',
     min: field?.min ?? '',
     max: field?.max ?? '',
+    category: field?.category?.id || '',
   });
 
   function set(key, value) {
@@ -87,6 +88,7 @@ function MasterModal({ field, onClose, onSaved, groupOptions = [] }) {
         placeholder: form.placeholder.trim(),
         helpText: form.helpText.trim(),
         group: form.group.trim() || 'Custom Fields',
+        category: form.category || null,
       };
       if (isChoiceType) {
         payload.options = form.options.filter((o) => o.value.trim()).map((o) => ({ value: o.value.trim(), label: o.label.trim() || o.value.trim() }));
@@ -173,6 +175,16 @@ function MasterModal({ field, onClose, onSaved, groupOptions = [] }) {
             {groupOptions.map((name) => <option key={name} value={name} />)}
           </datalist>
         </div>
+
+        <FormField
+          label="Category"
+          type="select"
+          value={form.category}
+          onChange={(e) => set('category', e.target.value)}
+          options={[{ value: '', label: 'All Categories' }, ...categories.map((c) => ({ value: c.id, label: c.name }))]}
+          placeholder="All Categories"
+          helper="Leave as All Categories to show on every product, or scope this field to one category (e.g. Fabric only for Saree, Size only for T-Shirt)"
+        />
 
         <AdminInput
           label="Help Text"
@@ -264,6 +276,7 @@ export default function AdminMasters() {
   const [fieldToDelete, setFieldToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [groupOptions, setGroupOptions] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const {
     rows, loading, refreshing, pagination, error,
@@ -282,6 +295,12 @@ export default function AdminMasters() {
   }, [token]);
 
   useEffect(() => { loadGroupOptions(); }, [loadGroupOptions]);
+
+  useEffect(() => {
+    api.adminListCategories(token, { isActive: 'true', limit: 100 })
+      .then((res) => setCategories(res?.data || []))
+      .catch(() => {});
+  }, [token]);
 
   async function handleDelete() {
     if (!fieldToDelete) return;
@@ -324,6 +343,7 @@ export default function AdminMasters() {
           field={editingField}
           onClose={closeModal}
           groupOptions={groupOptions}
+          categories={categories}
           onSaved={() => { loadFields(); loadGroupOptions(); showSuccess(editingField ? 'Field updated!' : 'Field added!'); }}
         />
       )}
@@ -354,6 +374,7 @@ export default function AdminMasters() {
             render: (f) => (
               <div>
                 <b className="text-ink">{f.label}</b>
+                {f.isCore && <span className="ml-1.5 text-[10px] font-semibold text-terra">core</span>}
                 {f.required && <span className="ml-1.5 text-[10px] font-semibold text-[#c5221f]">required</span>}
                 <small className="block text-[11px] text-muted">
                   key: {f.key}{f.group ? ` · ${f.group}` : ''}
@@ -362,6 +383,11 @@ export default function AdminMasters() {
             ),
           },
           { key: 'fieldType', header: 'Type', render: (f) => <span className="text-[12px] text-ink">{typeLabel(f.fieldType)}</span> },
+          {
+            key: 'category',
+            header: 'Category',
+            render: (f) => <span className="text-[12px] text-ink">{f.category?.name || 'All Categories'}</span>,
+          },
           {
             key: 'isActive',
             header: 'Status',
@@ -376,7 +402,12 @@ export default function AdminMasters() {
         rowKey="id"
         rowActions={[
           { label: 'Edit', onClick: openEdit },
-          { label: 'Delete', danger: true, onClick: setFieldToDelete },
+          {
+            label: 'Delete',
+            danger: true,
+            onClick: setFieldToDelete,
+            disabled: (f) => f.isCore,
+          },
         ]}
         emptyMessage="No master fields yet. Click Add Master Field to create one."
       />

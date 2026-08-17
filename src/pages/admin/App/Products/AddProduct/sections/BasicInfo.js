@@ -26,15 +26,6 @@ export default function BasicInfo({ register, errors, formValues, categories = [
           />
         </div>
         <FormField
-          label="Slug"
-          name="slug"
-          register={register}
-          error={errors.slug?.message}
-          placeholder="Auto-generated"
-          helper="Auto-generated from name"
-          className="opacity-80"
-        />
-        <FormField
           label="SKU"
           name="sku"
           register={register}

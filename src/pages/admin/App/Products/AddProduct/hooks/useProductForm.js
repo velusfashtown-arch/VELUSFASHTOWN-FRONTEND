@@ -12,35 +12,22 @@ export function useProductForm(editProduct) {
         ...initialFormValues,
         productId: editProduct.productId || '',
         productName: editProduct.name || '',
-        slug: editProduct.slug || '',
         sku: editProduct.sku || '',
-category: editProduct.category?.categoryId || editProduct.category?.id || editProduct.category || '',
-        subCategory: editProduct.subCategory?.categoryId || editProduct.subCategory?.id || editProduct.subCategory || '',
+category: editProduct.category?.id || editProduct.category || '',
+        subCategory: editProduct.subCategory?.id || editProduct.subCategory || '',
         mrp: editProduct.mrp?.toString() || '',
         sellingPrice: editProduct.sellingPrice?.toString() || '',
         costPrice: editProduct.costPrice?.toString() || '',
         gst: editProduct.gst?.toString() || '',
         stock: editProduct.stock?.toString() || '',
         lowStockAlert: editProduct.lowStockAlert?.toString() || '',
-        sareeFabric: editProduct.sareeFabric || '',
-        blouseFabric: editProduct.blouseFabric || '',
-        workType: editProduct.workType || '',
-        primaryColor: editProduct.primaryColor || '',
-        secondaryColor: editProduct.secondaryColor || '',
-        pattern: editProduct.pattern || '',
-        printType: editProduct.printType || '',
-        borderType: editProduct.borderType || '',
-        palluType: editProduct.palluType || '',
-        sareeLength: editProduct.sareeLength || '5.5 Mtrs',
-        blouseLength: editProduct.blouseLength || '0.80 Mtrs',
-        style: editProduct.style || '',
-countryOfOrigin: editProduct.countryOfOrigin || 'India',
+        countryOfOrigin: editProduct.countryOfOrigin || 'India',
         manufacturer: editProduct.manufacturer || '',
         packer: editProduct.packer || '',
         shortDescription: editProduct.shortDescription || '',
         longDescription: editProduct.description || '',
 images: Array.isArray(editProduct.images)
-          ? editProduct.images.map((img) => (typeof img === 'string' ? img : (img.url || img.publicId || ''))).filter(Boolean)
+          ? editProduct.images.map((img) => (typeof img === 'string' ? img : (img.url || ''))).filter(Boolean)
           : [],
         productVideo: editProduct.productVideo || '',
         youtubeUrl: editProduct.youtubeUrl || '',
@@ -54,22 +41,10 @@ images: Array.isArray(editProduct.images)
               mrp: v.mrp != null ? String(v.mrp) : '',
               stock: v.stock != null ? String(v.stock) : '',
               images: Array.isArray(v.images)
-                ? v.images.map((img) => (typeof img === 'string' ? img : (img.url || img.publicId || ''))).filter(Boolean)
+                ? v.images.map((img) => (typeof img === 'string' ? img : (img.url || ''))).filter(Boolean)
                 : [],
             }))
           : [],
-        returnAvailable: editProduct.returnAvailable,
-        returnDays: editProduct.returnDays?.toString() || '',
-        exchangeAvailable: editProduct.exchangeAvailable,
-        codAvailable: editProduct.codAvailable,
-        shippingCharge: editProduct.shippingCharge?.toString() || '',
-        shippingWeight: editProduct.weight?.toString() || '',
-        shippingLength: editProduct.length?.toString() || '',
-        shippingWidth: editProduct.width?.toString() || '',
-        shippingHeight: editProduct.height?.toString() || '',
-        blouseIncluded: editProduct.blouseIncluded,
-        blouseType: editProduct.blouseType || 'Unstitched',
-        blouseColor: editProduct.blouseColor || '',
         customFields: Array.isArray(editProduct.customFields) ? editProduct.customFields : [],
       };
     }
@@ -95,19 +70,6 @@ const {
   });
 
   const formValues = watch();
-
-  // Auto-generate slug from product name
-  useEffect(() => {
-    if (formValues.productName && !editProduct) {
-      const slug = formValues.productName
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .trim();
-      setValue('slug', slug, { shouldValidate: false });
-    }
-  }, [formValues.productName, editProduct, setValue]);
 
   // Auto-generate SKU
   useEffect(() => {

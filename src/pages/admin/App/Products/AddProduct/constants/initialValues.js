@@ -1,7 +1,6 @@
 export const initialFormValues = {
   productId: '',
   productName: '',
-  slug: '',
   sku: '',
   category: '',
   subCategory: '',
@@ -14,23 +13,6 @@ export const initialFormValues = {
   stock: '',
   lowStockAlert: '',
 
-  sareeFabric: '',
-  blouseFabric: '',
-  workType: '',
-  borderType: '',
-  palluType: '',
-  sareeLength: '',
-  blouseLength: '',
-  primaryColor: '',
-  secondaryColor: '',
-  pattern: '',
-  printType: '',
-  style: '',
-
-  blouseIncluded: false,
-  blouseType: 'Unstitched',
-  blouseColor: '',
-
   images: [],
   productVideo: '',
   youtubeUrl: '',
@@ -39,20 +21,9 @@ export const initialFormValues = {
 shortDescription: '',
   longDescription: '',
 
-  shippingWeight: '',
-  shippingLength: '',
-  shippingWidth: '',
-  shippingHeight: '',
-  shippingCharge: '',
-  codAvailable: true,
-
   tags: [],
   variants: [],
   customFields: [],
-
-  returnAvailable: true,
-  returnDays: '7',
-  exchangeAvailable: true,
 
   countryOfOrigin: 'India',
   manufacturer: '',
@@ -62,7 +33,6 @@ shortDescription: '',
 
 export const variantInitialValues = {
   color: '',
-  colorCode: '',
   sku: '',
   price: '',
   mrp: '',

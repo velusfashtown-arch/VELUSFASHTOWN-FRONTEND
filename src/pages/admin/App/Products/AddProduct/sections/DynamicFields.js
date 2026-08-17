@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { FiSliders, FiInfo, FiDollarSign, FiPackage, FiLayers, FiImage, FiVideo, FiFileText, FiTruck, FiRotateCcw, FiTag } from 'react-icons/fi';
+import { FiSliders, FiInfo, FiDollarSign, FiPackage, FiLayers, FiImage, FiVideo, FiFileText, FiTag } from 'react-icons/fi';
 import CollapsibleCard from '../components/CollapsibleCard';
 import RichTextEditor from '../components/RichTextEditor';
 import ImageDropzone from '../components/ImageDropzone';
@@ -16,8 +16,6 @@ const GROUP_ICONS = {
   'Images': FiImage,
   'Videos': FiVideo,
   'Description': FiFileText,
-  'Shipping': FiTruck,
-  'Return Policy': FiRotateCcw,
   'Additional Details': FiTag,
 };
 
@@ -69,7 +67,14 @@ export default function DynamicFields({
   uploading,
   uploadProgress,
 }) {
+  const selectedCategory = formValues.category;
+
   const groups = useMemo(() => {
+    // A field scoped to a category (see the Masters screen) only shows once
+    // that category is selected in Basic Information — a global field
+    // (category: null) always shows.
+    const visibleFields = fields.filter((field) => !field.category || field.category.id === selectedCategory);
+
     const order = [];
     const byGroup = {};
     // Section names come from free text on the Masters screen — fields
@@ -77,7 +82,7 @@ export default function DynamicFields({
     // Information" vs "Basic information") must still land in the same
     // group instead of splitting into a lookalike section.
     const canonicalKeyFor = {};
-    for (const field of [...fields, ...FIXED_BASIC_INFO_FIELDS]) {
+    for (const field of [...visibleFields, ...FIXED_BASIC_INFO_FIELDS]) {
       const rawName = (field.group || 'Custom Fields').trim() || 'Custom Fields';
       const normalized = rawName.toLowerCase();
       if (!(normalized in canonicalKeyFor)) {
@@ -88,7 +93,7 @@ export default function DynamicFields({
       byGroup[canonicalKeyFor[normalized]].push(field);
     }
     return order.map((name) => ({ name, fields: byGroup[name] }));
-  }, [fields]);
+  }, [fields, selectedCategory]);
 
   function getValue(field, fallback = '') {
     const schemaKey = schemaKeyFor(field.key);
