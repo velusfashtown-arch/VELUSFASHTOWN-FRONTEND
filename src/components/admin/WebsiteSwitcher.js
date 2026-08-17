@@ -67,12 +67,12 @@ useEffect(() => {
             All Websites
           </button>
           {websites.map((w) => {
-            const isActive = String(w._id) === String(selectedWebsiteId);
+            const isActive = String(w.id) === String(selectedWebsiteId);
             return (
               <button
-                key={w._id}
+                key={w.id}
                 type="button"
-                onClick={() => select(w._id)}
+                onClick={() => select(w.id)}
                 className={`flex w-full items-center gap-2 px-3 py-2.5 text-left text-[12px] font-medium no-underline transition-colors hover:bg-[rgba(167,78,62,0.08)] ${isActive ? 'text-terra font-bold' : 'text-ink'}`}
               >
                 <StoreGlyph />

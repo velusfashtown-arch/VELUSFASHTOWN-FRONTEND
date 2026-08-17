@@ -17,7 +17,7 @@ export function getAddProductSchema() {
   slug: z.string().optional(),
   sku: z.string().optional(),
 category: z.string().min(1, 'Category is required'),
-  subCategory: z.string().optional(),
+  subCategory: z.string().min(1, 'Sub category is required'),
   status: z.string().optional(),
 
   mrp: requiredNumber('MRP'),
@@ -64,6 +64,7 @@ shortDescription: z.string().max(300, 'Short description too long').optional(),
   variants: z.array(z.object({
     color: z.string().min(1, 'Color name is required'),
   })).optional(),
+  customFields: z.array(z.object({ key: z.string(), value: z.any() })).optional(),
 
   returnAvailable: booleanValue,
   returnDays: optionalNumber,

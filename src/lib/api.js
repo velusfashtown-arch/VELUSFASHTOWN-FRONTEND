@@ -74,12 +74,18 @@ export const api = {
   // ADMIN CATEGORIES
   // ══════════════════════════════════════════════════════════════════
   adminListCategories: (token, params) => adminApi.listCategories(token, params),
-  adminGetCategoryTree: (token) => adminApi.getCategoryTree(token),
   adminGetCategory: (token, id) => adminApi.getCategory(token, id),
-  adminGetCategoryChildren: (token, id) => adminApi.getCategoryChildren(token, id),
   adminCreateCategory: (token, payload) => adminApi.createCategory(token, payload),
   adminUpdateCategory: (token, id, payload) => adminApi.updateCategory(token, id, payload),
+  adminToggleCategoryActive: (token, id, isActive) => adminApi.toggleCategoryActive(token, id, isActive),
   adminDeleteCategory: (token, id) => adminApi.deleteCategory(token, id),
+
+  adminListSubCategories: (token, params) => adminApi.listSubCategories(token, params),
+  adminGetSubCategory: (token, id) => adminApi.getSubCategory(token, id),
+  adminCreateSubCategory: (token, payload) => adminApi.createSubCategory(token, payload),
+  adminUpdateSubCategory: (token, id, payload) => adminApi.updateSubCategory(token, id, payload),
+  adminToggleSubCategoryActive: (token, id, isActive) => adminApi.toggleSubCategoryActive(token, id, isActive),
+  adminDeleteSubCategory: (token, id) => adminApi.deleteSubCategory(token, id),
 
   // ══════════════════════════════════════════════════════════════════
   // ADMIN COLLECTIONS
@@ -109,6 +115,18 @@ export const api = {
   // ADMIN DASHBOARD
   // ══════════════════════════════════════════════════════════════════
   adminGetDashboard: (token) => adminApi.getDashboard(token),
+
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN MASTERS (product attribute values: fabric, color, etc.)
+  // ══════════════════════════════════════════════════════════════════
+
+  // ══════════════════════════════════════════════════════════════════
+  // ADMIN MASTERS (extra Add Product fields, admin-defined)
+  // ══════════════════════════════════════════════════════════════════
+  adminListMasters: (token, params) => adminApi.listMasters(token, params),
+  adminCreateMaster: (token, payload) => adminApi.createMaster(token, payload),
+  adminUpdateMaster: (token, id, payload) => adminApi.updateMaster(token, id, payload),
+  adminDeleteMaster: (token, id) => adminApi.deleteMaster(token, id),
 
   // ══════════════════════════════════════════════════════════════════
   // ADMIN UPLOAD
@@ -178,6 +196,20 @@ export const api = {
   adminCreateBanner: (token, id, payload) => adminApi.createBanner(token, id, payload),
   adminUpdateBanner: (token, id, bannerId, payload) => adminApi.updateBanner(token, id, bannerId, payload),
   adminDeleteBanner: (token, id, bannerId) => adminApi.deleteBanner(token, id, bannerId),
+
+  // ── Admin Website Forms (customer-facing) ──
+  adminListFormTypes: (token) => adminApi.listFormTypes(token),
+  adminListForms: (token, id) => adminApi.listForms(token, id),
+  adminGetForm: (token, id, formId) => adminApi.getForm(token, id, formId),
+  adminCreateForm: (token, id, payload) => adminApi.createForm(token, id, payload),
+  adminUpdateForm: (token, id, formId, payload) => adminApi.updateForm(token, id, formId, payload),
+  adminDeleteForm: (token, id, formId) => adminApi.deleteForm(token, id, formId),
+
+  // ── Admin Form Submissions ──
+  adminListSubmissions: (token, id, params) => adminApi.listSubmissions(token, id, params),
+  adminGetSubmission: (token, id, submissionId) => adminApi.getSubmission(token, id, submissionId),
+  adminUpdateSubmissionStatus: (token, id, submissionId, status) => adminApi.updateSubmissionStatus(token, id, submissionId, status),
+  adminDeleteSubmission: (token, id, submissionId) => adminApi.deleteSubmission(token, id, submissionId),
 };
 
 // Legacy storefront API surface (kept for components that import stores).

@@ -8,6 +8,7 @@ import useTableData from '../../../Common/Table/useTableData';
 import AdminInput from '../../../Common/Form/Input';
 import AdminDropdown from '../../../Common/Form/Dropdown';
 import AdminTextarea from '../../../Common/Form/Textarea';
+import AdminCheckbox from '../../../Common/Form/Checkbox';
 import { adminBtnPrimary, adminBtnSecondary, adminToast } from '../../../Common/buttonClasses';
 
 function SubCategoryModal({ subCategory, onClose, onSaved }) {
@@ -18,11 +19,12 @@ function SubCategoryModal({ subCategory, onClose, onSaved }) {
   const [form, setForm] = useState({
     name: subCategory?.name || '',
     description: subCategory?.description || '',
-    parent: subCategory?.parent?.id || subCategory?.parent || '',
+    category: subCategory?.category?.id || subCategory?.category || '',
+    isActive: subCategory?.isActive ?? true,
   });
 
   useEffect(() => {
-    api.adminListCategories(token, { parent: 'null', isActive: 'true', includeRelations: 'true', limit: 100 })
+    api.adminListCategories(token, { isActive: 'true', limit: 100 })
       .then((res) => setCategories(res.data || []))
       .catch(() => setCategories([]));
   }, [token]);
@@ -34,19 +36,20 @@ function SubCategoryModal({ subCategory, onClose, onSaved }) {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!form.name.trim()) return setError('Name is required');
-    if (!form.parent) return setError('Parent category is required for sub category');
+    if (!form.category) return setError('Parent category is required for sub category');
     setLoading(true);
     setError('');
     try {
       const payload = {
         name: form.name.trim(),
-        parent: form.parent,
+        category: form.category,
         description: form.description.trim(),
+        isActive: form.isActive,
       };
       if (subCategory?.id || subCategory?._id) {
-        await api.adminUpdateCategory(token, subCategory.id || subCategory._id, payload);
+        await api.adminUpdateSubCategory(token, subCategory.id || subCategory._id, payload);
       } else {
-        await api.adminCreateCategory(token, payload);
+        await api.adminCreateSubCategory(token, payload);
       }
       onSaved();
       onClose();
@@ -81,8 +84,8 @@ function SubCategoryModal({ subCategory, onClose, onSaved }) {
         <AdminDropdown
           label="Category"
           placeholder="Select category"
-          value={form.parent}
-          onChange={(value) => set('parent', value)}
+          value={form.category}
+          onChange={(value) => set('category', value)}
           options={categories.map((category) => ({ value: category.id, label: category.name }))}
           required
         />
@@ -91,6 +94,12 @@ function SubCategoryModal({ subCategory, onClose, onSaved }) {
           placeholder="Optional description..."
           value={form.description}
           onChange={(event) => set('description', event.target.value)}
+        />
+        <AdminCheckbox
+          label="Active"
+          helper="Only active subcategories are available when adding a product."
+          checked={form.isActive}
+          onChange={(event) => set('isActive', event.target.checked)}
         />
       </form>
     </AdminModal>
@@ -117,14 +126,14 @@ export default function AdminSubCategory() {
     changePageSize,
     searchTable,
   } = useTableData({
-    fetcher: (params) => api.adminListCategories(token, { ...params, type: 'subcategory', includeRelations: 'true' }),
+    fetcher: (params) => api.adminListSubCategories(token, params),
   });
 
   async function handleDelete() {
     if (!subCategoryToDelete) return;
     setDeleting(true);
     try {
-      await api.adminDeleteCategory(token, subCategoryToDelete.id || subCategoryToDelete._id);
+      await api.adminDeleteSubCategory(token, subCategoryToDelete.id || subCategoryToDelete._id);
       await loadSubCategory();
       setSubCategoryToDelete(null);
       showSuccess('Sub Category deleted!');
@@ -149,6 +158,17 @@ export default function AdminSubCategory() {
   function openEdit(cat) { setEditingSubCategory(cat); setModalOpen(true); }
   function closeModal() { setModalOpen(false); setEditingSubCategory(null); }
 
+  async function handleToggleActive(cat) {
+    if (!cat?.id) return;
+    try {
+      await api.adminToggleSubCategoryActive(token, cat.id, !cat.isActive);
+      await loadSubCategory();
+      showSuccess(cat.isActive ? 'Sub Category deactivated!' : 'Sub Category activated!');
+    } catch (err) {
+      showError(err.message || 'Failed to toggle sub category status');
+    }
+  }
+
   return (
     <div>
 {success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
@@ -167,7 +187,7 @@ export default function AdminSubCategory() {
 
       <AdminTable
           title="Sub Category"
-          searchKeys={['name', 'description', 'parent.name']}
+          searchKeys={['name', 'description', 'category.name']}
           onAdd={openAdd}
           addLabel="Add Sub Category"
           onRefresh={loadSubCategory}
@@ -179,12 +199,13 @@ export default function AdminSubCategory() {
           onServerSearch={searchTable}
           columns={[
             { key: 'name', header: 'Name', render: (cat) => (<div><b className="text-ink">{cat.name}</b>{cat.description && <small className="block text-[11px] text-muted truncate max-w-[200px]">{cat.description}</small>}</div>) },
-            { key: 'parent', header: 'Parent Category', render: (cat) => (<span className="inline-flex items-center gap-1 rounded-full bg-[rgba(167,78,62,0.1)] px-2 py-0.5 text-[11px] font-medium text-terra">{cat.parent?.name || '-'}</span>) },
-            { key: 'slug', header: 'Slug', className: 'font-mono text-[12px] text-muted' },
+            { key: 'category', header: 'Parent Category', render: (cat) => (<span className="inline-flex items-center gap-1 rounded-full bg-[rgba(167,78,62,0.1)] px-2 py-0.5 text-[11px] font-medium text-terra">{cat.category?.name || '-'}</span>) },
+            { key: 'isActive', header: 'Status', render: (cat) => <span className={`text-[11px] font-semibold ${cat.isActive ? 'text-[#137333]' : 'text-muted'}`}>{cat.isActive ? 'Active' : 'Inactive'}</span> },
           ]}
           rows={subCategory}
           rowActions={[
             { label: 'Edit', onClick: openEdit },
+            { label: (cat) => (cat.isActive ? 'Deactivate' : 'Activate'), onClick: handleToggleActive },
             { label: 'Delete', danger: true, onClick: setSubCategoryToDelete },
           ]}
           emptyMessage="No sub Category yet. Click Add Sub Category to create one."

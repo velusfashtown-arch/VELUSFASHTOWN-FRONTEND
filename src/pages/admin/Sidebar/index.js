@@ -55,14 +55,6 @@ function CustomersIcon() {
   );
 }
 
-function CategoryIcon() {
-  return (
-    <svg className="w-[18px] h-[18px] shrink-0 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 6h16M4 12h16M4 18h7" />
-    </svg>
-  );
-}
-
 function CollectionsIcon() {
   return (
     <svg className="w-[18px] h-[18px] shrink-0 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -75,6 +67,14 @@ function StoreIcon() {
   return (
     <svg className="w-[18px] h-[18px] shrink-0 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 01-8 0" />
+    </svg>
+  );
+}
+
+function FormsIcon() {
+  return (
+    <svg className="w-[18px] h-[18px] shrink-0 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6" /><path d="M9 13h6M9 17h6M9 9h1" />
     </svg>
   );
 }
@@ -113,7 +113,8 @@ function CloseIcon() {
 }
 
 export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMobileClose }) {
-  const [CategoryOpen, setCategoryOpen] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
+  const [FormsOpen, setFormsOpen] = useState(false);
   const sidebarIsCollapsed = isCollapsed && !isMobileOpen;
 
   return (
@@ -148,35 +149,34 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
         {/* Navigation */}
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
           <NavItem to="/admin/dashboard" icon={DashboardIcon} label="Dashboard" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
-          <NavItem to="/admin/products" icon={ProductsIcon} label="Products" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
           <NavItem to="/admin/orders" icon={OrdersIcon} label="Orders" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
           <NavItem to="/admin/customers" icon={CustomersIcon} label="Customers" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
 
-          {/* Category Dropdown */}
+          {/* Product setup workflow */}
           {sidebarIsCollapsed ? (
             <button
-              onClick={() => { onToggle(); setTimeout(() => setCategoryOpen(true), 200); }}
+              onClick={() => { onToggle(); setTimeout(() => setProductsOpen(true), 200); }}
               className="flex w-full items-center justify-center rounded-lg px-0 py-2.5 text-sm font-medium text-[rgba(255,249,241,0.65)] no-underline transition-all hover:bg-[rgba(255,249,241,0.08)] hover:text-white border-none bg-transparent cursor-pointer"
-              title="Category"
+              title="Products"
             >
-              <CategoryIcon />
+              <ProductsIcon />
             </button>
           ) : (
             <div className="flex flex-col">
               <button
-                onClick={() => setCategoryOpen(!CategoryOpen)}
+                onClick={() => setProductsOpen(!productsOpen)}
                 className="flex items-center w-full gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium no-underline transition-all text-[rgba(255,249,241,0.65)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white border-none bg-transparent cursor-pointer"
               >
-                <CategoryIcon />
-                <span className="flex-1 text-left">Category</span>
+                <ProductsIcon />
+                <span className="flex-1 text-left">Products</span>
                 <svg
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${CategoryOpen ? 'rotate-180' : ''}`}
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${productsOpen ? 'rotate-180' : ''}`}
                   viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                 >
                   <path d="M6 9l6 6 6-6" />
                 </svg>
               </button>
-              {CategoryOpen && (
+              {productsOpen && (
                 <div className="flex flex-col ml-2 mt-0.5 gap-0.5 border-l border-[rgba(255,249,241,0.1)] pl-2">
                   <NavLink
                     to="/admin/Category"
@@ -204,12 +204,92 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
                     <span className="w-1 h-1 rounded-full bg-current opacity-50" />
                     Sub Category
                   </NavLink>
+                  <NavLink to="/admin/masters" onClick={onMobileClose} className={({ isActive }) => `flex items-center w-full gap-2 px-3 py-2 rounded-lg text-xs font-medium no-underline transition-all ${isActive ? 'bg-[rgba(167,78,62,0.2)] text-white' : 'text-[rgba(255,249,241,0.55)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white'}`}>
+                    <span className="w-1 h-1 rounded-full bg-current opacity-50" />
+                    Masters
+                  </NavLink>
+                  <NavLink to="/admin/products" onClick={onMobileClose} className={({ isActive }) => `flex items-center w-full gap-2 px-3 py-2 rounded-lg text-xs font-medium no-underline transition-all ${isActive ? 'bg-[rgba(167,78,62,0.2)] text-white' : 'text-[rgba(255,249,241,0.55)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white'}`}>
+                    <span className="w-1 h-1 rounded-full bg-current opacity-50" />
+                    Products
+                  </NavLink>
                 </div>
               )}
             </div>
           )}
 
 <NavItem to="/admin/collections" icon={CollectionsIcon} label="Collections" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
+
+          {/* Forms Dropdown */}
+          {sidebarIsCollapsed ? (
+            <button
+              onClick={() => { onToggle(); setTimeout(() => setFormsOpen(true), 200); }}
+              className="flex w-full items-center justify-center rounded-lg px-0 py-2.5 text-sm font-medium text-[rgba(255,249,241,0.65)] no-underline transition-all hover:bg-[rgba(255,249,241,0.08)] hover:text-white border-none bg-transparent cursor-pointer"
+              title="Forms"
+            >
+              <FormsIcon />
+            </button>
+          ) : (
+            <div className="flex flex-col">
+              <button
+                onClick={() => setFormsOpen(!FormsOpen)}
+                className="flex items-center w-full gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium no-underline transition-all text-[rgba(255,249,241,0.65)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white border-none bg-transparent cursor-pointer"
+              >
+                <FormsIcon />
+                <span className="flex-1 text-left">Forms</span>
+                <svg
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${FormsOpen ? 'rotate-180' : ''}`}
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+              {FormsOpen && (
+                <div className="flex flex-col ml-2 mt-0.5 gap-0.5 border-l border-[rgba(255,249,241,0.1)] pl-2">
+                  <NavLink
+                    to="/admin/forms"
+                    end
+                    onClick={onMobileClose}
+                    className={({ isActive }) =>
+                      `flex items-center w-full gap-2 px-3 py-2 rounded-lg text-xs font-medium no-underline transition-all ${isActive
+                        ? 'bg-[rgba(167,78,62,0.2)] text-white'
+                        : 'text-[rgba(255,249,241,0.55)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white'
+                      }`
+                    }
+                  >
+                    <span className="w-1 h-1 rounded-full bg-current opacity-50" />
+                    Form Builder
+                  </NavLink>
+                  <NavLink
+                    to="/admin/forms/submissions"
+                    onClick={onMobileClose}
+                    className={({ isActive }) =>
+                      `flex items-center w-full gap-2 px-3 py-2 rounded-lg text-xs font-medium no-underline transition-all ${isActive
+                        ? 'bg-[rgba(167,78,62,0.2)] text-white'
+                        : 'text-[rgba(255,249,241,0.55)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white'
+                      }`
+                    }
+                  >
+                    <span className="w-1 h-1 rounded-full bg-current opacity-50" />
+                    Form Submissions
+                  </NavLink>
+                  <NavLink
+                    to="/admin/forms/integrations"
+                    onClick={onMobileClose}
+                    className={({ isActive }) =>
+                      `flex items-center w-full gap-2 px-3 py-2 rounded-lg text-xs font-medium no-underline transition-all ${isActive
+                        ? 'bg-[rgba(167,78,62,0.2)] text-white'
+                        : 'text-[rgba(255,249,241,0.55)] hover:bg-[rgba(255,249,241,0.08)] hover:text-white'
+                      }`
+                    }
+                  >
+                    <span className="w-1 h-1 rounded-full bg-current opacity-50" />
+                    Integrations
+                  </NavLink>
+                </div>
+              )}
+            </div>
+          )}
+
           <NavItem to="/admin/websites" icon={WebsitesIcon} label="Websites" isCollapsed={sidebarIsCollapsed} onNavigate={onMobileClose} />
         </nav>
 

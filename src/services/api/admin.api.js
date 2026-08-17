@@ -28,13 +28,20 @@ export const adminApi = {
   reserveProductId: (token) => request('/api/admin/products/reserve-id', { method: 'POST', token, isAdmin: true }),
 
   // ─── Admin Categories ──────────────────────────────────────────────
-  listCategories: (token, params) => request(`/api/admin/categories${toQuery(params)}`, { token, isAdmin: true }),
-  getCategoryTree: (token) => request('/api/admin/categories/tree', { token, isAdmin: true }),
-  getCategory: (token, id) => request(`/api/admin/categories/${encodeURIComponent(id)}`, { token, isAdmin: true }),
-  getCategoryChildren: (token, id) => request(`/api/admin/categories/${encodeURIComponent(id)}/children`, { token, isAdmin: true }),
-  createCategory: (token, payload) => request('/api/admin/categories', { method: 'POST', token, isAdmin: true, body: payload }),
-  updateCategory: (token, id, payload) => request(`/api/admin/categories/${encodeURIComponent(id)}`, { method: 'PUT', token, isAdmin: true, body: payload }),
-  deleteCategory: (token, id) => request(`/api/admin/categories/${encodeURIComponent(id)}`, { method: 'DELETE', token, isAdmin: true }),
+  listCategories: (token, params) => request(`/api/admin/category${toQuery(params)}`, { token, isAdmin: true }),
+  getCategory: (token, id) => request(`/api/admin/category/${encodeURIComponent(id)}`, { token, isAdmin: true }),
+  createCategory: (token, payload) => request('/api/admin/category', { method: 'POST', token, isAdmin: true, body: payload }),
+  updateCategory: (token, id, payload) => request(`/api/admin/category/${encodeURIComponent(id)}`, { method: 'PUT', token, isAdmin: true, body: payload }),
+  toggleCategoryActive: (token, id, isActive) => request(`/api/admin/category/${encodeURIComponent(id)}/toggle-active`, { method: 'PATCH', token, isAdmin: true, body: { isActive } }),
+  deleteCategory: (token, id) => request(`/api/admin/category/${encodeURIComponent(id)}`, { method: 'DELETE', token, isAdmin: true }),
+
+  // ─── Admin Sub Categories ────────────────────────────────────────────
+  listSubCategories: (token, params) => request(`/api/admin/sub-category${toQuery(params)}`, { token, isAdmin: true }),
+  getSubCategory: (token, id) => request(`/api/admin/sub-category/${encodeURIComponent(id)}`, { token, isAdmin: true }),
+  createSubCategory: (token, payload) => request('/api/admin/sub-category', { method: 'POST', token, isAdmin: true, body: payload }),
+  updateSubCategory: (token, id, payload) => request(`/api/admin/sub-category/${encodeURIComponent(id)}`, { method: 'PUT', token, isAdmin: true, body: payload }),
+  toggleSubCategoryActive: (token, id, isActive) => request(`/api/admin/sub-category/${encodeURIComponent(id)}/toggle-active`, { method: 'PATCH', token, isAdmin: true, body: { isActive } }),
+  deleteSubCategory: (token, id) => request(`/api/admin/sub-category/${encodeURIComponent(id)}`, { method: 'DELETE', token, isAdmin: true }),
 
   // ─── Admin Collections ─────────────────────────────────────────────
   listCollections: (token, params) => request(`/api/admin/collections${toQuery(params)}`, { token, isAdmin: true }),
@@ -56,6 +63,12 @@ export const adminApi = {
 
   // ─── Admin Dashboard ───────────────────────────────────────────────
   getDashboard: (token) => request('/api/admin/dashboard', { token, isAdmin: true }),
+
+  // ─── Admin Masters (extra Add Product fields, admin-defined) ───────
+  listMasters: (token, params) => request(`/api/admin/masters${toQuery(params)}`, { token, isAdmin: true }),
+  createMaster: (token, payload) => request('/api/admin/masters', { method: 'POST', token, isAdmin: true, body: payload }),
+  updateMaster: (token, id, payload) => request(`/api/admin/masters/${encodeURIComponent(id)}`, { method: 'PUT', token, isAdmin: true, body: payload }),
+  deleteMaster: (token, id) => request(`/api/admin/masters/${encodeURIComponent(id)}`, { method: 'DELETE', token, isAdmin: true }),
 
   // ─── Admin Image Upload ────────────────────────────────────────────
   uploadImages: (token, formData, productId) => {
@@ -137,6 +150,20 @@ export const adminApi = {
   createBanner: (token, id, payload) => request(`/api/admin/websites/${encodeURIComponent(id)}/banners`, { method: 'POST', token, isAdmin: true, body: payload }),
   updateBanner: (token, id, bannerId, payload) => request(`/api/admin/websites/${encodeURIComponent(id)}/banners/${encodeURIComponent(bannerId)}`, { method: 'PUT', token, isAdmin: true, body: payload }),
   deleteBanner: (token, id, bannerId) => request(`/api/admin/websites/${encodeURIComponent(id)}/banners/${encodeURIComponent(bannerId)}`, { method: 'DELETE', token, isAdmin: true }),
+
+  // ─── Website Forms (customer-facing) ───────────────────────────────
+  listFormTypes: (token) => request('/api/admin/websites/forms/types', { token, isAdmin: true }),
+  listForms: (token, id) => request(`/api/admin/websites/${encodeURIComponent(id)}/forms`, { token, isAdmin: true }),
+  getForm: (token, id, formId) => request(`/api/admin/websites/${encodeURIComponent(id)}/forms/${encodeURIComponent(formId)}`, { token, isAdmin: true }),
+  createForm: (token, id, payload) => request(`/api/admin/websites/${encodeURIComponent(id)}/forms`, { method: 'POST', token, isAdmin: true, body: payload }),
+  updateForm: (token, id, formId, payload) => request(`/api/admin/websites/${encodeURIComponent(id)}/forms/${encodeURIComponent(formId)}`, { method: 'PUT', token, isAdmin: true, body: payload }),
+  deleteForm: (token, id, formId) => request(`/api/admin/websites/${encodeURIComponent(id)}/forms/${encodeURIComponent(formId)}`, { method: 'DELETE', token, isAdmin: true }),
+
+  // ─── Form Submissions ───────────────────────────────────────────────
+  listSubmissions: (token, id, params) => request(`/api/admin/websites/${encodeURIComponent(id)}/submissions${toQuery(params)}`, { token, isAdmin: true }),
+  getSubmission: (token, id, submissionId) => request(`/api/admin/websites/${encodeURIComponent(id)}/submissions/${encodeURIComponent(submissionId)}`, { token, isAdmin: true }),
+  updateSubmissionStatus: (token, id, submissionId, status) => request(`/api/admin/websites/${encodeURIComponent(id)}/submissions/${encodeURIComponent(submissionId)}`, { method: 'PUT', token, isAdmin: true, body: { status } }),
+  deleteSubmission: (token, id, submissionId) => request(`/api/admin/websites/${encodeURIComponent(id)}/submissions/${encodeURIComponent(submissionId)}`, { method: 'DELETE', token, isAdmin: true }),
 };
 
 export default adminApi;

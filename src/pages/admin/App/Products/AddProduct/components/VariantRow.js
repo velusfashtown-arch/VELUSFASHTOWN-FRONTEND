@@ -4,7 +4,6 @@ import FormField from '../../../../Common/Form/FormField';
 import AdminCheckbox from '../../../../Common/Form/Checkbox';
 import ImageDropzone from './ImageDropzone';
 import { useImageUpload } from '../hooks/useImageUpload';
-import { COLORS } from '../constants/options';
 
 export default function VariantRow({ index, variant, onUpdate, onRemove, token, productId, baseSku }) {
   const { uploadImages, uploading, uploadProgress } = useImageUpload(token);
@@ -13,10 +12,6 @@ export default function VariantRow({ index, variant, onUpdate, onRemove, token, 
     const value = event.target.value;
     onUpdate(index, 'color', value);
 
-    const matched = COLORS.find((c) => c.value === value);
-    if (matched?.color?.startsWith('#')) {
-      onUpdate(index, 'colorCode', matched.color);
-    }
     if (!variant.sku && value) {
       const suffix = value.slice(0, 3).toUpperCase();
       onUpdate(index, 'sku', `${baseSku || 'VAR'}-${suffix}`);
@@ -68,11 +63,10 @@ export default function VariantRow({ index, variant, onUpdate, onRemove, token, 
         <FormField
           label="Color"
           name={`variant-${index}-color`}
-          type="select"
+          type="text"
           value={variant.color || ''}
           onChange={handleColorChange}
-          options={COLORS}
-          placeholder="Select color"
+          placeholder="e.g. Red"
           required
         />
         <FormField

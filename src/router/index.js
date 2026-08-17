@@ -29,6 +29,10 @@ const AdminCustomers = lazy(() => import('../pages/admin/App/Customers/index'));
 const AdminCategories = lazy(() => import('../pages/admin/App/Categories/Category/index'));
 const AdminSubCategories = lazy(() => import('../pages/admin/App/Categories/Sub-category/index'));
 const AdminCollections = lazy(() => import('../pages/admin/App/Collections/index'));
+const AdminMasters = lazy(() => import('../pages/admin/App/Masters/index'));
+const AdminFormBuilder = lazy(() => import('../pages/admin/App/Forms/FormBuilder'));
+const AdminFormSubmissions = lazy(() => import('../pages/admin/App/Forms/Submissions'));
+const AdminFormIntegrations = lazy(() => import('../pages/admin/App/Forms/Integrations'));
 
 // Admin Websites (Multi-Tenant)
 const AdminWebsites = lazy(() => import('../pages/admin/App/Websites/List'));
@@ -181,6 +185,48 @@ return (
             <RequireAdmin>
               <AdminLayout pageTitle="Collections">
                 <AdminCollections />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+
+        <Route
+          path="/admin/masters"
+          element={
+            <RequireAdmin>
+              <AdminLayout pageTitle="Masters">
+                <AdminMasters />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+
+        <Route
+          path="/admin/forms"
+          element={
+            <RequireAdmin>
+              <AdminLayout pageTitle="Form Builder">
+                <AdminFormBuilder />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/forms/submissions"
+          element={
+            <RequireAdmin>
+              <AdminLayout pageTitle="Form Submissions">
+                <AdminFormSubmissions />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/forms/integrations"
+          element={
+            <RequireAdmin>
+              <AdminLayout pageTitle="Integrations">
+                <AdminFormIntegrations />
               </AdminLayout>
             </RequireAdmin>
           }

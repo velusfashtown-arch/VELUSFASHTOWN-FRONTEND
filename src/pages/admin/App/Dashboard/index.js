@@ -80,8 +80,8 @@ export default function AdminDashboard() {
 
   async function loadDashboard() {
     try {
-      const data = await api.adminGetDashboard(token);
-      setDashData(data);
+      const res = await api.adminGetDashboard(token);
+      setDashData(res?.data || null);
     } catch (err) {
       setError(err.message || 'Failed to load dashboard');
     } finally {
@@ -106,37 +106,40 @@ export default function AdminDashboard() {
     );
   }
 
-  const { visits = {}, orders = {}, revenue = {}, topProducts = [], rto = {} } = dashData || {};
+  const {
+    products = {}, orders = {}, revenue = {}, revenueTrend = [],
+    topSellingProducts = [], customers = {}, lowStockProducts = [],
+  } = dashData || {};
 
-  // Prepare pie chart data for order status
-  const statusPieData = Object.entries(orders.statusBreakdown || {}).map(([name, value]) => ({ name, value }));
+  // Order status breakdown, derived from the counts the API already gives us.
+  const statusPieData = [
+    { name: 'Pending', value: orders.pending || 0 },
+    { name: 'Shipped', value: orders.shipped || 0 },
+    { name: 'Delivered', value: orders.delivered || 0 },
+    { name: 'Cancelled', value: orders.cancelled || 0 },
+  ].filter((s) => s.value > 0);
 
-  // Format trend data for chart
-  const orderTrendData = (orders.trend || []).slice(-14); // Last 14 days
-
-  // Visit trend data
-  const visitTrendData = (visits.trend || []).slice(-14);
+  // Order/revenue trend for the last 14 days.
+  const orderTrendData = revenueTrend
+    .slice(-14)
+    .map((d) => ({ date: d._id, orders: d.orders, revenue: d.revenue }));
 
   // Top products for display
-  const topProductsList = topProducts.slice(0, 5);
+  const topProductsList = topSellingProducts.slice(0, 5).map((p) => ({
+    name: p.name,
+    quantity: p.totalQuantity,
+    revenue: p.totalRevenue,
+  }));
 
   return (
     <div>
       {/* ─── Top Stats Row ────────────────────────────────────────── */}
       <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-[18px] mb-8">
         <StatCard
-          icon={<EyeIcon />}
-          label="Today's Visits"
-          value={visits.today || 0}
-          sub={`${visits.todayUnique || 0} unique visitors`}
-          bgColor="#fef7e0"
-          iconColor="#b47c2e"
-        />
-        <StatCard
           icon={<CartIcon />}
           label="Total Orders"
           value={orders.total || 0}
-          sub={`${orders.today || 0} today · ${orders.thisMonth || 0} this month`}
+          sub={`${orders.pending || 0} pending · ${orders.delivered || 0} delivered`}
           bgColor="#e8f0fe"
           iconColor="#1a73e8"
         />
@@ -151,26 +154,34 @@ export default function AdminDashboard() {
         <StatCard
           icon={<BoxIcon />}
           label="Total Products"
-          value={topProducts.length > 0 ? topProducts[0]?.name || '—' : '—'}
-          sub={`${topProductsList.length} top selling`}
+          value={products.total || 0}
+          sub={`${products.active || 0} active · ${products.outOfStock || 0} out of stock`}
           bgColor="#f0edf5"
           iconColor="#6b4fa0"
         />
         <StatCard
+          icon={<UserIcon />}
+          label="Total Customers"
+          value={customers.totalCustomers || 0}
+          sub={`${customers.verifiedCustomers || 0} verified`}
+          bgColor="#e6f4ea"
+          iconColor="#137333"
+        />
+        <StatCard
           icon={<RTODashIcon />}
           label="RTO Orders"
-          value={rto.count || 0}
-          sub={`₹${(rto.revenue || 0).toLocaleString('en-IN')} affected`}
+          value={orders.rto || 0}
+          sub="Return to origin"
           bgColor="#fce8e6"
           iconColor="#c5221f"
         />
         <StatCard
-          icon={<UserIcon />}
-          label="Total Visits (All Time)"
-          value={(visits.total || 0).toLocaleString()}
-          sub={`${(visits.totalUnique || 0).toLocaleString()} unique IPs`}
-          bgColor="#e6f4ea"
-          iconColor="#137333"
+          icon={<EyeIcon />}
+          label="Avg. Order Value"
+          value={`₹${Math.round(revenue.avgOrderValue || 0).toLocaleString('en-IN')}`}
+          sub={`${orders.total || 0} orders total`}
+          bgColor="#fef7e0"
+          iconColor="#b47c2e"
         />
       </div>
 
@@ -207,27 +218,25 @@ export default function AdminDashboard() {
           )}
         </div>
 
-        {/* Visit Trend Chart */}
+        {/* Low Stock Products */}
         <div className="bg-paper border border-line rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="m-0 text-sm font-semibold text-ink">Visit Trend (Last 14 Days)</h3>
+            <h3 className="m-0 text-sm font-semibold text-ink">Low Stock Products</h3>
             <span className="text-[10px] font-semibold tracking-[0.05em] text-muted bg-[rgba(47,31,25,0.06)] px-2.5 py-0.5 rounded-full">
-              {visitTrendData.length} days
+              {lowStockProducts.length} item{lowStockProducts.length === 1 ? '' : 's'}
             </span>
           </div>
-          {visitTrendData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={visitTrendData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(47,31,25,0.06)" />
-                <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#756b65' }} tickFormatter={val => val?.slice(5) || ''} />
-                <YAxis tick={{ fontSize: 10, fill: '#756b65' }} />
-                <Tooltip content={<ChartTooltip />} />
-                <Bar dataKey="count" name="Visits" fill="#b47c2e" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="unique" name="Unique" fill="#6b4fa0" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          {lowStockProducts.length > 0 ? (
+            <div className="flex flex-col gap-2 max-h-[200px] overflow-y-auto">
+              {lowStockProducts.map((product) => (
+                <div key={product._id || product.name} className="flex items-center justify-between py-1.5 border-b border-[rgba(47,31,25,0.06)] last:border-0">
+                  <span className="text-[12px] text-ink truncate">{product.name}</span>
+                  <span className="text-[10px] font-semibold text-[#c5221f] shrink-0">{product.stock} left</span>
+                </div>
+              ))}
+            </div>
           ) : (
-            <div className="flex items-center justify-center h-[200px] text-muted text-xs">No visit data yet</div>
+            <div className="flex items-center justify-center h-[200px] text-muted text-xs">No low stock products</div>
           )}
         </div>
 
@@ -307,8 +316,8 @@ export default function AdminDashboard() {
               <b className="text-[13px] text-ink">{orders.total || 0}</b>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-[rgba(47,31,25,0.06)]">
-              <span className="text-[11px] text-muted">Orders Today</span>
-              <b className="text-[13px] text-ink">{orders.today || 0}</b>
+              <span className="text-[11px] text-muted">Pending Orders</span>
+              <b className="text-[13px] text-ink">{orders.pending || 0}</b>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-[rgba(47,31,25,0.06)]">
               <span className="text-[11px] text-muted">This Month Revenue</span>
@@ -319,16 +328,16 @@ export default function AdminDashboard() {
               <b className="text-[13px] text-ink">₹{(revenue.total || 0).toLocaleString('en-IN')}</b>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-[rgba(47,31,25,0.06)]">
-              <span className="text-[11px] text-muted">Total Visits</span>
-              <b className="text-[13px] text-ink">{(visits.total || 0).toLocaleString()}</b>
+              <span className="text-[11px] text-muted">Total Customers</span>
+              <b className="text-[13px] text-ink">{customers.totalCustomers || 0}</b>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-[rgba(47,31,25,0.06)]">
               <span className="text-[11px] text-muted">RTO Orders</span>
-              <b className="text-[13px] text-[#c5221f]">{rto.count || 0}</b>
+              <b className="text-[13px] text-[#c5221f]">{orders.rto || 0}</b>
             </div>
             <div className="flex items-center justify-between py-2">
               <span className="text-[11px] text-muted">Avg. Order Value</span>
-              <b className="text-[13px] text-ink">₹{orders.total > 0 ? Math.round((revenue.total || 0) / orders.total).toLocaleString('en-IN') : 0}</b>
+              <b className="text-[13px] text-ink">₹{Math.round(revenue.avgOrderValue || 0).toLocaleString('en-IN')}</b>
             </div>
           </div>
         </div>

@@ -4,24 +4,15 @@ import { FiCheckCircle, FiClock, FiEye, FiRotateCcw, FiSave } from 'react-icons/
 import { getToken } from '../../../../../lib/auth';
 import { api } from '../../../../../lib/api';
 import { productService } from '../../../../../services/productService';
-import AdditionalDetails from './sections/AdditionalDetails';
-import BasicInfo from './sections/BasicInfo';
-import BlouseDetails from './sections/BlouseDetails';
-import Description from './sections/Description';
-import Images from './sections/Images';
-import Inventory from './sections/Inventory';
-import Pricing from './sections/Pricing';
-import ReturnPolicy from './sections/ReturnPolicy';
-import SareeDetails from './sections/SareeDetails';
-import Shipping from './sections/Shipping';
+import DynamicFields from './sections/DynamicFields';
 import Tags from './sections/Tags';
 import Variants from './sections/Variants';
-import Videos from './sections/Videos';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import Toast from './components/Toast';
 import { useAutoSave } from './hooks/useAutoSave';
 import { useImageUpload } from './hooks/useImageUpload';
 import { useProductForm } from './hooks/useProductForm';
+import { useMasterFields } from './hooks/useMasterFields';
 
 export default function AddProduct({ onBack, onProductSaved, editProduct }) {
   const token = getToken();
@@ -30,6 +21,7 @@ export default function AddProduct({ onBack, onProductSaved, editProduct }) {
   const [initialLoading, setInitialLoading] = useState(true);
   const [toast, setToast] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
   const isEdit = Boolean(editProduct);
 const {
     register,
@@ -44,9 +36,11 @@ const {
 handleImageChange,
     setTags,
     setVariants,
+    setCustomFields,
   } = useProductForm(editProduct);
   const { uploadImages, uploading, uploadProgress } = useImageUpload(token);
   const { saveDraft, clearDraft, getDraft } = useAutoSave(formValues, isDirty, isEdit);
+  const { fields: masterFields } = useMasterFields();
 
 useEffect(() => {
     // Always start with a blank form when adding a new product.
@@ -60,9 +54,12 @@ useEffect(() => {
   }, [getDraft, isEdit, reset, setValue]);
 
   useEffect(() => {
-    api.adminListCategories(token, { isActive: 'true', includeRelations: 'true', limit: 100 })
+    api.adminListCategories(token, { isActive: 'true', limit: 100 })
       .then((response) => setCategories(response.data || []))
       .catch(() => setCategories([]));
+    api.adminListSubCategories(token, { isActive: 'true', limit: 100 })
+      .then((response) => setSubCategories(response.data || []))
+      .catch(() => setSubCategories([]));
   }, [token]);
 
   useEffect(() => {
@@ -210,22 +207,19 @@ useEffect(() => {
       </div>
 
 <form id="add-product-form" onSubmit={handleSubmit(onSubmit, onError)} className="space-y-4 py-4 sm:py-5">
-<BasicInfo register={register} errors={errors} formValues={formValues} categories={categories} />
-        <Pricing register={register} errors={errors} formValues={formValues} />
-        <Inventory register={register} errors={errors} />
-        <SareeDetails register={register} errors={errors} formValues={formValues} />
-        <BlouseDetails register={register} errors={errors} formValues={formValues} />
-        <Images
-          images={formValues.images || []}
-          onImagesChange={handleImageChange}
+<DynamicFields
+          fields={masterFields}
+          formValues={formValues}
+          setValue={setValue}
+          errors={errors}
+          categories={categories}
+          subCategories={subCategories}
+          customValues={formValues.customFields || []}
+          setCustomFields={setCustomFields}
+          onImageUpload={handleImageUpload}
           uploading={uploading}
           uploadProgress={uploadProgress}
-          onUpload={handleImageUpload}
-          errors={errors}
         />
-        <Videos register={register} errors={errors} />
-<Description register={register} errors={errors} setValue={setValue} formValues={formValues} />
-        <Shipping register={register} errors={errors} formValues={formValues} />
         <Tags tags={formValues.tags || []} setTags={setTags} />
         <Variants
           variants={formValues.variants || []}
@@ -234,8 +228,6 @@ useEffect(() => {
           productId={formValues.productId}
           baseSku={formValues.sku}
         />
-<ReturnPolicy register={register} errors={errors} formValues={formValues} />
-        <AdditionalDetails register={register} errors={errors} />
 
         <div className="flex flex-col gap-3 border-t border-gray-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 text-[11px] text-gray-400">

@@ -137,6 +137,9 @@ export const productService = {
       countryOfOrigin: formValues.countryOfOrigin || 'India',
       manufacturer: formValues.manufacturer || '',
       packer: formValues.packer || '',
+
+      // Custom Fields (admin-defined, see Custom Fields admin screen)
+      customFields: Array.isArray(formValues.customFields) ? formValues.customFields : [],
     };
   },
 };

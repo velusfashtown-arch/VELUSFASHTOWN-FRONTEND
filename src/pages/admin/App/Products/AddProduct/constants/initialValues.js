@@ -48,6 +48,7 @@ shortDescription: '',
 
   tags: [],
   variants: [],
+  customFields: [],
 
   returnAvailable: true,
   returnDays: '7',

@@ -7,6 +7,7 @@ import AdminTable from '../../../Common/Table';
 import useTableData from '../../../Common/Table/useTableData';
 import AdminInput from '../../../Common/Form/Input';
 import AdminTextarea from '../../../Common/Form/Textarea';
+import AdminCheckbox from '../../../Common/Form/Checkbox';
 import { adminBtnPrimary, adminBtnSecondary, adminToast } from '../../../Common/buttonClasses';
 
 function CategoryModal({ category, onClose, onSaved }) {
@@ -16,6 +17,7 @@ function CategoryModal({ category, onClose, onSaved }) {
   const [form, setForm] = useState({
     name: category?.name || '',
     description: category?.description || '',
+    isActive: category?.isActive ?? true,
   });
 
   function set(key, value) {
@@ -28,7 +30,11 @@ function CategoryModal({ category, onClose, onSaved }) {
     setLoading(true);
     setError('');
     try {
-      const payload = { name: form.name.trim(), description: form.description.trim() };
+      const payload = {
+        name: form.name.trim(),
+        description: form.description.trim(),
+        isActive: form.isActive,
+      };
       if (category?.id) {
         await api.adminUpdateCategory(token, category.id, payload);
       } else {
@@ -71,6 +77,12 @@ function CategoryModal({ category, onClose, onSaved }) {
           value={form.description}
           onChange={e => set('description', e.target.value)}
         />
+        <AdminCheckbox
+          label="Active"
+          helper="Only active categories are available when adding a product."
+          checked={form.isActive}
+          onChange={e => set('isActive', e.target.checked)}
+        />
       </form>
     </AdminModal>
   );
@@ -96,7 +108,7 @@ export default function AdminCategory() {
     changePageSize,
     searchTable,
   } = useTableData({
-    fetcher: (params) => api.adminListCategories(token, { ...params, parent: 'null' }),
+    fetcher: (params) => api.adminListCategories(token, params),
   });
 
   async function handleDelete() {
@@ -128,6 +140,17 @@ export default function AdminCategory() {
   function openEdit(cat) { setEditingCategory(cat); setModalOpen(true); }
   function closeModal() { setModalOpen(false); setEditingCategory(null); }
 
+  async function handleToggleActive(cat) {
+    if (!cat?.id) return;
+    try {
+      await api.adminToggleCategoryActive(token, cat.id, !cat.isActive);
+      await loadCategory();
+      showSuccess(cat.isActive ? 'Category deactivated!' : 'Category activated!');
+    } catch (err) {
+      showError(err.message || 'Failed to toggle category status');
+    }
+  }
+
   return (
     <div>
 {success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
@@ -158,11 +181,13 @@ export default function AdminCategory() {
         onServerSearch={searchTable}
         columns={[
           { key: 'name', header: 'Name', render: (cat) => (<div><b className="text-ink">{cat.name}</b>{cat.description && <small className="block text-[11px] text-muted truncate max-w-[200px]">{cat.description}</small>}</div>) },
+          { key: 'isActive', header: 'Status', render: (cat) => <span className={`text-[11px] font-semibold ${cat.isActive ? 'text-[#137333]' : 'text-muted'}`}>{cat.isActive ? 'Active' : 'Inactive'}</span> },
         ]}
         rows={Category}
         rowKey="id"
         rowActions={[
           { label: 'Edit', onClick: openEdit },
+          { label: (cat) => (cat.isActive ? 'Deactivate' : 'Activate'), onClick: handleToggleActive },
           { label: 'Delete', danger: true, onClick: setCategoryToDelete },
         ]}
         emptyMessage="No Category yet. Click Add Category to create one."

@@ -1,4 +1,5 @@
 import React from 'react';
+import WebsiteSwitcher from '../../../components/admin/WebsiteSwitcher';
 
 function LogoutIcon() {
   return (
@@ -35,6 +36,7 @@ export default function AdminHeader({ pageTitle, onLogout, onMenuToggle }) {
         </h1>
       </div>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <WebsiteSwitcher />
         <span className="hidden md:inline text-[11px] font-semibold text-muted tracking-[0.05em]">Admin</span>
         <button
           onClick={onLogout}

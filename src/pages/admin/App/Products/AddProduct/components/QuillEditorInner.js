@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, false] }],
@@ -14,10 +14,13 @@ const TOOLBAR_OPTIONS = [
   ['clean'],
 ];
 
+// Quill 2.x (bundled by react-quill-new) merged the old separate 'bullet'
+// format into 'list' — 'list: ordered|bullet' is now a value of the single
+// 'list' format, not two distinct registered format names.
 const formats = [
   'header', 'bold', 'italic', 'underline', 'strike',
   'color', 'background',
-  'list', 'bullet', 'indent', 'align',
+  'list', 'indent', 'align',
   'blockquote', 'code-block',
   'link',
 ];

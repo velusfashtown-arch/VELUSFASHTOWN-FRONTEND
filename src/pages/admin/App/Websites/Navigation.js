@@ -146,7 +146,7 @@ export default function NavigationBuilder() {
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="rounded bg-cream px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-terra">{item.type}</span>
-                  <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold uppercase text-muted">{locationName(item.navigationLocation || items.find((i) => i._id === item.navigation)?.location)}</span>
+                  <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold uppercase text-muted">{locationName(navigations.find((n) => n._id === item.navigation)?.location)}</span>
                 </div>
                 <p className="mt-1 truncate text-sm font-semibold text-ink">{item.label || 'Untitled'}</p>
                 {item.url ? <p className="truncate text-[11px] text-muted">{item.url}</p> : null}

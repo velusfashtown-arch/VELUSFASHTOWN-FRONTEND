@@ -70,6 +70,7 @@ images: Array.isArray(editProduct.images)
         blouseIncluded: editProduct.blouseIncluded,
         blouseType: editProduct.blouseType || 'Unstitched',
         blouseColor: editProduct.blouseColor || '',
+        customFields: Array.isArray(editProduct.customFields) ? editProduct.customFields : [],
       };
     }
     return initialFormValues;
@@ -136,6 +137,10 @@ const setVariants = useCallback((variants) => {
     setValue('variants', variants, { shouldValidate: false });
   }, [setValue]);
 
+  const setCustomFields = useCallback((customFields) => {
+    setValue('customFields', customFields, { shouldValidate: false });
+  }, [setValue]);
+
   const methods = {
     register,
     handleSubmit,
@@ -152,6 +157,7 @@ const setVariants = useCallback((variants) => {
     handleImageChange,
     setTags,
     setVariants,
+    setCustomFields,
   };
 
   return methods;

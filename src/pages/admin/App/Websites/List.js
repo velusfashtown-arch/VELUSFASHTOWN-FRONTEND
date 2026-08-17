@@ -44,9 +44,9 @@ export default function WebsitesList() {
   async function toggleStatus(w) {
     try {
       if (w.status === 'active') {
-        await api.adminDeactivateWebsite(token, w._id);
+        await api.adminDeactivateWebsite(token, w.id);
       } else {
-        await api.adminActivateWebsite(token, w._id);
+        await api.adminActivateWebsite(token, w.id);
       }
       await load();
     } catch (err) {
@@ -57,7 +57,7 @@ export default function WebsitesList() {
   async function handleDelete(w) {
     if (!window.confirm(`Delete website "${w.name}"? This deactivates it.`)) return;
     try {
-      await api.adminDeleteWebsite(token, w._id);
+      await api.adminDeleteWebsite(token, w.id);
       await load();
     } catch (err) {
       alert(err.message || 'Delete failed');
@@ -105,7 +105,7 @@ export default function WebsitesList() {
             </thead>
             <tbody>
               {websites.map((w) => (
-                <tr key={w._id} className="border-b border-line last:border-0 hover:bg-[#fffaf5]">
+                <tr key={w.id} className="border-b border-line last:border-0 hover:bg-[#fffaf5]">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {w.logo ? (
@@ -116,7 +116,7 @@ export default function WebsitesList() {
                         </span>
                       )}
                       <div className="min-w-0">
-                        <Link to={`/admin/websites/${w._id}`} className="block truncate font-semibold text-ink no-underline hover:text-terra">
+                        <Link to={`/admin/websites/${w.id}`} className="block truncate font-semibold text-ink no-underline hover:text-terra">
                           {w.brandName || w.name}
                         </Link>
                         <span className="text-[11px] text-muted">/{w.slug}</span>
@@ -134,7 +134,7 @@ export default function WebsitesList() {
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
                       <Link to={`/store/${w.slug}`} target="_blank" rel="noopener noreferrer" className="rounded-md px-2 py-1 text-[11px] font-semibold text-muted no-underline hover:bg-sand hover:text-ink">Preview</Link>
-                      <button type="button" onClick={() => navigate(`/admin/websites/${w._id}`)} className="rounded-md px-2 py-1 text-[11px] font-semibold text-muted hover:bg-sand hover:text-ink">Edit</button>
+                      <button type="button" onClick={() => navigate(`/admin/websites/${w.id}`)} className="rounded-md px-2 py-1 text-[11px] font-semibold text-muted hover:bg-sand hover:text-ink">Edit</button>
                       <button type="button" onClick={() => toggleStatus(w)} className="rounded-md px-2 py-1 text-[11px] font-semibold text-muted hover:bg-sand hover:text-ink">
                         {w.status === 'active' ? 'Deactivate' : 'Activate'}
                       </button>

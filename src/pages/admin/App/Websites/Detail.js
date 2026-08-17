@@ -115,7 +115,7 @@ function SettingsPanel({ website }) {
     setSaving(true);
     setError(null);
     try {
-      await api.adminUpdateWebsite(token, website._id, {
+      await api.adminUpdateWebsite(token, id, {
         name: form.name,
         brandName: form.brandName,
         slug: form.slug,

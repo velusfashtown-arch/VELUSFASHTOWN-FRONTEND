@@ -35,7 +35,7 @@ export function AdminWebsiteProvider({ children }) {
   }, []);
 
   const selectedWebsite = useMemo(
-    () => websites.find((w) => String(w._id) === String(selectedWebsiteId)) || null,
+    () => websites.find((w) => String(w.id) === String(selectedWebsiteId)) || null,
     [websites, selectedWebsiteId]
   );
 

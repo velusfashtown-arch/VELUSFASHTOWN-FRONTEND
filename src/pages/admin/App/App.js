@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { clearToken } from '../../../lib/auth';
 import AdminHeader from '../Header/index';
 import AdminSidebar from '../Sidebar/index';
+import { AdminWebsiteProvider } from '../../../context/AdminWebsiteContext';
 
 export default function AdminLayout({ children, pageTitle }) {
   const nav = useNavigate();
@@ -45,32 +46,34 @@ export default function AdminLayout({ children, pageTitle }) {
   }, [mobileSidebarOpen]);
 
 return (
-    <div className="flex min-h-screen bg-[#f5f0eb] font-sans">
-      {/* Sidebar */}
-      <AdminSidebar
-        isCollapsed={sidebarCollapsed}
-        onToggle={toggleSidebar}
-        isMobileOpen={mobileSidebarOpen}
-        onMobileClose={closeMobileSidebar}
-      />
-
-{/* Main Content */}
-      <div
-        className={`flex min-h-screen min-w-0 flex-1 flex-col transition-all duration-200 ${
-          sidebarCollapsed ? 'md:ml-[72px]' : 'md:ml-[220px]'
-        }`}
-      >
-        <AdminHeader
-          pageTitle={pageTitle}
-          onLogout={onLogout}
-          onMenuToggle={openMobileSidebar}
+    <AdminWebsiteProvider>
+      <div className="flex min-h-screen bg-[#f5f0eb] font-sans">
+        {/* Sidebar */}
+        <AdminSidebar
+          isCollapsed={sidebarCollapsed}
+          onToggle={toggleSidebar}
+          isMobileOpen={mobileSidebarOpen}
+          onMobileClose={closeMobileSidebar}
         />
 
-        <div className="min-w-0 flex-1 p-3 md:p-4">
-          {children}
+{/* Main Content */}
+        <div
+          className={`flex min-h-screen min-w-0 flex-1 flex-col transition-all duration-200 ${
+            sidebarCollapsed ? 'md:ml-[72px]' : 'md:ml-[220px]'
+          }`}
+        >
+          <AdminHeader
+            pageTitle={pageTitle}
+            onLogout={onLogout}
+            onMenuToggle={openMobileSidebar}
+          />
+
+          <div className="min-w-0 flex-1 p-3 md:p-4">
+            {children}
+          </div>
         </div>
       </div>
-    </div>
+    </AdminWebsiteProvider>
   );
 }
 
