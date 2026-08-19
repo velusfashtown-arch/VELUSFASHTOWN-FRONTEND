@@ -196,7 +196,7 @@ export default function WebsiteProducts() {
             <option value="UNPUBLISHED">Unpublished</option>
           </select>
         </div>
-        <button type="button" onClick={openAssign} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white hover:bg-wine">
+        <button type="button" onClick={openAssign} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)]">
           + Assign Product
         </button>
       </div>
@@ -245,9 +245,9 @@ export default function WebsiteProducts() {
                       {a.published ? (
                         <button type="button" onClick={() => handleUnpublish(a.product?._id || a.product)} className="rounded border border-line px-2 py-1 text-xs text-muted hover:bg-cream">Unpublish</button>
                       ) : null}
-                      <button type="button" onClick={() => setRejecting(a.product?._id || a.product)} className="rounded border border-red-200 px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">Reject</button>
+                      <button type="button" onClick={() => setRejecting(a.product?._id || a.product)} className="rounded border border-[#f3d4d4] px-2 py-1 text-xs font-semibold text-[#b93b3b] transition-colors hover:bg-[#fce8e6]">Reject</button>
                       <button type="button" onClick={() => openEdit(a)} className="rounded border border-line px-2 py-1 text-xs font-semibold text-terra hover:bg-cream">Edit</button>
-                      <button type="button" onClick={() => handleUnassign(a.product?._id || a.product)} className="rounded border border-red-200 px-2 py-1 text-xs text-red-600 hover:bg-red-50">Unassign</button>
+                      <button type="button" onClick={() => handleUnassign(a.product?._id || a.product)} className="rounded border border-[#f3d4d4] px-2 py-1 text-xs text-[#b93b3b] transition-colors hover:bg-[#fce8e6]">Unassign</button>
                     </div>
                   </td>
                 </tr>
@@ -293,7 +293,7 @@ export default function WebsiteProducts() {
               </label>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowAssign(false)} className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-muted hover:bg-cream">Cancel</button>
-                <button type="button" onClick={handleAssign} disabled={assigning || !selectedProduct} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-wine disabled:opacity-60">
+                <button type="button" onClick={handleAssign} disabled={assigning || !selectedProduct} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] disabled:opacity-60">
                   {assigning ? 'Assigning…' : 'Assign'}
                 </button>
               </div>
@@ -349,7 +349,7 @@ export default function WebsiteProducts() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setEditing(null)} className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-muted hover:bg-cream">Cancel</button>
-                <button type="button" onClick={handleSaveEdit} disabled={savingEdit} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-wine disabled:opacity-60">
+                <button type="button" onClick={handleSaveEdit} disabled={savingEdit} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] disabled:opacity-60">
                   {savingEdit ? 'Saving…' : 'Save'}
                 </button>
               </div>

@@ -124,7 +124,7 @@ export default function WebsiteTheme() {
         {saved ? <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">Theme saved successfully.</div> : null}
 
         <div className="flex justify-end">
-          <button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-terra px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white hover:bg-wine disabled:opacity-60">
+          <button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-terra px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] disabled:opacity-60">
             {saving ? 'Saving…' : 'Save Theme'}
           </button>
         </div>

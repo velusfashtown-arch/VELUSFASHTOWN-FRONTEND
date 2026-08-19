@@ -128,7 +128,7 @@ export default function NavigationBuilder() {
 
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted">{items.length} menu item(s). Manage header, footer, mobile and mega menus.</p>
-        <button type="button" onClick={openNew} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white hover:bg-wine">
+        <button type="button" onClick={openNew} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)]">
           + Add Menu Item
         </button>
       </div>
@@ -156,7 +156,7 @@ export default function NavigationBuilder() {
                 <button type="button" onClick={() => handleMove(index, 1)} disabled={index === items.length - 1} className="rounded border border-line p-1.5 text-xs text-muted hover:bg-cream disabled:opacity-40">↓</button>
                 <button type="button" onClick={() => handleToggle(item)} className="rounded border border-line px-2 py-1.5 text-xs text-muted hover:bg-cream">{item.isActive ? 'Disable' : 'Enable'}</button>
                 <button type="button" onClick={() => openEdit(item)} className="rounded border border-line px-2 py-1.5 text-xs font-semibold text-terra hover:bg-cream">Edit</button>
-                <button type="button" onClick={() => handleDelete(item._id)} className="rounded border border-red-200 px-2 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">Delete</button>
+                <button type="button" onClick={() => handleDelete(item._id)} className="rounded border border-[#f3d4d4] px-2 py-1.5 text-xs font-semibold text-[#b93b3b] transition-colors hover:bg-[#fce8e6]">Delete</button>
               </div>
             </div>
           </div>
@@ -218,7 +218,7 @@ export default function NavigationBuilder() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setEditing(null)} className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-muted hover:bg-cream">Cancel</button>
-                <button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-wine disabled:opacity-60">
+                <button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] disabled:opacity-60">
                   {saving ? 'Saving…' : 'Save Item'}
                 </button>
               </div>

@@ -55,11 +55,11 @@ className={`flex max-h-[calc(100dvh-1rem)] w-full flex-col overflow-hidden round
         {/* Header */}
         {title && (
           <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[rgba(47,31,25,0.08)] px-4 py-4 sm:px-5 sm:py-[18px]">
-            <h3 className="m-0 min-w-0 text-base font-semibold text-ink sm:text-lg">{title}</h3>
+            <h3 className="m-0 min-w-0 font-playfair text-base font-semibold tracking-[-0.02em] text-ink sm:text-lg">{title}</h3>
             {showClose && (
               <button
                 onClick={onClose}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[rgba(47,31,25,0.08)] text-muted transition-colors hover:bg-[rgba(47,31,25,0.06)] hover:text-ink"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[rgba(47,31,25,0.08)] text-muted transition-colors hover:border-terra/30 hover:bg-terra/10 hover:text-terra"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />

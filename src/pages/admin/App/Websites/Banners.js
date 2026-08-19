@@ -107,7 +107,7 @@ export default function Banners() {
 
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted">{banners.length} banner(s).</p>
-        <button type="button" onClick={openNew} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white hover:bg-wine">
+        <button type="button" onClick={openNew} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)]">
           + Add Banner
         </button>
       </div>
@@ -130,7 +130,7 @@ export default function Banners() {
               <div className="flex shrink-0 items-center gap-1">
                 <button type="button" onClick={() => handleToggle(banner)} className="rounded border border-line px-2 py-1.5 text-xs text-muted hover:bg-cream">{banner.status === 'active' ? 'Deactivate' : 'Activate'}</button>
                 <button type="button" onClick={() => openEdit(banner)} className="rounded border border-line px-2 py-1.5 text-xs font-semibold text-terra hover:bg-cream">Edit</button>
-                <button type="button" onClick={() => handleDelete(banner._id)} className="rounded border border-red-200 px-2 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">Delete</button>
+                <button type="button" onClick={() => handleDelete(banner._id)} className="rounded border border-[#f3d4d4] px-2 py-1.5 text-xs font-semibold text-[#b93b3b] transition-colors hover:bg-[#fce8e6]">Delete</button>
               </div>
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function Banners() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setEditing(null)} className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-muted hover:bg-cream">Cancel</button>
-                <button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-wine disabled:opacity-60">
+                <button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] disabled:opacity-60">
                   {saving ? 'Saving…' : 'Save Banner'}
                 </button>
               </div>

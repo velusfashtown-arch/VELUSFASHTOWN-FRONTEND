@@ -7,8 +7,8 @@ import { api } from '../../../../lib/api';
 import { getToken } from '../../../../lib/auth';
 
 const STATUS_BADGE = {
-  active: 'bg-emerald-100 text-emerald-700',
-  inactive: 'bg-neutral-100 text-neutral-500',
+  active: 'bg-[#e6f4ea] text-[#137333]',
+  inactive: 'bg-[rgba(47,31,25,0.06)] text-muted',
 };
 
 function formatDate(value) {
@@ -75,26 +75,31 @@ export default function WebsitesList() {
   return (
     <div>
       <div className="mb-5 flex items-center justify-between">
-        <div>
-          <h2 className="m-0 font-playfair text-xl font-semibold text-ink">Websites</h2>
-          <p className="mt-1 text-xs text-muted">Manage your multi-website storefronts.</p>
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-terra/10 text-terra">
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a15 15 0 010 18 15 15 0 010-18z" /></svg>
+          </div>
+          <div>
+            <h2 className="m-0 font-playfair text-xl font-semibold text-ink">Websites</h2>
+            <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted">Manage your multi-website storefronts</p>
+          </div>
         </div>
         <Link
           to="/admin/websites/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-terra px-4 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white no-underline transition-colors hover:bg-wine"
+          className="inline-flex items-center gap-1.5 rounded-md bg-terra px-4 py-3 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-[#fffaf5] no-underline shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] active:scale-[0.97]"
         >
-          + Create Website
+          <span className="text-base leading-none">+</span> Create Website
         </Link>
       </div>
 
       {websites.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-line bg-paper p-12 text-center">
+        <div className="rounded-2xl border border-dashed border-line bg-paper p-12 text-center">
           <p className="text-sm text-muted">No websites yet. Create your first website to get started.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-line bg-paper">
+        <div className="overflow-hidden rounded-2xl border border-[rgba(47,31,25,0.1)] bg-paper shadow-[0_12px_32px_rgba(47,31,25,0.06)]">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-line bg-[#f7f0e6] text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
+            <thead className="border-b border-[rgba(47,31,25,0.08)] bg-[linear-gradient(115deg,rgba(255,255,255,0.92),rgba(250,245,239,0.92))] text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
               <tr>
                 <th className="px-4 py-3">Website</th>
                 <th className="px-4 py-3">Domain</th>
@@ -105,7 +110,7 @@ export default function WebsitesList() {
             </thead>
             <tbody>
               {websites.map((w) => (
-                <tr key={w.id} className="border-b border-line last:border-0 hover:bg-[#fffaf5]">
+                <tr key={w.id} className="border-b border-[rgba(47,31,25,0.06)] odd:bg-white even:bg-[rgba(250,245,239,0.45)] transition-colors last:border-0 hover:bg-[rgba(167,78,62,0.055)]">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {w.logo ? (
@@ -138,7 +143,7 @@ export default function WebsitesList() {
                       <button type="button" onClick={() => toggleStatus(w)} className="rounded-md px-2 py-1 text-[11px] font-semibold text-muted hover:bg-sand hover:text-ink">
                         {w.status === 'active' ? 'Deactivate' : 'Activate'}
                       </button>
-                      <button type="button" onClick={() => handleDelete(w)} className="rounded-md px-2 py-1 text-[11px] font-semibold text-red-600 hover:bg-red-50">Delete</button>
+                      <button type="button" onClick={() => handleDelete(w)} className="rounded-md px-2 py-1 text-[11px] font-semibold text-[#b93b3b] transition-colors hover:bg-[#fce8e6]">Delete</button>
                     </div>
                   </td>
                 </tr>

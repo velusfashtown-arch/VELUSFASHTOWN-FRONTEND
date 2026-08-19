@@ -21,7 +21,7 @@ function MenuIcon() {
 
 export default function AdminHeader({ pageTitle, onLogout, onMenuToggle }) {
   return (
-<header className="sticky top-0 z-40 flex min-h-[60px] min-w-0 items-center justify-between gap-3 border-b border-line bg-paper px-3 py-2.5 sm:px-4 sm:py-3 lg:px-7">
+<header className="sticky top-0 z-40 flex min-h-[64px] min-w-0 items-center justify-between gap-3 border-b border-line bg-paper/90 px-3 py-2.5 shadow-[0_1px_0_rgba(47,31,25,0.04),0_4px_16px_-8px_rgba(47,31,25,0.08)] backdrop-blur-sm sm:px-4 sm:py-3 lg:px-7">
       <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
         {/* Hamburger menu button - visible on mobile only */}
         <button
@@ -31,16 +31,20 @@ export default function AdminHeader({ pageTitle, onLogout, onMenuToggle }) {
         >
           <MenuIcon />
         </button>
+        <span className="hidden h-6 w-[3px] shrink-0 rounded-full bg-terra sm:block" aria-hidden="true" />
         <h1 className="m-0 truncate font-playfair text-[17px] font-semibold tracking-[-0.03em] text-ink sm:text-[19px] lg:text-[22px]">
           {pageTitle || 'Dashboard'}
         </h1>
       </div>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         <WebsiteSwitcher />
-        <span className="hidden md:inline text-[11px] font-semibold text-muted tracking-[0.05em]">Admin</span>
+        <div className="hidden md:flex items-center gap-2 rounded-full border border-line bg-[rgba(47,31,25,0.02)] py-1 pl-1 pr-3">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-terra text-[10px] font-bold text-white">A</span>
+          <span className="text-[11px] font-semibold text-muted tracking-[0.03em]">Admin</span>
+        </div>
         <button
           onClick={onLogout}
-          className="flex h-9 items-center justify-center gap-1.5 rounded-md border border-line bg-transparent px-2.5 text-[11px] font-semibold tracking-[0.05em] text-muted transition-colors hover:border-terra hover:text-terra sm:px-3 lg:px-4"
+          className="flex h-9 items-center justify-center gap-1.5 rounded-md border border-line bg-transparent px-2.5 text-[11px] font-semibold tracking-[0.05em] text-muted transition-all hover:border-terra hover:text-terra hover:shadow-[0_1px_6px_rgba(167,78,62,0.15)] sm:px-3 lg:px-4"
         >
           <LogoutIcon /> <span className="hidden sm:inline">Sign Out</span>
         </button>

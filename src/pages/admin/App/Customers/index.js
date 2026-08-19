@@ -3,6 +3,7 @@ import { api } from '../../../../lib/api';
 import { getToken } from '../../../../lib/auth';
 import Table from '../../Common/Table';
 import useTableData from '../../Common/Table/useTableData';
+import Rupee from '../../../../components/shared/Rupee';
 
 function formatCurrency(value) {
   return `₹${Number(value || 0).toLocaleString('en-IN')}`;
@@ -35,8 +36,8 @@ export default function AdminCustomers() {
       <div className="mb-6 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
         <div className="rounded-lg border border-line bg-paper px-4 py-3.5"><span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">Total Customers</span><b className="font-playfair text-[22px] font-semibold text-ink">{pagination.total}</b></div>
         <div className="rounded-lg border border-line bg-paper px-4 py-3.5"><span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">Repeat On This Page</span><b className="font-playfair text-[22px] font-semibold text-ink">{repeatCustomers}</b></div>
-        <div className="rounded-lg border border-line bg-paper px-4 py-3.5"><span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">Page Revenue</span><b className="font-playfair text-[22px] font-semibold text-ink">{formatCurrency(listedRevenue)}</b></div>
-        <div className="rounded-lg border border-line bg-paper px-4 py-3.5"><span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">Page Average</span><b className="font-playfair text-[22px] font-semibold text-ink">{formatCurrency(customers.length ? listedRevenue / customers.length : 0)}</b></div>
+        <div className="rounded-lg border border-line bg-paper px-4 py-3.5"><span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">Page Revenue</span><b className="font-playfair text-[22px] font-semibold text-ink"><Rupee amount={listedRevenue} /></b></div>
+        <div className="rounded-lg border border-line bg-paper px-4 py-3.5"><span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">Page Average</span><b className="font-playfair text-[22px] font-semibold text-ink"><Rupee amount={customers.length ? listedRevenue / customers.length : 0} /></b></div>
       </div>
 
       <Table

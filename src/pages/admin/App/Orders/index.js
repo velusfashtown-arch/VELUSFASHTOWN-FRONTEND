@@ -7,6 +7,7 @@ import ConfirmDeleteModal from '../../Common/ConfirmDeleteModal';
 import AdminInput from '../../Common/Form/Input';
 import AdminTextarea from '../../Common/Form/Textarea';
 import { adminBtnPrimary, adminBtnSecondary, adminBtnDanger, adminBtnGhost, adminToast } from '../../Common/buttonClasses';
+import Rupee from '../../../../components/shared/Rupee';
 
 const statusOptions = ['Placed', 'Confirmed', 'Packed', 'Shipped', 'Delivered', 'Cancelled', 'RTO'];
 const paymentOptions = ['Pending', 'Paid'];
@@ -478,7 +479,7 @@ export default function AdminOrders() {
         </div>
         <div className="bg-paper border border-line rounded-lg px-4 py-3.5">
           <span className="block text-[10px] font-semibold tracking-[0.08em] uppercase text-muted mb-1">Revenue (Paid)</span>
-          <b className="font-playfair text-[22px] font-semibold text-ink">₹{stats.revenue.toLocaleString('en-IN')}</b>
+          <b className="font-playfair text-[22px] font-semibold text-ink"><Rupee amount={stats.revenue} /></b>
         </div>
       </div>
 
@@ -530,7 +531,7 @@ export default function AdminOrders() {
             </div>
 
             <div className="text-right flex flex-col items-end gap-2 shrink-0">
-              <div className="font-playfair text-lg font-semibold text-ink">₹{Number(order.total).toLocaleString('en-IN')}</div>
+              <div className="font-playfair text-lg font-semibold text-ink"><Rupee amount={order.total} /></div>
               <div>
                 <span className="text-[10px] font-semibold tracking-[0.05em] uppercase text-muted block mb-1">Payment</span>
                 <Listbox

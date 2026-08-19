@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../../../lib/api';
 import { getToken } from '../../../../lib/auth';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+import Rupee from '../../../../components/shared/Rupee';
 
 const statusColors = {
   Placed: 'bg-[#f0edf5] text-[#6b4fa0]',
@@ -23,7 +24,7 @@ function StatCard({ icon, label, value, sub, bgColor, iconColor, trend }) {
       </div>
       <div className="min-w-0 flex-1">
         <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-muted mb-1">{label}</div>
-        <div className="font-playfair text-[26px] font-semibold tracking-[-0.03em] text-ink leading-none">{value}</div>
+        <div className="font-playfair text-[26px] font-semibold tracking-[-0.03em] text-ink leading-none tabular-nums">{value}</div>
         <div className="flex items-center gap-2 mt-1">
           <span className="text-[11px] text-muted">{sub}</span>
           {trend !== undefined && (
@@ -146,8 +147,8 @@ export default function AdminDashboard() {
         <StatCard
           icon={<DollarIcon />}
           label="Revenue"
-          value={`₹${(revenue.total || 0).toLocaleString('en-IN')}`}
-          sub={`₹${(revenue.thisMonth || 0).toLocaleString('en-IN')} this month`}
+          value={<Rupee amount={revenue.total} />}
+          sub={<><Rupee amount={revenue.thisMonth} /> this month</>}
           bgColor="#e6f4ea"
           iconColor="#1e8e3e"
         />
@@ -178,7 +179,7 @@ export default function AdminDashboard() {
         <StatCard
           icon={<EyeIcon />}
           label="Avg. Order Value"
-          value={`₹${Math.round(revenue.avgOrderValue || 0).toLocaleString('en-IN')}`}
+          value={<Rupee amount={revenue.avgOrderValue} />}
           sub={`${orders.total || 0} orders total`}
           bgColor="#fef7e0"
           iconColor="#b47c2e"

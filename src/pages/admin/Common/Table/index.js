@@ -90,7 +90,7 @@ function TableActionButtons({ row, index, rowActions, isBusy }) {
         title={label}
         aria-label={label}
         disabled={getValue(action.disabled, row, index) || isBusy}
-        className={`ml-1 inline-flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-md border border-[rgba(47,31,25,0.06)] bg-transparent align-middle text-muted transition-all duration-200 hover:bg-[rgba(167,78,62,0.08)] hover:text-terra active:scale-[0.92] disabled:cursor-not-allowed disabled:opacity-40 ${action.danger ? 'hover:bg-[#fce8e6] hover:text-danger' : ''}`}
+        className={`ml-1 inline-flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-md border border-[rgba(47,31,25,0.08)] bg-transparent align-middle text-muted opacity-70 transition-all duration-150 hover:scale-[1.06] hover:border-terra/25 hover:bg-terra/10 hover:text-terra hover:opacity-100 hover:shadow-[0_2px_8px_rgba(167,78,62,0.18)] active:scale-[0.92] disabled:cursor-not-allowed disabled:opacity-30 group-hover:opacity-100 ${action.danger ? 'hover:border-[#f3d4d4] hover:bg-[#fce8e6] hover:text-danger' : ''}`}
         onClick={() => action.onClick(row, index)}
       >
         <Icon className="size-4" />
@@ -230,27 +230,27 @@ export default function Table({
 <div className="hidden overflow-x-auto md:block">
         <table className="w-full min-w-[720px] border-collapse text-[13px]">
           <thead>
-            <tr className="bg-[rgba(47,31,25,0.035)] text-left text-[12px] font-bold uppercase tracking-[0.1em] text-muted">
+            <tr className="bg-[linear-gradient(115deg,rgba(255,255,255,0.95),rgba(250,245,239,0.95))] text-left text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted">
               {columns.map((column, columnIndex) => {
                 const alignment = columnIndex === 0 ? 'text-left' : rowActions.length === 0 && columnIndex === columns.length - 1 ? 'text-right' : 'text-center';
-                return <th key={column.key} className={`border-b border-[rgba(47,31,25,0.08)] px-4 py-3.5  ${alignment} ${column.headerClassName || ''}`}>{column.header}</th>;
+                return <th key={column.key} className={`border-b-2 border-[rgba(47,31,25,0.09)] px-4 py-3.5  ${alignment} ${column.headerClassName || ''}`}>{column.header}</th>;
               })}
-              {rowActions.length > 0 && <th className="sticky right-0 z-20 border-b border-[rgba(47,31,25,0.08)] bg-[#f8f3ee] px-4 py-3.5 text-right shadow-[-8px_0_14px_rgba(47,31,25,0.04)]">Actions</th>}
+              {rowActions.length > 0 && <th className="sticky right-0 z-20 border-b-2 border-[rgba(47,31,25,0.09)] bg-[#f8f3ee] px-4 py-3.5 text-right shadow-[-8px_0_14px_rgba(47,31,25,0.04)]">Actions</th>}
             </tr>
           </thead>
           <tbody>
             {showSkeleton ? <SkeletonRows columns={columns} rowCount={skeletonRows} rowActions={rowActions} /> : null}
 {!showSkeleton && !isBusy && filteredRows.map((row, index) => (
-              <tr key={typeof rowKey === 'function' ? rowKey(row, index) : row[rowKey]} className="group animate-admin-row-fade transition-colors odd:bg-white even:bg-[rgba(250,245,239,0.45)] hover:bg-[rgba(167,78,62,0.055)]">
+              <tr key={typeof rowKey === 'function' ? rowKey(row, index) : row[rowKey]} className="group animate-admin-row-fade bg-white transition-all duration-150 hover:bg-[rgba(167,78,62,0.04)] hover:shadow-[inset_3px_0_0_#a74e3e]">
                 {columns.map((column, columnIndex) => {
                   const value = column.render ? column.render(row, index) : row[column.key];
                   const alignment = columnIndex === 0 ? 'text-left' : rowActions.length === 0 && columnIndex === columns.length - 1 ? 'text-right' : 'text-center';
-                  return <td key={column.key} className={`border-b border-[rgba(47,31,25,0.06)] px-4 py-2 capitalize text-ink ${alignment} ${column.cellClassName || ''}`}>{value ?? '—'}</td>;
+                  return <td key={column.key} className={`border-b border-[rgba(47,31,25,0.07)] px-4 py-3.5 capitalize text-ink ${alignment} ${column.cellClassName || ''}`}>{value ?? '—'}</td>;
                 })}
-                {rowActions.length > 0 && <td className="sticky right-0 z-10 border-b border-[rgba(47,31,25,0.06)] px-4 py-3.5 text-right"><TableActionButtons row={row} index={index} rowActions={rowActions} isBusy={isBusy} /></td>}
+                {rowActions.length > 0 && <td className="sticky right-0 z-10 border-b border-[rgba(47,31,25,0.07)] bg-white px-4 py-3.5 text-right transition-colors group-hover:bg-[#fdf9f4]"><TableActionButtons row={row} index={index} rowActions={rowActions} isBusy={isBusy} /></td>}
               </tr>
             ))}
-            {!showSkeleton && !isBusy && filteredRows.length === 0 && <tr><td colSpan={columns.length + (rowActions.length ? 1 : 0)} className="px-4 py-12 text-center text-muted">{emptyMessage}</td></tr>}
+            {!showSkeleton && !isBusy && filteredRows.length === 0 && <tr><td colSpan={columns.length + (rowActions.length ? 1 : 0)} className="px-4 py-16 text-center text-muted"><span className="mx-auto flex max-w-xs flex-col items-center gap-2"><svg className="h-9 w-9 opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 9h18M9 4v16" /></svg><span className="text-[13px]">{emptyMessage}</span></span></td></tr>}
           </tbody>
         </table>
       </div>

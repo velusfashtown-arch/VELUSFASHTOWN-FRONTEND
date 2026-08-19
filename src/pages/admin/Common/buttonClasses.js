@@ -3,7 +3,7 @@
 // `admin-btn-*` classes from styles.css.
 
 export const adminBtnPrimary =
-  'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md border-none bg-terra px-[18px] py-3 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-[#fffaf5] no-underline transition-all duration-200 hover:bg-wine active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md border-none bg-terra px-[18px] py-3 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-[#fffaf5] no-underline shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none';
 
 export const adminBtnSecondary =
   'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-[rgba(47,31,25,0.16)] bg-transparent px-[18px] py-3 text-[12px] font-bold uppercase leading-none tracking-[0.06em] text-muted no-underline transition-all duration-200 hover:border-[rgba(47,31,25,0.24)] hover:bg-[rgba(47,31,25,0.06)] hover:text-ink active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40';
