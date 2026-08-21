@@ -7,6 +7,11 @@ import AdminCheckbox from '../../Common/Form/Checkbox';
 import FormField from '../../Common/Form/FormField';
 import { adminBtnPrimary, adminToast } from '../../Common/buttonClasses';
 import NoWebsiteSelected from './NoWebsiteSelected';
+import PageHeader from '../../Common/PageHeader';
+
+function IntegrationsPageIcon() {
+  return <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 106 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 01-3.46 0" /></svg>;
+}
 
 const emptyIntegrations = {
   email: { enabled: false, toEmail: '' },
@@ -69,10 +74,11 @@ export default function Integrations() {
   if (!selectedWebsiteId) {
     return (
       <div className="flex flex-col gap-4">
-        <div>
-          <h2 className="m-0 text-lg font-semibold text-ink">Integrations</h2>
-          <p className="m-0 mt-1 text-[13px] text-muted">Forward new submissions to an email address or a webhook URL.</p>
-        </div>
+        <PageHeader
+          icon={<IntegrationsPageIcon />}
+          title="Integrations"
+          description="Forward new submissions to an email address or a webhook URL."
+        />
         <NoWebsiteSelected what="integrations" />
       </div>
     );
@@ -80,10 +86,11 @@ export default function Integrations() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h2 className="m-0 text-lg font-semibold text-ink">Integrations</h2>
-        <p className="m-0 mt-1 text-[13px] text-muted">Forward new submissions to an email address or a webhook URL.</p>
-      </div>
+      <PageHeader
+        icon={<IntegrationsPageIcon />}
+        title="Integrations"
+        description="Forward new submissions to an email address or a webhook URL."
+      />
 
       {success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
       {error && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{error}</div>}

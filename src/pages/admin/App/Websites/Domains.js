@@ -70,9 +70,9 @@ export default function Domains() {
 
   return (
     <div className="max-w-2xl space-y-5">
-      {error ? <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+      {error ? <div className="rounded-xl border border-[#f3d4d4] bg-[#fce8e6] p-3 text-sm text-[#b93b3b]">{error}</div> : null}
 
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row">
         <input className={inputClass} value={newDomain} onChange={(e) => setNewDomain(e.target.value)} placeholder="e.g. storeb.com" />
         <button type="button" onClick={handleAdd} disabled={saving || !newDomain.trim()} className={`shrink-0 ${adminBtnPrimary}`}>
           + Add
@@ -80,15 +80,15 @@ export default function Domains() {
       </div>
 
       {domains.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-line bg-paper p-10 text-center text-sm text-muted">
+        <div className="rounded-2xl border border-dashed border-[rgba(47,31,25,0.16)] bg-paper p-10 text-center text-sm text-muted">
           No custom domains yet. Add a domain to point it to this website.
         </div>
       ) : (
         <div className="space-y-2">
           {domains.map((d) => (
-            <div key={d._id} className="flex items-center justify-between rounded-xl border border-[rgba(47,31,25,0.1)] bg-paper p-3.5 shadow-[0_4px_16px_rgba(47,31,25,0.04)] transition-shadow hover:shadow-[0_6px_20px_rgba(47,31,25,0.07)]">
+            <div key={d._id} className="flex flex-col gap-3 rounded-2xl border border-[rgba(47,31,25,0.08)] bg-paper p-3.5 shadow-[0_4px_16px_rgba(47,31,25,0.04)] transition-shadow hover:shadow-[0_6px_20px_rgba(47,31,25,0.07)] sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
-                <p className="flex items-center gap-2 text-sm font-semibold text-ink">
+                <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-ink">
                   {d.domain}
                   {d.isPrimary ? <span className="rounded-full bg-terra/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.04em] text-terra">Primary</span> : null}
                 </p>

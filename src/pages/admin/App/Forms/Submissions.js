@@ -9,6 +9,11 @@ import useTableData from '../../Common/Table/useTableData';
 import FormField from '../../Common/Form/FormField';
 import { adminToast } from '../../Common/buttonClasses';
 import NoWebsiteSelected from './NoWebsiteSelected';
+import PageHeader from '../../Common/PageHeader';
+
+function SubmissionsPageIcon() {
+  return <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6" /><path d="M9 13h6M9 17h6M9 9h1" /></svg>;
+}
 
 const STATUS_OPTIONS = [
   { value: 'new', label: 'New' },
@@ -101,10 +106,11 @@ export default function Submissions() {
   if (!selectedWebsiteId) {
     return (
       <div className="flex flex-col gap-4">
-        <div>
-          <h2 className="m-0 text-lg font-semibold text-ink">Form Submissions</h2>
-          <p className="m-0 mt-1 text-[13px] text-muted">Entries visitors submitted through your forms.</p>
-        </div>
+        <PageHeader
+          icon={<SubmissionsPageIcon />}
+          title="Form Submissions"
+          description="Entries visitors submitted through your forms."
+        />
         <NoWebsiteSelected what="submissions" />
       </div>
     );
@@ -112,21 +118,22 @@ export default function Submissions() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 className="m-0 text-lg font-semibold text-ink">Form Submissions</h2>
-          <p className="m-0 mt-1 text-[13px] text-muted">Entries visitors submitted through your forms.</p>
-        </div>
-        <div className="w-full max-w-[240px]">
-          <FormField
-            label="Filter by form"
-            type="select"
-            value={selectedFormId}
-            onChange={(e) => setSelectedFormId(e.target.value)}
-            options={[{ value: '', label: 'All forms' }, ...forms.map((f) => ({ value: f.id || f._id, label: f.name }))]}
-          />
-        </div>
-      </div>
+      <PageHeader
+        icon={<SubmissionsPageIcon />}
+        title="Form Submissions"
+        description="Entries visitors submitted through your forms."
+        actions={
+          <div className="w-full min-w-[220px] sm:w-[240px]">
+            <FormField
+              label="Filter by form"
+              type="select"
+              value={selectedFormId}
+              onChange={(e) => setSelectedFormId(e.target.value)}
+              options={[{ value: '', label: 'All forms' }, ...forms.map((f) => ({ value: f.id || f._id, label: f.name }))]}
+            />
+          </div>
+        }
+      />
 
       {success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
       {(error || localError) && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{error || localError}</div>}
@@ -143,7 +150,6 @@ export default function Submissions() {
       />
 
       <AdminTable
-        title="Submissions"
         searchable={false}
         onRefresh={loadSubmissions}
         loading={loading}

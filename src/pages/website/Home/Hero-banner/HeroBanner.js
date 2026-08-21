@@ -95,14 +95,14 @@ export default function HeroBanner() {
   return (
     <section
       ref={sectionRef}
-className="relative isolate h-[min(680px,calc(100vh-110px))] min-h-[570px] overflow-hidden text-white max-[620px]:h-[620px] max-[620px]:min-h-0"
+      className="relative isolate h-[min(680px,calc(100vh-110px))] min-h-[570px] overflow-hidden text-white max-[620px]:h-[620px] max-[620px]:min-h-0"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-<div className="absolute inset-0 -z-[3]">
+      <div className="absolute inset-0 -z-[3]">
         {heroSlides.map((slide, i) => (
           <div key={i} className={`absolute inset-0 transition-opacity duration-[800ms] ease-in-out ${i === slideIndex ? 'opacity-100' : 'opacity-0'}`}>
             <img

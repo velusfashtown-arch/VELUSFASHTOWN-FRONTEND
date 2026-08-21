@@ -10,6 +10,11 @@ import AdminDropdown from '../../../Common/Form/Dropdown';
 import AdminTextarea from '../../../Common/Form/Textarea';
 import AdminCheckbox from '../../../Common/Form/Checkbox';
 import { adminBtnPrimary, adminBtnSecondary, adminToast } from '../../../Common/buttonClasses';
+import PageHeader from '../../../Common/PageHeader';
+
+function SubCategoryPageIcon() {
+  return <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5H5a2 2 0 00-2 2v3a2 2 0 002 2h4a2 2 0 002-2V7a2 2 0 00-2-2z" /><path d="M19 12h-4a2 2 0 00-2 2v3a2 2 0 002 2h4a2 2 0 002-2v-3a2 2 0 00-2-2z" /><path d="M7 12v2a2 2 0 002 2h2" /></svg>;
+}
 
 function SubCategoryModal({ subCategory, onClose, onSaved }) {
   const token = getToken();
@@ -171,6 +176,12 @@ export default function AdminSubCategory() {
 
   return (
     <div>
+      <PageHeader
+        icon={<SubCategoryPageIcon />}
+        title="Sub Category"
+        description="Finer-grained groupings nested under each top-level category."
+        actions={<button type="button" onClick={openAdd} className={adminBtnPrimary}><span className="text-base leading-none">+</span> Add Sub Category</button>}
+      />
 {success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
       {(error || localError) && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{(error || localError)}</div>}
 
@@ -186,10 +197,7 @@ export default function AdminSubCategory() {
       />
 
       <AdminTable
-          title="Sub Category"
           searchKeys={['name', 'description', 'category.name']}
-          onAdd={openAdd}
-          addLabel="Add Sub Category"
           onRefresh={loadSubCategory}
           loading={loading}
           refreshing={refreshing}

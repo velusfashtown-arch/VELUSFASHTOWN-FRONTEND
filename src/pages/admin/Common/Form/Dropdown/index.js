@@ -40,7 +40,7 @@ export default function AdminDropdown({
         <label htmlFor={id} className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted">
           {label}
           {helper && <span className="font-normal lowercase tracking-normal text-[#999] ml-1">({helper})</span>}
-          {required && <span className="text-[#c5221f] ml-0.5">*</span>}
+          {required && <span className="text-danger ml-0.5">*</span>}
         </label>
       )}
 <Listbox

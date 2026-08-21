@@ -30,7 +30,7 @@ export default function ConfirmDeleteModal({
           </svg>
         </button>
 
-        <h2 className="m-0 pr-8 text-3xl font-bold tracking-tight text-[#c5221f] sm:pr-0 sm:text-4xl">Are you sure?</h2>
+        <h2 className="m-0 pr-8 font-playfair text-3xl font-bold tracking-tight text-danger sm:pr-0 sm:text-4xl">Are you sure?</h2>
         <p className="mx-auto mt-3 max-w-md text-base leading-6 text-muted sm:mt-4 sm:text-lg sm:leading-7">
           Are you sure you want to delete {itemName}? Once deleted, it cannot be restored.
         </p>

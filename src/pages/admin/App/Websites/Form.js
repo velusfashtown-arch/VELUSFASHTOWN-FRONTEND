@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../../../../lib/api';
 import { getToken } from '../../../../lib/auth';
+import { adminBtnPrimary, adminBtnSecondary } from '../../Common/buttonClasses';
 
 const EMPTY = {
   name: '',
@@ -23,7 +24,10 @@ const EMPTY = {
   socialLinks: { instagram: '', facebook: '', youtube: '', twitter: '', pinterest: '' },
 };
 
-const inputClass = 'w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink outline-none focus:border-terra';
+const inputClass = 'w-full rounded-lg border border-[rgba(47,31,25,0.14)] bg-paper px-3 py-2.5 text-sm text-ink outline-none transition-colors focus:border-terra';
+const labelClass = 'mb-1.5 block text-xs font-semibold text-ink';
+const cardClass = 'rounded-2xl border border-[rgba(47,31,25,0.08)] bg-paper p-4 shadow-[0_12px_32px_rgba(47,31,25,0.06)] sm:p-5';
+const sectionLabel = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-muted';
 
 export default function WebsiteForm() {
   const { id } = useParams();
@@ -106,46 +110,50 @@ export default function WebsiteForm() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h2 className="mb-1 font-playfair text-xl font-semibold text-ink">{isEdit ? 'Edit Website' : 'Create Website'}</h2>
-      <p className="mb-6 text-xs text-muted">{isEdit ? 'Update the website configuration and settings.' : 'Set up a new storefront. You can configure branding, theme, homepage, and navigation after creation.'}</p>
+      <h1 className="m-0 font-playfair text-[24px] font-semibold leading-tight tracking-[-0.03em] text-ink sm:text-[28px]">
+        {isEdit ? 'Edit Website' : 'Create Website'}
+      </h1>
+      <p className="m-0 mb-6 mt-1.5 text-[13px] leading-relaxed text-muted">
+        {isEdit ? 'Update the website configuration and settings.' : 'Set up a new storefront. You can configure branding, theme, homepage, and navigation after creation.'}
+      </p>
 
-      {error ? <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+      {error ? <div className="mb-4 rounded-xl border border-[#f3d4d4] bg-[#fce8e6] p-3 text-sm text-[#b93b3b]">{error}</div> : null}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {/* Basic */}
-        <section className="rounded-xl border border-line bg-paper p-5">
-          <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Basic Information</h3>
+        <section className={cardClass}>
+          <h3 className={sectionLabel}>Basic Information</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-semibold text-ink">Website Name *</label>
+              <label className={labelClass}>Website Name *</label>
               <input className={inputClass} value={form.name} onChange={(e) => set('name', e.target.value)} required placeholder="VELU'S FASHTOWN" />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-semibold text-ink">Brand Name</label>
+              <label className={labelClass}>Brand Name</label>
               <input className={inputClass} value={form.brandName} onChange={(e) => set('brandName', e.target.value)} placeholder="Store brand" />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-semibold text-ink">Slug *</label>
-              <input className={inputClass} value={form.slug} onChange={(e) => set('slug', e.target.value)} placeholder="velus-fashtown" disabled={isEdit} />
+              <label className={labelClass}>Slug *</label>
+              <input className={inputClass + ' disabled:cursor-not-allowed disabled:opacity-60'} value={form.slug} onChange={(e) => set('slug', e.target.value)} placeholder="velus-fashtown" disabled={isEdit} />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-semibold text-ink">Primary Domain</label>
+              <label className={labelClass}>Primary Domain</label>
               <input className={inputClass} value={form.domain} onChange={(e) => set('domain', e.target.value)} placeholder="velusfashtown.com" />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs font-semibold text-ink">Description</label>
-              <textarea className={inputClass} rows={2} value={form.description} onChange={(e) => set('description', e.target.value)} placeholder="Store description" />
+              <label className={labelClass}>Description</label>
+              <textarea className={inputClass + ' min-h-[70px] resize-y'} rows={2} value={form.description} onChange={(e) => set('description', e.target.value)} placeholder="Store description" />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-semibold text-ink">Logo URL</label>
+              <label className={labelClass}>Logo URL</label>
               <input className={inputClass} value={form.logo} onChange={(e) => set('logo', e.target.value)} placeholder="https://…/logo.png" />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-semibold text-ink">Favicon URL</label>
+              <label className={labelClass}>Favicon URL</label>
               <input className={inputClass} value={form.favicon} onChange={(e) => set('favicon', e.target.value)} placeholder="https://…/favicon.png" />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs font-semibold text-ink">Status</label>
+              <label className={labelClass}>Status</label>
               <select className={inputClass} value={form.status} onChange={(e) => set('status', e.target.value)}>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
@@ -155,31 +163,31 @@ export default function WebsiteForm() {
         </section>
 
         {/* Contact */}
-        <section className="rounded-xl border border-line bg-paper p-5">
-          <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Contact Information</h3>
+        <section className={cardClass}>
+          <h3 className={sectionLabel}>Contact Information</h3>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Email</label><input className={inputClass} value={form.contact.contactEmail} onChange={(e) => set('contact.contactEmail', e.target.value)} /></div>
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Phone</label><input className={inputClass} value={form.contact.contactPhone} onChange={(e) => set('contact.contactPhone', e.target.value)} /></div>
-            <div><label className="mb-1 block text-xs font-semibold text-ink">WhatsApp</label><input className={inputClass} value={form.contact.whatsapp} onChange={(e) => set('contact.whatsapp', e.target.value)} /></div>
-            <div className="sm:col-span-2"><label className="mb-1 block text-xs font-semibold text-ink">Address</label><textarea className={inputClass} rows={2} value={form.contact.address} onChange={(e) => set('contact.address', e.target.value)} /></div>
+            <div><label className={labelClass}>Email</label><input className={inputClass} value={form.contact.contactEmail} onChange={(e) => set('contact.contactEmail', e.target.value)} /></div>
+            <div><label className={labelClass}>Phone</label><input className={inputClass} value={form.contact.contactPhone} onChange={(e) => set('contact.contactPhone', e.target.value)} /></div>
+            <div><label className={labelClass}>WhatsApp</label><input className={inputClass} value={form.contact.whatsapp} onChange={(e) => set('contact.whatsapp', e.target.value)} /></div>
+            <div className="sm:col-span-2"><label className={labelClass}>Address</label><textarea className={inputClass + ' min-h-[60px] resize-y'} rows={2} value={form.contact.address} onChange={(e) => set('contact.address', e.target.value)} /></div>
           </div>
         </section>
 
         {/* Social */}
-        <section className="rounded-xl border border-line bg-paper p-5">
-          <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Social Links</h3>
+        <section className={cardClass}>
+          <h3 className={sectionLabel}>Social Links</h3>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Instagram</label><input className={inputClass} value={form.socialLinks.instagram} onChange={(e) => set('socialLinks.instagram', e.target.value)} /></div>
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Facebook</label><input className={inputClass} value={form.socialLinks.facebook} onChange={(e) => set('socialLinks.facebook', e.target.value)} /></div>
-            <div><label className="mb-1 block text-xs font-semibold text-ink">YouTube</label><input className={inputClass} value={form.socialLinks.youtube} onChange={(e) => set('socialLinks.youtube', e.target.value)} /></div>
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Twitter</label><input className={inputClass} value={form.socialLinks.twitter} onChange={(e) => set('socialLinks.twitter', e.target.value)} /></div>
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Pinterest</label><input className={inputClass} value={form.socialLinks.pinterest} onChange={(e) => set('socialLinks.pinterest', e.target.value)} /></div>
+            <div><label className={labelClass}>Instagram</label><input className={inputClass} value={form.socialLinks.instagram} onChange={(e) => set('socialLinks.instagram', e.target.value)} /></div>
+            <div><label className={labelClass}>Facebook</label><input className={inputClass} value={form.socialLinks.facebook} onChange={(e) => set('socialLinks.facebook', e.target.value)} /></div>
+            <div><label className={labelClass}>YouTube</label><input className={inputClass} value={form.socialLinks.youtube} onChange={(e) => set('socialLinks.youtube', e.target.value)} /></div>
+            <div><label className={labelClass}>Twitter</label><input className={inputClass} value={form.socialLinks.twitter} onChange={(e) => set('socialLinks.twitter', e.target.value)} /></div>
+            <div><label className={labelClass}>Pinterest</label><input className={inputClass} value={form.socialLinks.pinterest} onChange={(e) => set('socialLinks.pinterest', e.target.value)} /></div>
           </div>
         </section>
 
-        <div className="flex items-center justify-end gap-3">
-          <button type="button" onClick={() => navigate('/admin/websites')} className="rounded-lg border border-line px-4 py-2.5 text-xs font-semibold text-ink hover:bg-sand">Cancel</button>
-          <button type="submit" disabled={saving} className="rounded-lg bg-terra px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] disabled:opacity-60">
+        <div className="flex flex-col-reverse items-stretch justify-end gap-2.5 sm:flex-row sm:items-center sm:gap-3">
+          <button type="button" onClick={() => navigate('/admin/websites')} className={adminBtnSecondary}>Cancel</button>
+          <button type="submit" disabled={saving} className={adminBtnPrimary}>
             {saving ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Website'}
           </button>
         </div>

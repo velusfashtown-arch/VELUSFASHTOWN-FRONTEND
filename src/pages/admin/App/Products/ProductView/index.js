@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getToken } from '../../../../../lib/auth';
 import { api } from '../../../../../lib/api';
+import { adminBtnBack, adminBtnSecondary, adminBtnDanger } from '../../../Common/buttonClasses';
 
 function formatPrice(value) {
   return `₹${Number(value || 0).toLocaleString('en-IN')}`;
@@ -65,36 +66,36 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
   return (
     <div className="min-w-0">
       {/* Toolbar */}
-      <div className="mb-4 flex flex-col gap-3 rounded-xl border border-line bg-white/95 px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:px-5">
+      <div className="mb-4 flex flex-col gap-3 rounded-xl border border-[rgba(47,31,25,0.1)] bg-paper/95 px-4 py-3 shadow-[0_12px_32px_rgba(47,31,25,0.06)] sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div className="flex min-w-0 items-center gap-3">
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-line bg-gray-100 px-3 py-2 text-[11px] font-semibold text-gray-500 transition-all hover:bg-terra/10 hover:text-terra"
+            className={adminBtnBack}
           >
             ← Back
           </button>
-          <span className="h-6 w-px shrink-0 bg-gray-200" />
+          <span className="h-6 w-px shrink-0 bg-[rgba(47,31,25,0.1)]" />
           <div className="min-w-0">
-            <h3 className="truncate text-sm font-semibold text-ink">Product Details</h3>
-            <p className="mt-0.5 truncate text-[11px] text-gray-400">{p.productId || p.sku || p.name}</p>
+            <h3 className="truncate font-playfair text-base font-semibold text-ink">Product Details</h3>
+            <p className="mt-0.5 truncate text-[11px] text-muted">{p.productId || p.sku || p.name}</p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => onEdit(p)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-white px-3 py-2 text-[11px] font-semibold text-gray-600 transition-all hover:bg-gray-50"
+            className={`${adminBtnSecondary} min-h-[38px] rounded-lg px-3 py-2 text-[11px] normal-case tracking-[0.02em]`}
           >
-            ✏️ Edit
+            Edit
           </button>
           <button
             type="button"
             disabled={deleting}
             onClick={() => onDelete(p)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-2 text-[11px] font-semibold text-red-500 transition-all hover:bg-red-50 disabled:opacity-50"
+            className={`${adminBtnDanger} min-h-[38px] rounded-lg px-3 py-2 text-[11px] normal-case tracking-[0.02em]`}
           >
-            🗑 Delete
+            Delete
           </button>
         </div>
       </div>
@@ -119,8 +120,8 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
                   {p.isActive ? 'Live' : 'Hidden'} · {p.status || 'Draft'}
                 </span>
               </div>
-              <p className="mt-1 text-[12px] text-gray-400">SKU: {p.sku || '—'}</p>
-              {p.shortDescription && <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{p.shortDescription}</p>}
+              <p className="mt-1 text-[12px] text-muted">SKU: {p.sku || '—'}</p>
+              {p.shortDescription && <p className="mt-1 text-[13px] leading-relaxed text-muted">{p.shortDescription}</p>}
               <div className="mt-4 flex flex-wrap items-center gap-4">
                 <div>
                   <span className="text-[10px] font-semibold uppercase tracking-wide text-muted">Price</span>
@@ -170,7 +171,7 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
           {/* Description */}
           {p.description && (
             <Section title="Description">
-              <p className="m-0 whitespace-pre-wrap text-[13px] leading-relaxed text-gray-700">{p.description}</p>
+              <p className="m-0 whitespace-pre-wrap text-[13px] leading-relaxed text-ink">{p.description}</p>
             </Section>
           )}
 
@@ -221,7 +222,7 @@ export default function ProductView({ product, onBack, onEdit, onDelete, deletin
             <Section title="Tags">
               <div className="flex flex-wrap gap-2">
                 {p.tags.map((tag, i) => (
-                  <span key={i} className="rounded-full bg-[rgba(47,31,25,0.06)] px-3 py-1 text-[11px] font-medium text-gray-600">#{tag}</span>
+                  <span key={i} className="rounded-full bg-[rgba(47,31,25,0.06)] px-3 py-1 text-[11px] font-medium text-muted">#{tag}</span>
                 ))}
               </div>
             </Section>

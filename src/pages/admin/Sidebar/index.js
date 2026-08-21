@@ -7,8 +7,8 @@ function NavItem({ to, icon: Icon, label, isCollapsed, onNavigate }) {
       to={to}
       className={({ isActive }) =>
         `group relative flex items-center w-full rounded-lg text-[13px] font-medium no-underline transition-all duration-150 ${isActive
-          ? 'bg-gradient-to-r from-terra/25 to-terra/5 text-white'
-          : 'text-[rgba(255,249,241,0.6)] hover:bg-white/[0.06] hover:text-white'
+          ? 'bg-admin-primary/10 text-admin-primary'
+          : 'text-admin-muted hover:bg-admin-bg hover:text-admin-text'
         } ${isCollapsed ? 'justify-center px-0 py-2.5' : 'gap-3 px-3.5 py-2.5'}`
       }
       title={isCollapsed ? label : undefined}
@@ -16,7 +16,7 @@ function NavItem({ to, icon: Icon, label, isCollapsed, onNavigate }) {
     >
       {({ isActive }) => (
         <>
-          <span className={`absolute left-0 top-1/2 h-[16px] w-[3px] -translate-y-1/2 rounded-full bg-terra transition-all duration-150 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
+          <span className={`absolute left-0 top-1/2 h-[16px] w-[3px] -translate-y-1/2 rounded-full bg-admin-primary transition-all duration-150 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
           <Icon active={isActive} />
           {!isCollapsed && <span className="truncate">{label}</span>}
         </>
@@ -26,7 +26,7 @@ function NavItem({ to, icon: Icon, label, isCollapsed, onNavigate }) {
 }
 
 function iconClass(active) {
-  return `w-[18px] h-[18px] shrink-0 transition-colors ${active ? 'text-terra opacity-100' : 'opacity-70 group-hover:opacity-90'}`;
+  return `w-[18px] h-[18px] shrink-0 transition-colors ${active ? 'text-admin-primary opacity-100' : 'opacity-70 group-hover:opacity-90'}`;
 }
 
 function DashboardIcon({ active }) {
@@ -130,9 +130,9 @@ function ChevronIcon({ open }) {
 }
 
 function SectionLabel({ children, isCollapsed }) {
-  if (isCollapsed) return <div className="my-2 h-px bg-white/10" />;
+  if (isCollapsed) return <div className="my-2 h-px bg-admin-border" />;
   return (
-    <div className="mb-1 mt-4 px-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[rgba(255,249,241,0.32)] first:mt-1">
+    <div className="mb-1 mt-4 px-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-admin-muted/60 first:mt-1">
       {children}
     </div>
   );
@@ -146,8 +146,8 @@ function SubNavLink({ to, end, onClick, children }) {
       onClick={onClick}
       className={({ isActive }) =>
         `flex items-center w-full gap-2.5 px-3 py-2 rounded-md text-[12.5px] font-medium no-underline transition-all ${isActive
-          ? 'bg-white/[0.08] text-white'
-          : 'text-[rgba(255,249,241,0.5)] hover:bg-white/[0.06] hover:text-white'
+          ? 'bg-admin-primary-light text-admin-primary'
+          : 'text-admin-muted hover:bg-admin-bg hover:text-admin-text'
         }`
       }
     >
@@ -162,7 +162,7 @@ function DropdownNav({ icon: Icon, label, isOpen, setIsOpen, isCollapsed, onExpa
     return (
       <button
         onClick={() => { onExpandSidebar(); setTimeout(() => setIsOpen(true), 200); }}
-        className="flex w-full items-center justify-center rounded-lg px-0 py-2.5 text-[13px] font-medium text-[rgba(255,249,241,0.6)] no-underline transition-all hover:bg-white/[0.06] hover:text-white border-none bg-transparent cursor-pointer"
+        className="flex w-full items-center justify-center rounded-lg px-0 py-2.5 text-[13px] font-medium text-admin-muted no-underline transition-all hover:bg-admin-bg hover:text-admin-text border-none bg-transparent cursor-pointer"
         title={label}
       >
         <Icon />
@@ -173,14 +173,14 @@ function DropdownNav({ icon: Icon, label, isOpen, setIsOpen, isCollapsed, onExpa
     <div className="flex flex-col">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center w-full gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium no-underline transition-all text-[rgba(255,249,241,0.6)] hover:bg-white/[0.06] hover:text-white border-none bg-transparent cursor-pointer"
+        className="flex items-center w-full gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium no-underline transition-all text-admin-muted hover:bg-admin-bg hover:text-admin-text border-none bg-transparent cursor-pointer"
       >
         <Icon active={isOpen} />
         <span className="flex-1 text-left truncate">{label}</span>
         <ChevronIcon open={isOpen} />
       </button>
       <div className={`grid overflow-hidden transition-all duration-200 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100 mt-0.5' : 'grid-rows-[0fr] opacity-0'}`}>
-        <div className="flex flex-col ml-[19px] gap-0.5 border-l border-white/10 pl-2.5 min-h-0">
+        <div className="flex flex-col ml-[19px] gap-0.5 border-l border-admin-border pl-2.5 min-h-0">
           {children}
         </div>
       </div>
@@ -203,21 +203,21 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
       />
 
       <aside
-        className={`bg-gradient-to-b from-[#241b18] to-[#1a1310] text-[#fff9f1] flex flex-col fixed top-0 left-0 bottom-0 z-50 overflow-x-hidden whitespace-nowrap transition-[width,transform] duration-200 ease-in-out shadow-[4px_0_24px_rgba(0,0,0,0.18)] ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        className={`bg-white text-admin-text flex flex-col fixed top-0 left-0 bottom-0 z-50 overflow-x-hidden whitespace-nowrap transition-[width,transform] duration-200 ease-in-out shadow-sidebar border-r border-admin-border ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
           }`}
         style={{
-          width: isMobileOpen ? 'min(84vw,300px)' : sidebarIsCollapsed ? '76px' : '232px',
+          width: isMobileOpen ? 'min(84vw,300px)' : sidebarIsCollapsed ? '76px' : '240px',
         }}
       >
         {/* Logo */}
-        <div className={`relative flex min-h-[64px] items-center border-b border-white/10 ${sidebarIsCollapsed ? 'justify-center px-0' : 'px-4 md:px-6'}`}>
+        <div className={`relative flex min-h-[64px] items-center border-b border-admin-border ${sidebarIsCollapsed ? 'justify-center px-0' : 'px-4 md:px-6'}`}>
           <img
             src="/images/Logo/LOGO.png"
             alt="Velu's Fashtown"
-            className="h-auto mx-auto brightness-[10] transition-all duration-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
+            className="h-auto mx-auto transition-all duration-200"
             style={sidebarIsCollapsed ? { width: '42px' } : { width: '96px' }}
           />
-          <button type="button" onClick={onMobileClose} className="absolute right-3 flex h-9 w-9 items-center justify-center rounded-md text-[rgba(255,249,241,0.7)] transition-colors hover:bg-white/10 hover:text-white md:hidden" aria-label="Close sidebar">
+          <button type="button" onClick={onMobileClose} className="absolute right-3 flex h-9 w-9 items-center justify-center rounded-md text-admin-muted transition-colors hover:bg-admin-bg hover:text-admin-text md:hidden" aria-label="Close sidebar">
             <CloseIcon />
           </button>
         </div>
@@ -248,13 +248,13 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
         </nav>
 
         {/* Bottom section */}
-        <div className="px-3 py-3 border-t border-white/10 flex flex-col gap-1">
+        <div className="px-3 py-3 border-t border-admin-border flex flex-col gap-1">
           {/* View Store link */}
           <a
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center rounded-lg text-[12px] font-medium text-[rgba(255,249,241,0.5)] no-underline hover:bg-white/[0.06] hover:text-white transition-colors ${sidebarIsCollapsed ? 'justify-center px-0 py-2.5' : 'gap-2.5 px-3.5 py-2.5'
+            className={`flex items-center rounded-lg text-[12px] font-medium text-admin-muted no-underline hover:bg-admin-bg hover:text-admin-text transition-colors ${sidebarIsCollapsed ? 'justify-center px-0 py-2.5' : 'gap-2.5 px-3.5 py-2.5'
               }`}
             title={sidebarIsCollapsed ? 'View Store' : undefined}
           >
@@ -265,7 +265,7 @@ export default function AdminSidebar({ isCollapsed, onToggle, isMobileOpen, onMo
           {/* Collapse toggle button */}
           <button
             onClick={onToggle}
-            className={`hidden md:flex items-center rounded-lg text-[12px] font-medium text-[rgba(255,249,241,0.5)] no-underline hover:bg-white/[0.06] hover:text-white transition-colors cursor-pointer w-full border-none bg-transparent ${sidebarIsCollapsed ? 'justify-center px-0 py-2.5' : 'gap-2.5 px-3.5 py-2.5'
+            className={`hidden md:flex items-center rounded-lg text-[12px] font-medium text-admin-muted no-underline hover:bg-admin-bg hover:text-admin-text transition-colors cursor-pointer w-full border-none bg-transparent ${sidebarIsCollapsed ? 'justify-center px-0 py-2.5' : 'gap-2.5 px-3.5 py-2.5'
               }`}
             title={sidebarIsCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >

@@ -12,6 +12,11 @@ import AdminCheckbox from '../../Common/Form/Checkbox';
 import FormField from '../../Common/Form/FormField';
 import { adminBtnPrimary, adminBtnSecondary, adminToast } from '../../Common/buttonClasses';
 import NoWebsiteSelected from './NoWebsiteSelected';
+import PageHeader from '../../Common/PageHeader';
+
+function FormsPageIcon() {
+  return <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6" /><path d="M9 13h6M9 17h6M9 9h1" /></svg>;
+}
 
 const FIELD_TYPES = [
   { value: 'text', label: 'Text' },
@@ -54,18 +59,18 @@ function FieldRow({ field, onChange, onRemove }) {
   }
 
   return (
-    <div className="rounded-lg border border-line bg-[rgba(47,31,25,0.02)] p-3">
+    <div className="rounded-lg border border-admin-border bg-admin-bg p-3">
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-[2fr_1.2fr_auto]">
         <AdminInput placeholder="Field label, e.g. Your Name" value={field.label} onChange={(e) => set('label', e.target.value)} />
         <FormField type="select" value={field.fieldType} onChange={(e) => set('fieldType', e.target.value)} options={FIELD_TYPES} />
-        <button type="button" onClick={onRemove} className="shrink-0 rounded-md border border-line px-3 py-2 text-[11px] text-muted hover:border-[#c5221f]/30 hover:text-[#c5221f]">
+        <button type="button" onClick={onRemove} className="shrink-0 rounded-md border border-admin-border px-3 py-2 text-[11px] text-admin-muted hover:border-admin-danger/30 hover:text-admin-danger">
           Remove
         </button>
       </div>
       <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
         <AdminInput placeholder="Placeholder (optional)" value={field.placeholder} onChange={(e) => set('placeholder', e.target.value)} />
-        <label className="flex items-center gap-2 text-[12px] text-ink">
-          <input type="checkbox" checked={field.required} onChange={(e) => set('required', e.target.checked)} className="h-4 w-4 accent-terra" />
+        <label className="flex items-center gap-2 text-[12px] text-admin-text">
+          <input type="checkbox" checked={field.required} onChange={(e) => set('required', e.target.checked)} className="h-4 w-4 accent-admin-primary" />
           Required
         </label>
       </div>
@@ -161,7 +166,7 @@ function FormModal({ form, onClose, onSaved }) {
       }
     >
       <form id="form-builder-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {error && <p className="m-0 text-[12px] font-medium text-[#c5221f]">{error}</p>}
+        {error && <p className="m-0 text-[12px] font-medium text-admin-danger">{error}</p>}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <AdminInput label="Form Name (internal)" placeholder="e.g. Contact Us" value={values.name} onChange={(e) => set('name', e.target.value)} required />
@@ -174,8 +179,8 @@ function FormModal({ form, onClose, onSaved }) {
 
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <label className="text-[10px] font-bold uppercase tracking-[0.08em] text-muted">Fields</label>
-            <button type="button" onClick={addField} className="text-[11px] font-semibold text-terra hover:text-wine">+ Add field</button>
+            <label className="text-[10px] font-bold uppercase tracking-[0.08em] text-admin-muted">Fields</label>
+            <button type="button" onClick={addField} className="text-[11px] font-semibold text-admin-primary hover:text-admin-primary-hover">+ Add field</button>
           </div>
           <div className="flex flex-col gap-2">
             {fields.map((field, i) => (
@@ -247,10 +252,11 @@ export default function FormBuilder() {
   if (!selectedWebsiteId) {
     return (
       <div className="flex flex-col gap-4">
-        <div>
-          <h2 className="m-0 text-lg font-semibold text-ink">Form Builder</h2>
-          <p className="m-0 mt-1 text-[13px] text-muted">Build customer-facing forms — Contact Us, inquiries, newsletter signup — for your storefront.</p>
-        </div>
+        <PageHeader
+          icon={<FormsPageIcon />}
+          title="Form Builder"
+          description="Build customer-facing forms — Contact Us, inquiries, newsletter signup — for your storefront."
+        />
         <NoWebsiteSelected what="forms" />
       </div>
     );
@@ -258,13 +264,15 @@ export default function FormBuilder() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h2 className="m-0 text-lg font-semibold text-ink">Form Builder</h2>
-        <p className="m-0 mt-1 text-[13px] text-muted">Build customer-facing forms — Contact Us, inquiries, newsletter signup — for your storefront.</p>
-      </div>
+      <PageHeader
+        icon={<FormsPageIcon />}
+        title="Form Builder"
+        description="Build customer-facing forms — Contact Us, inquiries, newsletter signup — for your storefront."
+        actions={<button type="button" onClick={openAdd} className={adminBtnPrimary}><span className="text-base leading-none">+</span> New Form</button>}
+      />
 
-      {success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
-      {(error || localError) && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{error || localError}</div>}
+      {success && <div className={`${adminToast} bg-admin-success-light text-admin-success border border-admin-success/20`}>{success}</div>}
+      {(error || localError) && <div className={`${adminToast} bg-admin-danger-light text-admin-danger border border-admin-danger/20`}>{error || localError}</div>}
 
       {modalOpen && (
         <FormModal
@@ -282,10 +290,7 @@ export default function FormBuilder() {
       />
 
       <AdminTable
-        title="Forms"
         searchable={false}
-        onAdd={openAdd}
-        addLabel="New Form"
         onRefresh={loadForms}
         loading={loading}
         refreshing={refreshing}
@@ -295,8 +300,8 @@ export default function FormBuilder() {
             header: 'Form',
             render: (f) => (
               <div>
-                <b className="text-ink">{f.name}</b>
-                <small className="block text-[11px] text-muted">/{f.slug} · {f.fields?.length || 0} field{f.fields?.length === 1 ? '' : 's'}</small>
+                <b className="text-admin-text">{f.name}</b>
+                <small className="block text-[11px] text-admin-muted">/{f.slug} · {f.fields?.length || 0} field{f.fields?.length === 1 ? '' : 's'}</small>
               </div>
             ),
           },
@@ -304,15 +309,15 @@ export default function FormBuilder() {
             key: 'type',
             header: 'Type',
             render: (f) => (
-              <span className="inline-flex rounded-full bg-[rgba(167,78,62,0.1)] px-2 py-0.5 text-[10px] font-semibold text-terra">{typeLabel(f.type)}</span>
+              <span className="inline-flex rounded-full bg-admin-primary-light px-2 py-0.5 text-[10px] font-semibold text-admin-primary">{typeLabel(f.type)}</span>
             ),
           },
-          { key: 'submissionCount', header: 'Submissions', render: (f) => <span className="text-[12px] text-ink">{f.submissionCount || 0}</span> },
+          { key: 'submissionCount', header: 'Submissions', render: (f) => <span className="text-[12px] text-admin-text">{f.submissionCount || 0}</span> },
           {
             key: 'isActive',
             header: 'Status',
             render: (f) => (
-              <span className={`text-[11px] font-semibold ${f.isActive ? 'text-[#137333]' : 'text-muted'}`}>{f.isActive ? 'Active' : 'Inactive'}</span>
+              <span className={`text-[11px] font-semibold ${f.isActive ? 'text-admin-success' : 'text-admin-muted'}`}>{f.isActive ? 'Active' : 'Inactive'}</span>
             ),
           },
         ]}

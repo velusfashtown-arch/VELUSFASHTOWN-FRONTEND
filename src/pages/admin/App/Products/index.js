@@ -7,7 +7,16 @@ import ConfirmDeleteModal from '../../Common/ConfirmDeleteModal';
 import AddProduct from './AddProduct';
 import ProductView from './ProductView';
 import { scrollToTop } from '../../../../utils/scrollToTop';
-import { adminToast } from '../../Common/buttonClasses';
+import { adminBtnPrimary, adminToast } from '../../Common/buttonClasses';
+import PageHeader from '../../Common/PageHeader';
+
+function CatalogIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 7h16" /><path d="M6 7v10a2 2 0 002 2h8a2 2 0 002-2V7" /><path d="M9 5V3h6v2" /><path d="M9 12l2 2 4-4" />
+    </svg>
+  );
+}
 
 function formatPrice(value) {
   return `₹${Number(value || 0).toLocaleString('en-IN')}`;
@@ -15,8 +24,8 @@ function formatPrice(value) {
 
 function ProductStatus({ isActive }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isActive ? 'bg-[#e6f4ea] text-[#1e8e3e]' : 'bg-[#f0edf5] text-[#6b4fa0]'}`}>
-      <span className={`h-[6px] w-[6px] rounded-full ${isActive ? 'bg-[#1e8e3e]' : 'bg-[#6b4fa0]'}`} />
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isActive ? 'bg-admin-success-light text-admin-success' : 'bg-[#f0edf5] text-[#6b4fa0]'}`}>
+      <span className={`h-[6px] w-[6px] rounded-full ${isActive ? 'bg-admin-success' : 'bg-[#6b4fa0]'}`} />
       {isActive ? 'Live' : 'Hidden'}
     </span>
   );
@@ -25,19 +34,18 @@ function ProductStatus({ isActive }) {
 function ProductImage({ product }) {
   if (product.images?.[0]) {
     const image = product.images[0];
-    return <img className="h-[54px] w-[42px] rounded object-cover border border-line bg-[#f5f0eb]" src={typeof image === 'string' ? image : image.url} alt={product.name} />;
+    return <img className="h-[54px] w-[42px] rounded object-cover border border-admin-border bg-admin-bg" src={typeof image === 'string' ? image : image.url} alt={product.name} />;
   }
 
   return (
-    <div className="flex h-[54px] w-[42px] items-center justify-center rounded border border-line bg-[#f5f0eb] text-[9px] text-muted">
+    <div className="flex h-[54px] w-[42px] items-center justify-center rounded border border-admin-border bg-admin-bg text-[9px] text-admin-muted">
       No img
     </div>
   );
 }
 
-function ProductTable({ products, onView, onEdit, onDelete, loading, deleting, refreshing, pagination, onPageChange, onPageSizeChange, onServerSearch, onAdd }) {
+function ProductTable({ products, onView, onEdit, onDelete, loading, deleting, refreshing, pagination, onPageChange, onPageSizeChange, onServerSearch }) {
   return <Table
-    title="All Products"
     rows={products}
     loading={loading}
     refreshing={refreshing}
@@ -45,8 +53,6 @@ function ProductTable({ products, onView, onEdit, onDelete, loading, deleting, r
     onPageChange={onPageChange}
     onPageSizeChange={onPageSizeChange}
     onServerSearch={onServerSearch}
-    onAdd={onAdd}
-    addLabel="Add New Product"
     searchKeys={['name', 'sku', 'category.name']}
     emptyMessage="No products yet. Click Add New Product to create your first product."
     columns={[
@@ -59,17 +65,17 @@ function ProductTable({ products, onView, onEdit, onDelete, loading, deleting, r
           <div className="flex items-center gap-3">
             <ProductImage product={product} />
             <div className="min-w-0">
-              <b className="block max-w-[220px] truncate text-[13px] text-ink">{product.name}</b>
-              <small className="block text-[10px] text-muted">{product.productId || product.sku || 'No ID'}</small>
+              <b className="block max-w-[220px] truncate text-[13px] text-admin-text">{product.name}</b>
+              <small className="block text-[10px] text-admin-muted">{product.productId || product.sku || 'No ID'}</small>
             </div>
           </div>
         ),
       },
-      { key: 'mrp', header: 'MRP', render: (product) => <span className="text-muted">{formatPrice(product.mrp)}</span> },
-      { key: 'sellingPrice', header: 'Price', render: (product) => <b className="text-ink">{formatPrice(product.sellingPrice)}</b> },
-      { key: 'discount', header: 'Discount', render: (product) => product.discount ? <span className="text-[11px] font-semibold text-[#137333]">{product.discount}% off</span> : '—' },
-      { key: 'category', header: 'Category', render: (product) => <span className="text-[12px] text-muted">{product.category?.name || 'Uncategorized'}</span> },
-      { key: 'stock', header: 'Stock', render: (product) => <span className={`text-[12px] font-semibold ${product.stock > 0 ? 'text-ink' : 'text-[#c5221f]'}`}>{product.stock > 0 ? product.stock : 'Out of stock'}</span> },
+      { key: 'mrp', header: 'MRP', render: (product) => <span className="text-admin-muted">{formatPrice(product.mrp)}</span> },
+      { key: 'sellingPrice', header: 'Price', render: (product) => <b className="text-admin-text">{formatPrice(product.sellingPrice)}</b> },
+      { key: 'discount', header: 'Discount', render: (product) => product.discount ? <span className="text-[11px] font-semibold text-admin-success">{product.discount}% off</span> : '—' },
+      { key: 'category', header: 'Category', render: (product) => <span className="text-[12px] text-admin-muted">{product.category?.name || 'Uncategorized'}</span> },
+      { key: 'stock', header: 'Stock', render: (product) => <span className={`text-[12px] font-semibold ${product.stock > 0 ? 'text-admin-text' : 'text-admin-danger'}`}>{product.stock > 0 ? product.stock : 'Out of stock'}</span> },
       { key: 'isActive', header: 'Status', render: (product) => <ProductStatus isActive={product.isActive} /> },
     ]}
     rowActions={[
@@ -155,13 +161,13 @@ export default function AdminProducts() {
 
   return (
     <div className="min-w-0">
-{success && (
-        <div className={`${adminToast} rounded-lg border border-[rgba(19,115,51,0.15)] bg-[#e6f4ea] px-5 py-3 text-[13px] font-medium text-[#137333]`}>
+      {success && (
+        <div className={`${adminToast} rounded-lg border border-admin-success/20 bg-admin-success-light px-5 py-3 text-[13px] font-medium text-admin-success`}>
           {success}
         </div>
       )}
       {(error || localError) && (
-        <div className={`${adminToast} rounded-lg border border-[rgba(197,34,31,0.15)] bg-[#fce8e6] px-5 py-3 text-[13px] font-medium text-[#c5221f]`}>
+        <div className={`${adminToast} rounded-lg border border-admin-danger/20 bg-admin-danger-light px-5 py-3 text-[13px] font-medium text-admin-danger`}>
           {(error || localError)}
         </div>
       )}
@@ -176,12 +182,17 @@ export default function AdminProducts() {
 
       {view === 'list' && (
         <div className="overflow-hidden">
+          <PageHeader
+            icon={<CatalogIcon />}
+            title="Products"
+            description={pagination?.total ? `${pagination.total} products in your catalog.` : 'Manage every saree, lehenga and accessory in your store.'}
+            actions={<button type="button" onClick={openAddForm} className={adminBtnPrimary}><span className="text-base leading-none">+</span> Add New Product</button>}
+          />
           <ProductTable
             products={products}
             onView={openView}
             onEdit={(product) => openEditForm(product)}
             onDelete={(product) => confirmDelete(product, true)}
-            onAdd={openAddForm}
             loading={loading}
             deleting={deleting}
             refreshing={refreshing}

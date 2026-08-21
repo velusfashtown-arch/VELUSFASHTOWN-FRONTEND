@@ -44,14 +44,14 @@ export default function Variants({ variants, setVariants, token, productId, base
         <button
           type="button"
           onClick={addVariant}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-200 rounded-xl text-gray-500 hover:border-terra/50 hover:text-terra transition-all duration-200 text-[13px] font-medium"
+          className="w-full min-h-[42px] flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-[rgba(47,31,25,0.14)] rounded-xl text-muted hover:border-terra/50 hover:text-terra transition-all duration-200 text-[13px] font-medium"
         >
           <FiPlus className="w-4 h-4" />
           Add Variant
         </button>
 
         {variants.length > 0 && (
-          <p className="text-[11px] text-gray-400 text-center">
+          <p className="text-[11px] text-muted text-center">
             Add one variant for each available color
           </p>
         )}

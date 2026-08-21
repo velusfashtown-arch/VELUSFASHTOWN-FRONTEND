@@ -13,6 +13,7 @@ import { useAutoSave } from './hooks/useAutoSave';
 import { useImageUpload } from './hooks/useImageUpload';
 import { useProductForm } from './hooks/useProductForm';
 import { useMasterFields } from './hooks/useMasterFields';
+import { adminBtnPrimary, adminBtnSecondary, adminBtnBack, adminBtnDanger } from '../../../Common/buttonClasses';
 
 export default function AddProduct({ onBack, onProductSaved, editProduct }) {
   const token = getToken();
@@ -131,7 +132,7 @@ useEffect(() => {
 
   if (initialLoading) {
     return (
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
+      <div className="rounded-xl border border-[rgba(47,31,25,0.1)] bg-paper shadow-[0_12px_32px_rgba(47,31,25,0.06)]">
         <LoadingSkeleton sections={6} />
       </div>
     );
@@ -141,22 +142,22 @@ useEffect(() => {
     <div ref={formRef} className="relative min-w-0">
       {toast && <Toast key={toast.id} message={toast.message} type={toast.type} onClose={closeToast} />}
 
-<div className="sticky top-[60px] z-10 overflow-hidden rounded-xl border border-gray-200 bg-white/95 shadow-sm backdrop-blur-sm">
+<div className="sticky top-[60px] z-10 overflow-hidden rounded-xl border border-[rgba(47,31,25,0.1)] bg-paper/95 shadow-[0_12px_32px_rgba(47,31,25,0.06)] backdrop-blur-sm">
         <div className="flex flex-col gap-3 px-4 py-3 sm:px-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={onBack}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 text-[11px] font-semibold text-gray-500 transition-all hover:border-terra/20 hover:bg-terra/10 hover:text-terra"
+              className={adminBtnBack}
             >
-              Back
+              ← Back
             </button>
-            <span className="h-6 w-px shrink-0 bg-gray-200" />
+            <span className="h-6 w-px shrink-0 bg-[rgba(47,31,25,0.1)]" />
             <div className="min-w-0">
-              <h3 className="truncate text-sm font-semibold text-ink">
+              <h3 className="truncate font-playfair text-base font-semibold text-ink">
                 {isEdit ? 'Edit Product' : 'Add New Product'}
               </h3>
-              <p className="mt-0.5 text-[11px] text-gray-400">
+              <p className="mt-0.5 text-[11px] text-muted">
                 {isDirty ? 'Unsaved changes' : 'All changes saved'}
               </p>
             </div>
@@ -166,21 +167,21 @@ useEffect(() => {
             <button
               type="button"
               onClick={handlePreview}
-              className="inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-[11px] font-semibold text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-800"
+              className={`${adminBtnSecondary} min-h-[38px] rounded-lg px-3 py-2 text-[11px] normal-case tracking-[0.02em]`}
             >
               <FiEye className="h-3.5 w-3.5" /> Preview
             </button>
             <button
               type="button"
               onClick={() => { saveDraft(); showToast('Draft saved!', 'info'); }}
-              className="inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-[11px] font-semibold text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-800"
+              className={`${adminBtnSecondary} min-h-[38px] rounded-lg px-3 py-2 text-[11px] normal-case tracking-[0.02em]`}
             >
               <FiClock className="h-3.5 w-3.5" /> Save Draft
             </button>
             <button
               type="button"
               onClick={() => { reset(); showToast('Form reset', 'info'); }}
-              className="inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-2 text-[11px] font-semibold text-red-500 transition-all hover:bg-red-50 hover:text-red-600"
+              className={`${adminBtnDanger} min-h-[38px] rounded-lg px-3 py-2 text-[11px] normal-case tracking-[0.02em]`}
             >
               <FiRotateCcw className="h-3.5 w-3.5" /> Reset
             </button>
@@ -188,16 +189,16 @@ useEffect(() => {
               type="submit"
               form="add-product-form"
               disabled={loading || isSubmitting}
-              className="inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-lg bg-terra px-4 py-2 text-[11px] font-bold text-white shadow-sm transition-all hover:bg-wine disabled:cursor-not-allowed disabled:opacity-50"
+              className={`${adminBtnPrimary} min-h-[38px] rounded-lg px-4 py-2 text-[11px]`}
             >
               <FiSave className="h-3.5 w-3.5" /> {loading ? 'Saving...' : (isEdit ? 'Update' : 'Publish')}
             </button>
           </div>
         </div>
         {isDirty && (
-          <div className="h-0.5 bg-amber-100">
+          <div className="h-0.5 bg-[rgba(167,78,62,0.12)]">
             <motion.div
-              className="h-full bg-amber-400"
+              className="h-full bg-terra"
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
               transition={{ duration: 30 }}
@@ -229,21 +230,21 @@ useEffect(() => {
           baseSku={formValues.sku}
         />
 
-        <div className="flex flex-col gap-3 border-t border-gray-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-[11px] text-gray-400">
+        <div className="flex flex-col gap-3 border-t border-[rgba(47,31,25,0.1)] pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-[11px] text-muted">
             <FiCheckCircle className="h-3.5 w-3.5 shrink-0" />
             All fields are validated in real-time
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             {formValues.images?.length >= 4 && (
-              <span className="flex items-center gap-1 text-[11px] font-medium text-emerald-600">
+              <span className="flex items-center gap-1 text-[11px] font-medium text-[#1e8e3e]">
                 <FiCheckCircle className="h-3.5 w-3.5" /> {formValues.images.length} images ready
               </span>
             )}
             <button
               type="submit"
               disabled={loading || isSubmitting}
-              className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-lg bg-terra px-6 py-2.5 text-[12px] font-bold text-white shadow-sm transition-all hover:bg-wine disabled:cursor-not-allowed disabled:opacity-50"
+              className={`${adminBtnPrimary} min-h-[42px] rounded-lg px-6 py-2.5 text-[12px]`}
             >
               <FiSave className="h-4 w-4" /> {loading ? 'Saving Product...' : (isEdit ? 'Update Product' : 'Publish Product')}
             </button>

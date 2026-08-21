@@ -8,6 +8,24 @@ import AdminInput from '../../Common/Form/Input';
 import AdminTextarea from '../../Common/Form/Textarea';
 import { adminBtnPrimary, adminBtnSecondary, adminBtnDanger, adminBtnGhost, adminToast } from '../../Common/buttonClasses';
 import Rupee from '../../../../components/shared/Rupee';
+import StatCard from '../../../../components/shared/StatCard';
+import PageHeader from '../../Common/PageHeader';
+
+function OrdersIcon() {
+  return <svg className="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 01-8 0" /></svg>;
+}
+function ActiveIcon() {
+  return <svg className="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4" /><path d="M12 18v4" /><path d="M4.93 4.93l2.83 2.83" /><path d="M16.24 16.24l2.83 2.83" /><path d="M2 12h4" /><path d="M18 12h4" /></svg>;
+}
+function DeliveredIcon() {
+  return <svg className="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>;
+}
+function RTOStatIcon() {
+  return <svg className="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 20H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v4" /><path d="M17 15v5" /><path d="M14 15h6" /></svg>;
+}
+function RevenueIcon() {
+  return <svg className="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1v22" /><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" /></svg>;
+}
 
 const statusOptions = ['Placed', 'Confirmed', 'Packed', 'Shipped', 'Delivered', 'Cancelled', 'RTO'];
 const paymentOptions = ['Pending', 'Paid'];
@@ -142,34 +160,34 @@ function CourierModal({ order, onClose, onUpdate }) {
   return (
     <AdminModal isOpen onClose={onClose} title={`Shipping / Courier — ${order?.orderNumber}`} size="lg">
       <div className="space-y-6">
-        {formError && <p className="text-[12px] text-[#c5221f] m-0 -mt-2">{formError}</p>}
+        {formError && <p className="text-[12px] text-admin-danger m-0 -mt-2">{formError}</p>}
 
         {/* ─── Shiprocket ─────────────────────────────────────────── */}
         <div>
-          <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">Shiprocket</h4>
-          {shiprocketError && <p className="text-[12px] text-[#c5221f] mb-2">{shiprocketError}</p>}
+          <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-admin-muted mb-3">Shiprocket</h4>
+          {shiprocketError && <p className="text-[12px] text-admin-danger mb-2">{shiprocketError}</p>}
           {shiprocket?.shipmentId ? (
-            <div className="bg-[rgba(47,31,25,0.03)] rounded-lg p-3 text-[12px] space-y-1">
-              <div><span className="text-muted">Status:</span> <b className="text-ink">{shiprocket.status || 'Pushed'}</b></div>
-              {shiprocket.courierName && <div><span className="text-muted">Courier:</span> <b className="text-ink">{shiprocket.courierName}</b></div>}
-              {shiprocket.awbCode && <div><span className="text-muted">AWB:</span> <b className="text-ink">{shiprocket.awbCode}</b></div>}
-<button type="button" className={`${adminBtnSecondary} rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em] mt-2`} onClick={handleShiprocketTrack} disabled={shiprocketLoading}>
+            <div className="bg-admin-bg rounded-lg p-3 text-[12px] space-y-1">
+              <div><span className="text-admin-muted">Status:</span> <b className="text-admin-text">{shiprocket.status || 'Pushed'}</b></div>
+              {shiprocket.courierName && <div><span className="text-admin-muted">Courier:</span> <b className="text-admin-text">{shiprocket.courierName}</b></div>}
+              {shiprocket.awbCode && <div><span className="text-admin-muted">AWB:</span> <b className="text-admin-text">{shiprocket.awbCode}</b></div>}
+              <button type="button" className={`${adminBtnSecondary} rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em] mt-2`} onClick={handleShiprocketTrack} disabled={shiprocketLoading}>
                 {shiprocketLoading ? 'Refreshing...' : 'Refresh Tracking'}
               </button>
             </div>
           ) : (
-<button type="button" className={adminBtnPrimary} onClick={handleShiprocketPush} disabled={shiprocketLoading}>
+            <button type="button" className={adminBtnPrimary} onClick={handleShiprocketPush} disabled={shiprocketLoading}>
               {shiprocketLoading ? 'Pushing to Shiprocket...' : 'Ship via Shiprocket'}
             </button>
           )}
         </div>
 
         {/* ─── Assign Courier (manual fallback) ──────────────────────── */}
-        <div className="border-t border-line pt-5">
-          <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">Assign Courier Manually</h4>
+        <div className="border-t border-admin-border pt-5">
+          <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-admin-muted mb-3">Assign Courier Manually</h4>
           <form onSubmit={handleAssignCourier} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="sm:col-span-2 md:col-span-1 flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold tracking-[0.05em] text-muted">Courier</label>
+              <label className="text-[10px] font-bold tracking-[0.05em] text-admin-muted">Courier</label>
               <Listbox
                 value={{ value: form.courierName, label: form.courierName || 'Select courier...' }}
                 onChange={(option) => setForm(f => ({ ...f, courierName: option.value }))}
@@ -191,7 +209,7 @@ function CourierModal({ order, onClose, onUpdate }) {
               placeholder="Optional"
             />
             <div className="sm:col-span-2 flex items-center gap-2 mt-1">
-<button type="submit" disabled={loading || !form.courierName || !form.trackingNumber} className={adminBtnPrimary}>
+              <button type="submit" disabled={loading || !form.courierName || !form.trackingNumber} className={adminBtnPrimary}>
                 {loading ? 'Assigning...' : 'Assign Courier'}
               </button>
               <button type="button" className={adminBtnSecondary} onClick={onClose}>Cancel</button>
@@ -200,13 +218,13 @@ function CourierModal({ order, onClose, onUpdate }) {
         </div>
 
         {/* ─── RTO Management ────────────────────────────────────────── */}
-        <div className="border-t border-line pt-5">
-          <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted mb-3">
-            RTO Management {order?.isRTO ? <span className="text-[#c5221f] ml-2">(Active RTO)</span> : ''}
+        <div className="border-t border-admin-border pt-5">
+          <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-admin-muted mb-3">
+            RTO Management {order?.isRTO ? <span className="text-admin-danger ml-2">(Active RTO)</span> : ''}
           </h4>
           <form onSubmit={handleUpdateRTO} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold tracking-[0.05em] text-muted">RTO Status</label>
+              <label className="text-[10px] font-bold tracking-[0.05em] text-admin-muted">RTO Status</label>
               <Listbox
                 value={{ value: rtoForm.rtoStatus, label: rtoForm.rtoStatus }}
                 onChange={(option) => setRtoForm(f => ({ ...f, rtoStatus: option.value }))}
@@ -233,7 +251,7 @@ function CourierModal({ order, onClose, onUpdate }) {
               placeholder="e.g. Delhivery"
             />
             <div className="sm:col-span-2 flex flex-wrap items-center gap-2 mt-1">
-<button type="submit" disabled={loading} className={adminBtnPrimary}>{loading ? 'Saving...' : 'Update RTO'}</button>
+              <button type="submit" disabled={loading} className={adminBtnPrimary}>{loading ? 'Saving...' : 'Update RTO'}</button>
               {order?.isRTO && (
                 <>
                   <button type="button" className={`${adminBtnDanger} rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em]`} onClick={handleCancelRTO} disabled={loading}>
@@ -251,7 +269,7 @@ function CourierModal({ order, onClose, onUpdate }) {
         </div>
 
         {/* ─── Notes ──────────────────────────────────────────────────── */}
-        <div className="border-t border-line pt-5">
+        <div className="border-t border-admin-border pt-5">
           <AdminTextarea
             label="Order Notes"
             value={form.notes}
@@ -260,16 +278,16 @@ function CourierModal({ order, onClose, onUpdate }) {
             placeholder="Add internal notes about this order..."
           />
           <div className="mt-2 flex items-center gap-3">
-<button type="button" className={`${adminBtnSecondary} rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em]`} onClick={handleSaveNotes}>
+            <button type="button" className={`${adminBtnSecondary} rounded px-2.5 py-1 text-[10px] font-semibold normal-case tracking-[0.04em]`} onClick={handleSaveNotes}>
               Save Notes
             </button>
-            {notesMessage && <span className="text-[11px] text-muted">{notesMessage}</span>}
+            {notesMessage && <span className="text-[11px] text-admin-muted">{notesMessage}</span>}
           </div>
         </div>
 
         {/* ─── Print Label ────────────────────────────────────────────── */}
-        <div className="border-t border-line pt-5">
-<button type="button" className={adminBtnPrimary}
+        <div className="border-t border-admin-border pt-5">
+          <button type="button" className={adminBtnPrimary}
             onClick={() => {
               const labelUrl = `${process.env.REACT_APP_API_BASE_URL || ''}/api/admin/shipping/${order.id}/label?token=${token}`;
               window.open(labelUrl, '_blank');
@@ -294,49 +312,49 @@ function OrderDetailModal({ order, onClose }) {
       <div className="space-y-5 text-[13px]">
         {/* Customer Info */}
         <div>
-          <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted mb-2">Customer Information</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[rgba(47,31,25,0.03)] rounded-lg p-4">
-            <div><span className="text-muted text-[11px]">Name</span><br /><b className="text-ink">{order.customer?.name}</b></div>
-            <div><span className="text-muted text-[11px]">Phone</span><br /><b className="text-ink">{order.customer?.phone}</b></div>
-            <div className="sm:col-span-2"><span className="text-muted text-[11px]">Address</span><br /><b className="text-ink">{order.customer?.address}{order.customer?.landmark ? `, ${order.customer.landmark}` : ''}</b></div>
-            <div><span className="text-muted text-[11px]">City/State</span><br /><b className="text-ink">{order.customer?.city}, {order.customer?.state}</b></div>
-            <div><span className="text-muted text-[11px]">Pincode</span><br /><b className="text-ink">{order.customer?.pincode}</b></div>
+          <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-admin-muted mb-2">Customer Information</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-admin-bg rounded-lg p-4">
+            <div><span className="text-admin-muted text-[11px]">Name</span><br /><b className="text-admin-text">{order.customer?.name}</b></div>
+            <div><span className="text-admin-muted text-[11px]">Phone</span><br /><b className="text-admin-text">{order.customer?.phone}</b></div>
+            <div className="sm:col-span-2"><span className="text-admin-muted text-[11px]">Address</span><br /><b className="text-admin-text">{order.customer?.address}{order.customer?.landmark ? `, ${order.customer.landmark}` : ''}</b></div>
+            <div><span className="text-admin-muted text-[11px]">City/State</span><br /><b className="text-admin-text">{order.customer?.city}, {order.customer?.state}</b></div>
+            <div><span className="text-admin-muted text-[11px]">Pincode</span><br /><b className="text-admin-text">{order.customer?.pincode}</b></div>
           </div>
         </div>
 
         {/* Order Items */}
         <div>
-          <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted mb-2">Order Items ({order.items?.length || 0})</h4>
-          <div className="divide-y divide-[rgba(47,31,25,0.06)]">
+          <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-admin-muted mb-2">Order Items ({order.items?.length || 0})</h4>
+          <div className="divide-y divide-admin-border/50">
             {(order.items || []).map((item, idx) => (
               <div key={idx} className="flex items-center gap-3 py-2">
                 {item.image && <img src={item.image} alt="" className="w-10 h-12 rounded object-cover bg-sand" />}
                 <div className="flex-1 min-w-0">
-                  <span className="block text-ink truncate">{item.name}</span>
-                  <span className="text-[11px] text-muted">Qty: {item.quantity} × ₹{Number(item.price).toLocaleString('en-IN')}</span>
+                  <span className="block text-admin-text truncate">{item.name}</span>
+                  <span className="text-[11px] text-admin-muted">Qty: {item.quantity} × ₹{Number(item.price).toLocaleString('en-IN')}</span>
                 </div>
-                <b className="text-ink shrink-0">₹{Number(item.price * item.quantity).toLocaleString('en-IN')}</b>
+                <b className="text-admin-text shrink-0">₹{Number(item.price * item.quantity).toLocaleString('en-IN')}</b>
               </div>
             ))}
           </div>
         </div>
 
         {/* Pricing */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[rgba(47,31,25,0.03)] rounded-lg p-4">
-          <div><span className="text-muted text-[11px]">Subtotal</span><br /><b className="text-ink">₹{Number(order.subtotal || 0).toLocaleString('en-IN')}</b></div>
-          <div><span className="text-muted text-[11px]">Shipping</span><br /><b className="text-ink">₹{Number(order.shipping || 0).toLocaleString('en-IN')}</b></div>
-          <div><span className="text-muted text-[11px]">Discount</span><br /><b className="text-[#137333]">-₹{Number(order.discount || 0).toLocaleString('en-IN')}</b></div>
-          <div><span className="text-muted text-[11px]">Total</span><br /><b className="text-lg text-ink">₹{Number(order.total || 0).toLocaleString('en-IN')}</b></div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-admin-bg rounded-lg p-4">
+          <div><span className="text-admin-muted text-[11px]">Subtotal</span><br /><b className="text-admin-text">₹{Number(order.subtotal || 0).toLocaleString('en-IN')}</b></div>
+          <div><span className="text-admin-muted text-[11px]">Shipping</span><br /><b className="text-admin-text">₹{Number(order.shipping || 0).toLocaleString('en-IN')}</b></div>
+          <div><span className="text-admin-muted text-[11px]">Discount</span><br /><b className="text-admin-success">-₹{Number(order.discount || 0).toLocaleString('en-IN')}</b></div>
+          <div><span className="text-admin-muted text-[11px]">Total</span><br /><b className="text-lg text-admin-text">₹{Number(order.total || 0).toLocaleString('en-IN')}</b></div>
         </div>
 
         {/* Status & Payment */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div><span className="text-muted text-[11px]">Status</span><br />
+          <div><span className="text-admin-muted text-[11px]">Status</span><br />
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${statusColors[order.status] || statusColors.Placed}`}>
               <span className="w-[6px] h-[6px] rounded-full bg-current" /> {order.status}
             </span>
           </div>
-          <div><span className="text-muted text-[11px]">Payment</span><br />
+          <div><span className="text-admin-muted text-[11px]">Payment</span><br />
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${paidColors[order.paymentStatus] || paidColors.Pending}`}>
               <span className="w-[6px] h-[6px] rounded-full bg-current" /> {order.paymentStatus} ({order.paymentMethod})
             </span>
@@ -345,16 +363,16 @@ function OrderDetailModal({ order, onClose }) {
 
         {/* Courier / RTO Info */}
         {(order.courierName || order.isRTO) && (
-          <div className="border-t border-line pt-3">
-            <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted mb-2">Shipping Info</h4>
+          <div className="border-t border-admin-border pt-3">
+            <h4 className="text-[10px] font-bold tracking-[0.08em] uppercase text-admin-muted mb-2">Shipping Info</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[12px]">
-              {order.courierName && <div><span className="text-muted">Courier:</span> <b className="text-ink">{order.courierName}</b></div>}
-              {order.trackingNumber && <div><span className="text-muted">Tracking:</span> <b className="text-ink">{order.trackingNumber}</b></div>}
-              {order.awbNumber && <div><span className="text-muted">AWB:</span> <b className="text-ink">{order.awbNumber}</b></div>}
+              {order.courierName && <div><span className="text-admin-muted">Courier:</span> <b className="text-admin-text">{order.courierName}</b></div>}
+              {order.trackingNumber && <div><span className="text-admin-muted">Tracking:</span> <b className="text-admin-text">{order.trackingNumber}</b></div>}
+              {order.awbNumber && <div><span className="text-admin-muted">AWB:</span> <b className="text-admin-text">{order.awbNumber}</b></div>}
               {order.isRTO && (
                 <>
-                  <div className="text-[#c5221f]"><span className="text-muted">RTO Status:</span> <b className="text-[#c5221f]">{order.rtoStatus}</b></div>
-                  {order.rtoReason && <div className="sm:col-span-2"><span className="text-muted">RTO Reason:</span> <b className="text-ink">{order.rtoReason}</b></div>}
+                  <div className="text-admin-danger"><span className="text-admin-muted">RTO Status:</span> <b className="text-admin-danger">{order.rtoStatus}</b></div>
+                  {order.rtoReason && <div className="sm:col-span-2"><span className="text-admin-muted">RTO Reason:</span> <b className="text-admin-text">{order.rtoReason}</b></div>}
                 </>
               )}
             </div>
@@ -363,14 +381,14 @@ function OrderDetailModal({ order, onClose }) {
 
         {/* Notes */}
         {order.notes && (
-          <div className="border-t border-line pt-3">
-            <span className="text-muted text-[11px]">Notes:</span>
-            <p className="m-0 mt-1 text-ink text-[12px]">{order.notes}</p>
+          <div className="border-t border-admin-border pt-3">
+            <span className="text-admin-muted text-[11px]">Notes:</span>
+            <p className="m-0 mt-1 text-admin-text text-[12px]">{order.notes}</p>
           </div>
         )}
 
         {/* Dates */}
-        <div className="text-[11px] text-muted border-t border-line pt-3">
+        <div className="text-[11px] text-admin-muted border-t border-admin-border pt-3">
           <span>Placed: {new Date(order.createdAt).toLocaleString('en-IN')}</span>
           {order.shippedDate && <span className="ml-4">Shipped: {new Date(order.shippedDate).toLocaleString('en-IN')}</span>}
           {order.deliveredDate && <span className="ml-4">Delivered: {new Date(order.deliveredDate).toLocaleString('en-IN')}</span>}
@@ -445,8 +463,13 @@ export default function AdminOrders() {
 
   return (
     <div>
-{success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
-      {error && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{error}</div>}
+      <PageHeader
+        icon={<OrdersIcon />}
+        title="Orders"
+        description="Track, ship and manage every order placed across your stores."
+      />
+      {success && <div className={`${adminToast} bg-admin-success-light text-admin-success border border-admin-success/20`}>{success}</div>}
+      {error && <div className={`${adminToast} bg-admin-danger-light text-admin-danger border border-admin-danger/20`}>{error}</div>}
 
       {/* Modals */}
       {detailedOrder && <OrderDetailModal order={detailedOrder} onClose={() => setDetailedOrder(null)} />}
@@ -460,33 +483,18 @@ export default function AdminOrders() {
       />
 
       {/* Stats */}
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3 mb-6">
-        <div className="bg-paper border border-line rounded-lg px-4 py-3.5">
-          <span className="block text-[10px] font-semibold tracking-[0.08em] uppercase text-muted mb-1">Total Orders</span>
-          <b className="font-playfair text-[22px] font-semibold text-ink">{stats.total}</b>
-        </div>
-        <div className="bg-paper border border-line rounded-lg px-4 py-3.5">
-          <span className="block text-[10px] font-semibold tracking-[0.08em] uppercase text-muted mb-1">Active</span>
-          <b className="font-playfair text-[22px] font-semibold text-ink">{stats.active}</b>
-        </div>
-        <div className="bg-paper border border-line rounded-lg px-4 py-3.5">
-          <span className="block text-[10px] font-semibold tracking-[0.08em] uppercase text-muted mb-1">Delivered</span>
-          <b className="font-playfair text-[22px] font-semibold text-ink">{stats.delivered}</b>
-        </div>
-        <div className="bg-paper border border-line rounded-lg px-4 py-3.5">
-          <span className="block text-[10px] font-semibold tracking-[0.08em] uppercase text-muted mb-1">RTO</span>
-          <b className={`font-playfair text-[22px] font-semibold ${stats.rto > 0 ? 'text-[#c5221f]' : 'text-ink'}`}>{stats.rto}</b>
-        </div>
-        <div className="bg-paper border border-line rounded-lg px-4 py-3.5">
-          <span className="block text-[10px] font-semibold tracking-[0.08em] uppercase text-muted mb-1">Revenue (Paid)</span>
-          <b className="font-playfair text-[22px] font-semibold text-ink"><Rupee amount={stats.revenue} /></b>
-        </div>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-[18px] mb-6">
+        <StatCard icon={<OrdersIcon />} label="Total Orders" value={stats.total} bgColor="#eef2ff" iconColor="#4f46e5" />
+        <StatCard icon={<ActiveIcon />} label="Active" value={stats.active} bgColor="#f0edf5" iconColor="#6b4fa0" />
+        <StatCard icon={<DeliveredIcon />} label="Delivered" value={stats.delivered} bgColor="#ecfdf5" iconColor="#059669" />
+        <StatCard icon={<RTOStatIcon />} label="RTO" value={stats.rto} bgColor="#fef2f2" iconColor="#dc2626" />
+        <StatCard icon={<RevenueIcon />} label="Revenue (Paid)" value={<Rupee amount={stats.revenue} />} bgColor="#fffbeb" iconColor="#d97706" />
       </div>
 
       {/* Orders */}
       <div className="flex flex-col gap-3">
         {orders.length > 0 ? orders.map(order => (
-          <div key={order.id} className="bg-paper border border-line rounded-xl p-4 md:p-5 grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 items-start hover:shadow-[0_2px_8px_rgba(47,31,25,0.06)] transition-shadow">
+          <div key={order.id} className="bg-white border border-admin-border rounded-xl p-4 md:p-5 grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 items-start shadow-card hover:shadow-card-hover transition-shadow">
             <div>
               <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${statusColors[order.status] || statusColors.Placed}`}>
                 <span className="w-[6px] h-[6px] rounded-full bg-current" />
@@ -496,44 +504,44 @@ export default function AdminOrders() {
 
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-ink">{order.orderNumber}</span>
-                {order.isRTO && <span className="px-2 py-0.5 bg-[#fce8e6] text-[#c5221f] rounded text-[9px] font-bold">RTO</span>}
+                <span className="text-sm font-semibold text-admin-text">{order.orderNumber}</span>
+                {order.isRTO && <span className="px-2 py-0.5 bg-admin-danger-light text-admin-danger rounded text-[9px] font-bold">RTO</span>}
               </div>
-              <span className="block text-[11px] text-muted mb-1.5">
+              <span className="block text-[11px] text-admin-muted mb-1.5">
                 {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </span>
               <div className="mb-2">
-                <b className="block text-[13px] text-ink">{order.customer?.name}</b>
-                <small className="text-[11px] text-muted">{order.customer?.phone} · {order.customer?.city}, {order.customer?.state}</small>
-                <br /><small className="text-[11px] text-muted">{order.customer?.address}{order.customer?.landmark ? `, ${order.customer.landmark}` : ''} — {order.customer?.pincode}</small>
+                <b className="block text-[13px] text-admin-text">{order.customer?.name}</b>
+                <small className="text-[11px] text-admin-muted">{order.customer?.phone} · {order.customer?.city}, {order.customer?.state}</small>
+                <br /><small className="text-[11px] text-admin-muted">{order.customer?.address}{order.customer?.landmark ? `, ${order.customer.landmark}` : ''} — {order.customer?.pincode}</small>
               </div>
               <div className="flex flex-wrap gap-1">
                 {order.items?.map((item, idx) => (
-                  <span key={idx} className="px-2 py-0.5 bg-[rgba(47,31,25,0.06)] rounded text-[11px] text-muted">{item.quantity}× {item.name}</span>
+                  <span key={idx} className="px-2 py-0.5 bg-admin-bg rounded text-[11px] text-admin-muted">{item.quantity}× {item.name}</span>
                 ))}
               </div>
 
               {/* Courier / Tracking Info */}
               {order.trackingNumber && (
                 <div className="mt-2 flex items-center gap-3 text-[11px]">
-                  <span className="text-muted">📦 {order.courierName}</span>
-                  <b className="text-ink">#{order.trackingNumber}</b>
-                  {order.awbNumber && <span className="text-muted">AWB: {order.awbNumber}</span>}
+                  <span className="text-admin-muted">📦 {order.courierName}</span>
+                  <b className="text-admin-text">#{order.trackingNumber}</b>
+                  {order.awbNumber && <span className="text-admin-muted">AWB: {order.awbNumber}</span>}
                 </div>
               )}
               {order.shiprocket?.awbCode && (
                 <div className="mt-2 flex items-center gap-3 text-[11px]">
-                  <span className="text-muted">📦 Shiprocket · {order.shiprocket.courierName}</span>
-                  <b className="text-ink">AWB: {order.shiprocket.awbCode}</b>
-                  <span className="text-muted">{order.shiprocket.status}</span>
+                  <span className="text-admin-muted">📦 Shiprocket · {order.shiprocket.courierName}</span>
+                  <b className="text-admin-text">AWB: {order.shiprocket.awbCode}</b>
+                  <span className="text-admin-muted">{order.shiprocket.status}</span>
                 </div>
               )}
             </div>
 
             <div className="text-right flex flex-col items-end gap-2 shrink-0">
-              <div className="font-playfair text-lg font-semibold text-ink"><Rupee amount={order.total} /></div>
+              <div className="font-playfair text-lg font-semibold text-admin-text"><Rupee amount={order.total} /></div>
               <div>
-                <span className="text-[10px] font-semibold tracking-[0.05em] uppercase text-muted block mb-1">Payment</span>
+                <span className="text-[10px] font-semibold tracking-[0.05em] uppercase text-admin-muted block mb-1">Payment</span>
                 <Listbox
                   value={{ value: order.paymentStatus, label: order.paymentStatus }}
                   onChange={(option) => updateOrder(order, { paymentStatus: option.value })}
@@ -541,10 +549,10 @@ export default function AdminOrders() {
                   size="sm"
                   disabled={loading}
                 />
-                <small className="text-[10px] text-muted">{order.paymentMethod}</small>
+                <small className="text-[10px] text-admin-muted">{order.paymentMethod}</small>
               </div>
               <div>
-                <span className="text-[10px] font-semibold tracking-[0.05em] uppercase text-muted block mb-1">Status</span>
+                <span className="text-[10px] font-semibold tracking-[0.05em] uppercase text-admin-muted block mb-1">Status</span>
                 <Listbox
                   value={{ value: order.status, label: order.status }}
                   onChange={(option) => updateOrder(order, { status: option.value })}
@@ -554,7 +562,7 @@ export default function AdminOrders() {
                 />
               </div>
               <div className="flex items-center gap-1 mt-1">
-<button className={adminBtnGhost} onClick={() => viewOrderDetail(order)} title="View details">
+                <button className={adminBtnGhost} onClick={() => viewOrderDetail(order)} title="View details">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
                   </svg>
@@ -574,9 +582,9 @@ export default function AdminOrders() {
             </div>
           </div>
         )) : (
-          <div className="bg-paper border border-line rounded-xl p-5 text-center">
+          <div className="bg-white border border-admin-border rounded-xl p-5 text-center shadow-card">
             <svg className="w-10 h-10 opacity-40 mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-            <p className="m-0 text-sm text-muted">No orders yet. Orders will appear here once customers start purchasing.</p>
+            <p className="m-0 text-sm text-admin-muted">No orders yet. Orders will appear here once customers start purchasing.</p>
           </div>
         )}
       </div>

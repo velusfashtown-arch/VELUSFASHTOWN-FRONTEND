@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { api } from '../../../../lib/api';
 import { getToken } from '../../../../lib/auth';
+import { adminBtnPrimary } from '../../Common/buttonClasses';
 
 const DEFAULT_THEME = {
   primaryColor: '#a74e3e',
@@ -22,12 +23,15 @@ const DEFAULT_THEME = {
   containerWidth: '1280px',
 };
 
-const inputClass = 'w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink outline-none focus:border-terra';
+const inputClass = 'w-full rounded-lg border border-[rgba(47,31,25,0.14)] bg-paper px-3 py-2.5 text-sm text-ink outline-none transition-colors focus:border-terra';
+const labelClass = 'mb-1.5 block text-xs font-semibold text-ink';
+const cardClass = 'rounded-2xl border border-[rgba(47,31,25,0.08)] bg-paper p-4 shadow-[0_12px_32px_rgba(47,31,25,0.06)] sm:p-5';
+const sectionLabel = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-muted';
 
 function ColorField({ label, value, onChange }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-line">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[rgba(47,31,25,0.14)]">
         <input type="color" value={value} onChange={(e) => onChange(e.target.value)} className="h-12 w-12 cursor-pointer border-0 bg-transparent p-0" />
       </div>
       <div className="min-w-0 flex-1">
@@ -54,7 +58,7 @@ export default function WebsiteTheme() {
         const data = res?.data || res?.website || {};
         setTheme({ ...DEFAULT_THEME, ...(data.theme || {}) });
       })
-.catch((err) => setError(err.message || 'Failed to load theme'))
+      .catch((err) => setError(err.message || 'Failed to load theme'))
       .finally(() => setLoading(false));
   }, [id, token]);
 
@@ -79,13 +83,13 @@ export default function WebsiteTheme() {
   if (loading) return <div className="animate-pulse text-sm text-muted">Loading theme…</div>;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+    <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
       {/* Editor */}
       <div className="space-y-5">
-        {error ? <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+        {error ? <div className="rounded-xl border border-[#f3d4d4] bg-[#fce8e6] p-3 text-sm text-[#b93b3b]">{error}</div> : null}
 
-        <section className="rounded-xl border border-line bg-paper p-5">
-          <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Colors</h3>
+        <section className={cardClass}>
+          <h3 className={sectionLabel}>Colors</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <ColorField label="Primary Color" value={theme.primaryColor} onChange={(v) => setField('primaryColor', v)} />
             <ColorField label="Secondary Color" value={theme.secondaryColor} onChange={(v) => setField('secondaryColor', v)} />
@@ -96,19 +100,19 @@ export default function WebsiteTheme() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-line bg-paper p-5">
-          <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Typography</h3>
+        <section className={cardClass}>
+          <h3 className={sectionLabel}>Typography</h3>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Heading Font</label><input className={inputClass} value={theme.headingFont} onChange={(e) => setField('headingFont', e.target.value)} placeholder="Playfair Display" /></div>
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Body Font</label><input className={inputClass} value={theme.bodyFont} onChange={(e) => setField('bodyFont', e.target.value)} placeholder="Inter" /></div>
+            <div><label className={labelClass}>Heading Font</label><input className={inputClass} value={theme.headingFont} onChange={(e) => setField('headingFont', e.target.value)} placeholder="Playfair Display" /></div>
+            <div><label className={labelClass}>Body Font</label><input className={inputClass} value={theme.bodyFont} onChange={(e) => setField('bodyFont', e.target.value)} placeholder="Inter" /></div>
           </div>
         </section>
 
-        <section className="rounded-xl border border-line bg-paper p-5">
-          <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Layout & Buttons</h3>
+        <section className={cardClass}>
+          <h3 className={sectionLabel}>Layout & Buttons</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-semibold text-ink">Button Style</label>
+              <label className={labelClass}>Button Style</label>
               <select className={inputClass} value={theme.buttonStyle} onChange={(e) => setField('buttonStyle', e.target.value)}>
                 <option value="rounded-full">Pill (rounded-full)</option>
                 <option value="rounded-lg">Rounded (rounded-lg)</option>
@@ -116,15 +120,15 @@ export default function WebsiteTheme() {
                 <option value="rounded-none">Square</option>
               </select>
             </div>
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Border Radius</label><input className={inputClass} value={theme.borderRadius} onChange={(e) => setField('borderRadius', e.target.value)} placeholder="16px" /></div>
-            <div><label className="mb-1 block text-xs font-semibold text-ink">Container Width</label><input className={inputClass} value={theme.containerWidth} onChange={(e) => setField('containerWidth', e.target.value)} placeholder="1280px" /></div>
+            <div><label className={labelClass}>Border Radius</label><input className={inputClass} value={theme.borderRadius} onChange={(e) => setField('borderRadius', e.target.value)} placeholder="16px" /></div>
+            <div><label className={labelClass}>Container Width</label><input className={inputClass} value={theme.containerWidth} onChange={(e) => setField('containerWidth', e.target.value)} placeholder="1280px" /></div>
           </div>
         </section>
 
-        {saved ? <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">Theme saved successfully.</div> : null}
+        {saved ? <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">Theme saved successfully.</div> : null}
 
         <div className="flex justify-end">
-          <button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-terra px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] disabled:opacity-60">
+          <button type="button" onClick={handleSave} disabled={saving} className={adminBtnPrimary}>
             {saving ? 'Saving…' : 'Save Theme'}
           </button>
         </div>
@@ -132,18 +136,18 @@ export default function WebsiteTheme() {
 
       {/* Live preview */}
       <div>
-        <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Live Preview</h3>
+        <h3 className={sectionLabel}>Live Preview</h3>
         <div
-          className="overflow-hidden rounded-xl border shadow-sm"
+          className="overflow-hidden rounded-2xl border shadow-[0_12px_32px_rgba(47,31,25,0.08)]"
           style={{ backgroundColor: theme.backgroundColor, borderColor: theme.borderColor, borderRadius: theme.borderRadius, ['--t-primary']: theme.primaryColor, ['--t-secondary']: theme.secondaryColor, ['--t-accent']: theme.accentColor, ['--t-text']: theme.textColor, ['--t-border']: theme.borderColor }}
         >
           <div className="flex items-center justify-between border-b px-5 py-3" style={{ borderColor: theme.borderColor }}>
             <span className="font-bold" style={{ color: theme.textColor, fontFamily: theme.headingFont }}>Brand</span>
-            <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: theme.primaryColor }}>Shop · About · Contact</span>
+            <span className="hidden text-[10px] font-semibold uppercase tracking-wider sm:inline" style={{ color: theme.primaryColor }}>Shop · About · Contact</span>
           </div>
           <div className="px-5 py-8">
             <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: theme.accentColor }}>New Collection</p>
-            <h2 className="text-3xl" style={{ color: theme.textColor, fontFamily: theme.headingFont }}>Elegant Sarees</h2>
+            <h2 className="text-2xl sm:text-3xl" style={{ color: theme.textColor, fontFamily: theme.headingFont }}>Elegant Sarees</h2>
             <p className="mt-2 text-sm" style={{ color: theme.textColor, fontFamily: theme.bodyFont }}>A preview of how your website will look with these theme settings.</p>
             <button
               type="button"

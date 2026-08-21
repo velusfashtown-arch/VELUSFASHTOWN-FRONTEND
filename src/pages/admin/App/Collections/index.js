@@ -9,6 +9,11 @@ import AdminInput from '../../Common/Form/Input';
 import AdminTextarea from '../../Common/Form/Textarea';
 import AdminCheckbox from '../../Common/Form/Checkbox';
 import { adminBtnPrimary, adminBtnSecondary, adminToast } from '../../Common/buttonClasses';
+import PageHeader from '../../Common/PageHeader';
+
+function CollectionsIcon() {
+  return <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>;
+}
 
 function CollectionModal({ collection, onClose, onSaved }) {
   const token = getToken();
@@ -52,13 +57,13 @@ function CollectionModal({ collection, onClose, onSaved }) {
       title={collection ? 'Edit Collection' : 'Add Collection'}
       footer={
         <div className="flex items-center justify-end gap-2">
-<button type="submit" form="collection-form" disabled={loading} className={adminBtnPrimary}>{loading ? 'Saving...' : 'Save Collection'}</button>
+          <button type="submit" form="collection-form" disabled={loading} className={adminBtnPrimary}>{loading ? 'Saving...' : 'Save Collection'}</button>
           <button type="button" className={adminBtnSecondary} onClick={onClose}>Cancel</button>
         </div>
       }
     >
       <form id="collection-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {error && <p className="text-[12px] text-[#c5221f] m-0">{error}</p>}
+        {error && <p className="text-[12px] text-admin-danger m-0">{error}</p>}
 
         <AdminInput
           label="Name"
@@ -138,8 +143,14 @@ export default function AdminCollections() {
 
   return (
     <div>
-{success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
-      {(error || localError) && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{(error || localError)}</div>}
+      <PageHeader
+        icon={<CollectionsIcon />}
+        title="Collections"
+        description="Group products into curated collections for your storefront."
+        actions={<button type="button" onClick={openAdd} className={adminBtnPrimary}><span className="text-base leading-none">+</span> Add Collection</button>}
+      />
+      {success && <div className={`${adminToast} bg-admin-success-light text-admin-success border border-admin-success/20`}>{success}</div>}
+      {(error || localError) && <div className={`${adminToast} bg-admin-danger-light text-admin-danger border border-admin-danger/20`}>{(error || localError)}</div>}
 
       {modalOpen && <CollectionModal collection={editingCollection} onClose={closeModal} onSaved={() => { loadCollections(); showSuccess(editingCollection ? 'Collection updated!' : 'Collection created!'); }} />}
       <ConfirmDeleteModal
@@ -150,11 +161,11 @@ export default function AdminCollections() {
         itemName={collectionToDelete?.name ? `the collection “${collectionToDelete.name}”` : 'this collection'}
       />
 
-      <Table title="Collections" rows={collections} loading={loading} refreshing={refreshing} searchKeys={['name', 'slug']} onAdd={openAdd} addLabel="Add Collection" onRefresh={loadCollections}
+      <Table rows={collections} loading={loading} refreshing={refreshing} searchKeys={['name', 'slug']} onRefresh={loadCollections}
         pagination={pagination} onPageChange={goToPage} onPageSizeChange={changePageSize} onServerSearch={searchTable}
         rowKey="id"
         columns={[
-          { key: 'name', header: 'Name', render: (collection) => <div><b className="text-ink">{collection.name}</b>{collection.description && <small className="block text-[11px] text-muted truncate max-w-[200px]">{collection.description}</small>}</div> },
+          { key: 'name', header: 'Name', render: (collection) => <div><b className="text-admin-text">{collection.name}</b>{collection.description && <small className="block text-[11px] text-admin-muted truncate max-w-[200px]">{collection.description}</small>}</div> },
           { key: 'slug', header: 'Slug' },
           { key: 'products', header: 'Products', render: (collection) => collection.products?.length || 0 },
           { key: 'isFeatured', header: 'Featured', render: (collection) => collection.isFeatured ? 'Yes' : '—' },

@@ -27,11 +27,11 @@ export default function VariantRow({ index, variant, onUpdate, onRemove, token, 
   }, [uploadImages, productId]);
 
   return (
-    <div className="relative rounded-xl border border-gray-200 bg-gray-50/50 p-4">
+    <div className="relative rounded-xl border border-[rgba(47,31,25,0.1)] bg-[rgba(47,31,25,0.02)] p-4">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FiMove className="h-4 w-4 cursor-grab text-gray-300" />
-          <span className="text-[12px] font-semibold uppercase tracking-wide text-gray-500">
+          <FiMove className="h-4 w-4 cursor-grab text-muted" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-muted">
             Color Variant #{index + 1}
           </span>
         </div>
@@ -44,7 +44,7 @@ export default function VariantRow({ index, variant, onUpdate, onRemove, token, 
           <button
             type="button"
             onClick={() => onRemove(index)}
-            className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
+            className="min-h-[36px] min-w-[36px] rounded-lg p-1.5 text-muted transition-colors hover:bg-danger/10 hover:text-danger"
             title="Remove color variant"
           >
             <FiTrash2 className="h-4 w-4" />
@@ -102,7 +102,7 @@ export default function VariantRow({ index, variant, onUpdate, onRemove, token, 
       </div>
 
       <div className="mt-3">
-        <label className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-gray-600">
+        <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold tracking-[0.08em] uppercase text-muted">
           <FiImage className="h-3.5 w-3.5" /> Images for this color
         </label>
         <ImageDropzone
@@ -114,7 +114,7 @@ export default function VariantRow({ index, variant, onUpdate, onRemove, token, 
           maxImages={10}
           onUpload={handleImageUpload}
         />
-        <p className="mt-1 text-[10px] text-gray-400">
+        <p className="mt-1 text-[10px] text-muted">
           Selecting this color on the storefront swaps the product gallery to these images.
         </p>
       </div>

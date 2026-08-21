@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../auth.api';
+import { adminBtnPrimary } from '../../Common/buttonClasses';
 
 function getStrength(password) {
   let score = 0;
@@ -14,7 +15,84 @@ function getStrength(password) {
   return { label: 'Strong', className: 'strong', bars: 3 };
 }
 
-const RADIAL_PATTERN = 'radial-gradient(circle at 20% 30%, rgba(255,253,250,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,253,250,0.06) 0%, transparent 50%), repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,253,250,0.015) 30px, rgba(255,253,250,0.015) 31px)';
+function AuthShell({ eyebrow, title, subtitle, children }) {
+  return (
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-cream px-4 py-10 sm:px-6">
+      {/* Warm textured background */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(circle at 15% 10%, rgba(167,78,62,0.10) 0%, transparent 45%), radial-gradient(circle at 85% 90%, rgba(108,36,36,0.10) 0%, transparent 50%), linear-gradient(180deg, #f9f5ee 0%, #ece2d4 100%)',
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.4]"
+        style={{ background: 'repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(47,31,25,0.015) 30px, rgba(47,31,25,0.015) 31px)' }}
+        aria-hidden="true"
+      />
+
+      <div className="relative z-[1] w-full max-w-[420px] animate-auth-fade-up">
+        <div className="mb-7 flex flex-col items-center text-center">
+          <img src="/images/Logo/LOGO.png" alt="Velu's Fashtown" className="h-auto w-[150px]" />
+          <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.22em] text-muted">Admin Panel</p>
+        </div>
+
+        <div className="rounded-2xl border border-[rgba(47,31,25,0.08)] bg-paper p-7 shadow-[0_20px_50px_rgba(47,31,25,0.10)] sm:p-9">
+          <div className="mb-7 text-center">
+            <p className="m-0 mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-terra">{eyebrow}</p>
+            <h1 className="m-0 font-playfair text-[28px] font-semibold leading-tight tracking-[-0.03em] text-ink sm:text-[32px]">{title}</h1>
+            <p className="m-0 mt-2 text-[13px] leading-relaxed text-muted">{subtitle}</p>
+          </div>
+          {children}
+        </div>
+
+        <p className="mt-7 text-center text-[11px] leading-relaxed text-muted">
+          &copy; {new Date().getFullYear()} Velu&apos;s Fashtown &mdash; Curating timeless fashion.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PasswordField({ label, value, onChange, placeholder, show, onToggle, required, minLength }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-muted">{label}</span>
+      <div className="relative">
+        <input
+          type={show ? 'text' : 'password'}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          required={required}
+          minLength={minLength}
+          className="w-full rounded-md border border-line bg-paper py-2.5 pl-3 pr-10 font-sans text-[13px] text-ink outline-none transition-colors focus:border-terra"
+        />
+        <button
+          type="button"
+          className="absolute right-0 top-0 flex h-full w-10 items-center justify-center border-none bg-transparent p-0 text-muted transition-colors duration-200 hover:text-terra"
+          onClick={onToggle}
+          aria-label={show ? 'Hide password' : 'Show password'}
+        >
+          {show ? (
+            <svg className="h-[17px] w-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
+          ) : (
+            <svg className="h-[17px] w-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminResetPasswordPage() {
   const nav = useNavigate();
@@ -65,169 +143,72 @@ export default function AdminResetPasswordPage() {
 
   if (!token) {
     return (
-      <div className="flex min-h-screen flex-col bg-paper md:flex-row">
-        {/* Mobile brand header (below md) */}
-        <div className="flex items-center justify-center gap-2 bg-gradient-to-br from-wine to-ink px-5 py-5 md:hidden">
-          <img src="/images/Logo/LOGO.png" alt="Velu's Fashtown" className="h-auto w-[140px]" style={{ filter: 'brightness(0) invert(1)' }} />
+      <AuthShell eyebrow="Error" title={<>Invalid <em>link</em></>} subtitle="This reset link is invalid or expired.">
+        <div className="flex flex-col items-center gap-5">
+          <Link to="/admin" className="text-[12px] font-semibold text-terra no-underline transition-colors duration-200 hover:text-wine hover:underline">
+            Back to login
+          </Link>
         </div>
-
-        <aside className="relative hidden w-[50%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[40px_20px] text-center md:flex">
-          <div className="pointer-events-none absolute inset-0" style={{ background: RADIAL_PATTERN }} aria-hidden="true" />
-          <img src="/images/Logo/LOGO.png" alt="Velu's Fashtown" className="relative z-[1] mb-4 h-auto w-[300px]" style={{ filter: 'brightness(0) invert(1)' }} />
-          <p className="relative z-[1] m-0 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-[rgba(255,253,250,0.55)]">Admin Panel</p>
-          <p className="relative z-[1] mt-10 max-w-[280px] font-sans text-[13px] italic leading-[1.7] text-[rgba(255,253,250,0.45)]">"Let's get you a fresh link."</p>
-          <div className="absolute bottom-10 z-[1] flex gap-2">
-            <span className="h-[5px] w-[5px] rounded-full bg-[rgba(255,253,250,0.2)]" />
-            <span className="h-[6px] w-[6px] rounded-full bg-[rgba(255,253,250,0.4)]" />
-            <span className="h-[5px] w-[5px] rounded-full bg-[rgba(255,253,250,0.2)]" />
-          </div>
-        </aside>
-        <main className="flex flex-1 flex-col items-center justify-center px-6 py-10 sm:px-10 md:p-[40px_3vw]">
-          <div className="w-full max-w-[400px] animate-auth-fade-up">
-            <p className="m-0 mb-2.5 text-[9px] font-bold uppercase tracking-[0.22em] text-terra">Error</p>
-            <h1 className="m-0 mb-1.5 font-playfair text-[clamp(26px,7vw,36px)] font-medium leading-[1.1] tracking-[-0.04em] text-ink">Invalid <em>link</em></h1>
-            <p className="m-0 mb-8 text-[13px] leading-[1.5] text-muted">This reset link is invalid or expired.</p>
-            <Link to="/admin" className="text-[11px] font-semibold text-terra no-underline transition-colors duration-200 hover:text-wine hover:underline">Back to login</Link>
-          </div>
-        </main>
-      </div>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-paper md:flex-row">
-      {/* Mobile brand header (below md) */}
-      <div className="flex items-center justify-center gap-2 bg-gradient-to-br from-wine to-ink px-5 py-5 md:hidden">
-        <img src="/images/Logo/LOGO.png" alt="Velu's Fashtown" className="h-auto w-[140px]" style={{ filter: 'brightness(0) invert(1)' }} />
-      </div>
-
-      {/* Left brand panel (md and up) */}
-      <aside className="relative hidden w-[50%] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-wine to-ink p-[40px_20px] text-center md:flex">
-        <div className="pointer-events-none absolute inset-0" style={{ background: RADIAL_PATTERN }} aria-hidden="true" />
-        <img src="/images/Logo/LOGO.png" alt="Velu's Fashtown" className="relative z-[1] mb-4 h-auto w-[300px]" style={{ filter: 'brightness(0) invert(1)' }} />
-        <p className="relative z-[1] m-0 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-[rgba(255,253,250,0.55)]">Admin Panel</p>
-        <p className="relative z-[1] mt-10 max-w-[280px] font-sans text-[13px] italic leading-[1.7] text-[rgba(255,253,250,0.45)]">"Choose a strong password to secure your account."</p>
-        <div className="absolute bottom-10 z-[1] flex gap-2">
-          <span className="h-[5px] w-[5px] rounded-full bg-[rgba(255,253,250,0.2)]" />
-          <span className="h-[6px] w-[6px] rounded-full bg-[rgba(255,253,250,0.4)]" />
-          <span className="h-[5px] w-[5px] rounded-full bg-[rgba(255,253,250,0.2)]" />
+    <AuthShell eyebrow="New Password" title={<>Reset <em>password</em></>} subtitle="Enter your new password below.">
+      {success ? (
+        <div className="flex flex-col gap-5">
+          <p className="m-0 rounded-md border border-[rgba(42,122,59,0.25)] bg-[#e6f0df] p-[11px_14px] text-[12px] leading-[1.4] text-[#2a7a3b]">{success}</p>
+          <Link to="/admin" className="text-center text-[12px] font-semibold text-terra no-underline transition-colors duration-200 hover:text-wine hover:underline">
+            Return to sign in
+          </Link>
         </div>
-      </aside>
+      ) : (
+        <form className="flex flex-col gap-5" onSubmit={onSubmit}>
+          <PasswordField
+            label="New password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Min. 6 characters"
+            show={showPw}
+            onToggle={() => setShowPw((p) => !p)}
+            required
+            minLength={6}
+          />
 
-      {/* Right form panel */}
-      <main className="flex flex-1 flex-col items-center justify-center px-6 py-10 sm:px-10 md:p-[40px_3vw]">
-        <div className="w-full max-w-[400px] animate-auth-fade-up">
-          <p className="m-0 mb-2.5 text-[9px] font-bold uppercase tracking-[0.22em] text-terra">New Password</p>
-          <h1 className="m-0 mb-1.5 font-playfair text-[clamp(26px,7vw,36px)] font-medium leading-[1.1] tracking-[-0.04em] text-ink">Reset <em>password</em></h1>
-          <p className="m-0 mb-8 text-[13px] leading-[1.5] text-muted">Enter your new password below.</p>
-
-          {success ? (
-            <div className="flex flex-col gap-5">
-              <p className="m-0 border border-[rgba(42,122,59,0.25)] bg-[#e6f0df] p-[11px_14px] text-[12px] leading-[1.4] text-[#2a7a3b]">{success}</p>
-              <Link to="/admin" className="text-center text-[12px] font-semibold text-terra no-underline transition-colors duration-200 hover:text-wine hover:underline">
-                Return to sign in
-              </Link>
+          {password.length > 0 && (
+            <div className="-mt-3 flex gap-1">
+              <div className={`h-[3px] flex-1 rounded-full transition-colors duration-300 ${strength.bars >= 1 ? strengthColor : 'bg-[rgba(47,31,25,0.1)]'}`} />
+              <div className={`h-[3px] flex-1 rounded-full transition-colors duration-300 ${strength.bars >= 2 ? strengthColor : 'bg-[rgba(47,31,25,0.1)]'}`} />
+              <div className={`h-[3px] flex-1 rounded-full transition-colors duration-300 ${strength.bars >= 3 ? strengthColor : 'bg-[rgba(47,31,25,0.1)]'}`} />
             </div>
-          ) : (
-            <form className="flex flex-col gap-5" onSubmit={onSubmit}>
-              <label className="m-0 flex flex-col gap-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted">New password</span>
-                <div className="relative flex items-center">
-                  <input
-                    type={showPw ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Min. 6 characters"
-                    required
-                    minLength={6}
-                    className="h-[46px] w-full border border-line bg-paper px-3.5 pr-10 text-sm text-ink outline-none transition-[border-color,box-shadow] duration-200 focus:border-terra focus:shadow-[0_0_0_3px_rgba(167,78,62,0.08)]"
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-0 top-0 flex h-[46px] w-10 items-center justify-center border-none bg-transparent p-0 text-muted transition-colors duration-200 hover:text-terra"
-                    onClick={() => setShowPw((p) => !p)}
-                    aria-label={showPw ? 'Hide password' : 'Show password'}
-                  >
-                    {showPw ? (
-                      <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                        <line x1="1" y1="1" x2="23" y2="23" />
-                      </svg>
-                    ) : (
-                      <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                        <circle cx="12" cy="12" r="3" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </label>
-
-              {/* Password strength indicator */}
-              {password.length > 0 && (
-                <div className="-mt-3 flex gap-1">
-                  <div className={`h-[3px] flex-1 transition-colors duration-300 ${strength.bars >= 1 ? strengthColor : 'bg-[rgba(47,31,25,0.1)]'}`} />
-                  <div className={`h-[3px] flex-1 transition-colors duration-300 ${strength.bars >= 2 ? strengthColor : 'bg-[rgba(47,31,25,0.1)]'}`} />
-                  <div className={`h-[3px] flex-1 transition-colors duration-300 ${strength.bars >= 3 ? strengthColor : 'bg-[rgba(47,31,25,0.1)]'}`} />
-                </div>
-              )}
-
-              <label className="m-0 flex flex-col gap-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted">Confirm new password</span>
-                <div className="relative flex items-center">
-                  <input
-                    type={showConfirm ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Re-enter new password"
-                    required
-                    className="h-[46px] w-full border border-line bg-paper px-3.5 pr-10 text-sm text-ink outline-none transition-[border-color,box-shadow] duration-200 focus:border-terra focus:shadow-[0_0_0_3px_rgba(167,78,62,0.08)]"
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-0 top-0 flex h-[46px] w-10 items-center justify-center border-none bg-transparent p-0 text-muted transition-colors duration-200 hover:text-terra"
-                    onClick={() => setShowConfirm((p) => !p)}
-                    aria-label={showConfirm ? 'Hide password' : 'Show password'}
-                  >
-                    {showConfirm ? (
-                      <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                        <line x1="1" y1="1" x2="23" y2="23" />
-                      </svg>
-                    ) : (
-                      <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                        <circle cx="12" cy="12" r="3" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </label>
-
-              {error && (
-                <p className="m-0 border border-[rgba(155,53,49,0.25)] bg-[#fcf1ef] p-[11px_14px] text-[12px] leading-[1.4] text-[#a53232]">{error}</p>
-              )}
-
-              <button
-                className="inline-flex h-12 w-full items-center justify-center border-none bg-terra text-[11px] font-bold uppercase tracking-[0.14em] text-[#fffaf5] transition-all duration-200 hover:bg-wine active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? 'Resetting...' : 'Reset Password'}
-              </button>
-              <Link to="/admin" className="group mx-auto inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-muted no-underline transition-colors duration-200 hover:text-terra">
-                <svg className="h-[14px] w-[14px] transition-transform duration-200 group-hover:-translate-x-[3px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="19" y1="12" x2="5" y2="12" />
-                  <polyline points="12 19 5 12 12 5" />
-                </svg>
-                Back to login
-              </Link>
-            </form>
           )}
-        </div>
-      </main>
-    </div>
+
+          <PasswordField
+            label="Confirm new password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Re-enter new password"
+            show={showConfirm}
+            onToggle={() => setShowConfirm((p) => !p)}
+            required
+          />
+
+          {error && (
+            <p className="m-0 rounded-md border border-[rgba(155,53,49,0.25)] bg-[#fcf1ef] p-[11px_14px] text-[12px] leading-[1.4] text-[#a53232]">{error}</p>
+          )}
+
+          <button className={`${adminBtnPrimary} w-full`} type="submit" disabled={loading}>
+            {loading ? 'Resetting...' : 'Reset Password'}
+          </button>
+          <Link to="/admin" className="group mx-auto inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-muted no-underline transition-colors duration-200 hover:text-terra">
+            <svg className="h-[14px] w-[14px] transition-transform duration-200 group-hover:-translate-x-[3px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            Back to login
+          </Link>
+        </form>
+      )}
+    </AuthShell>
   );
 }

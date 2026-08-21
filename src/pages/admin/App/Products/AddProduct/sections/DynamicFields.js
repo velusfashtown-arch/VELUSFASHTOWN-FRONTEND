@@ -263,7 +263,7 @@ export default function DynamicFields({
               onUpload={onImageUpload}
               error={errorMsg}
             />
-            {field.helpText && <p className="mt-1 text-[10px] text-gray-400">{field.helpText}</p>}
+            {field.helpText && <p className="mt-1 text-[10px] text-muted">{field.helpText}</p>}
           </div>
         );
       }

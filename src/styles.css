@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,8 +15,10 @@ html {
 body {
   margin: 0;
   background: #fffdfa;
-  color: #241b18;
-  font-family: 'DM Sans', Arial, sans-serif;
+  color: #1e1b18;
+  font-family: 'Inter', 'DM Sans', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 button,
@@ -40,7 +42,7 @@ a {
 * {
   scrollbar-width: thin;
   /* Firefox */
-  scrollbar-color: #e5e7eb transparent;
+  scrollbar-color: #d1d5db transparent;
   /* Firefox */
 }
 
@@ -50,33 +52,33 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: #fffdfa;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #fffdfa;
+  background: #d1d5db;
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #fffdfa;
+  background: #9ca3af;
   background-clip: content-box;
   border: 2px solid transparent;
 }
 
 ::-webkit-scrollbar-corner {
-  background: #fffdfa;
+  background: transparent;
 }
 
 :root {
-  --cream: #f9f5ee;
-  --paper: #fffdfa;
-  --ink: #241b18;
+  --cream: #faf7f2;
+  --paper: #ffffff;
+  --ink: #1e1b18;
   --terra: #a74e3e;
-  --muted: #756b65;
-  --line: rgba(47, 31, 25, 0.16);
+  --muted: #6b6259;
+  --line: rgba(30, 27, 24, 0.1);
 }
 
 @layer components {
@@ -1071,13 +1073,13 @@ a {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #f9f5ee;
+  background: #faf7f2;
 }
 
 .page-loader-spinner {
   width: 32px;
   height: 32px;
-  border: 2px solid rgba(47, 31, 25, 0.16);
+  border: 2px solid rgba(30, 27, 24, 0.16);
   border-top-color: #a74e3e;
   border-radius: 50%;
   animation: page-loader-spin 0.7s linear infinite;
@@ -1111,7 +1113,7 @@ a {
 
 .rich-editor-wrapper .ql-container {
   border: none !important;
-  font-family: 'DM Sans', Arial, sans-serif;
+  font-family: 'Inter', 'DM Sans', Arial, sans-serif;
   font-size: 13px;
   min-height: 200px;
 }
@@ -1120,13 +1122,13 @@ a {
   padding: 16px;
   min-height: 200px;
   line-height: 1.6;
-  color: #241b18;
+  color: #1e1b18;
 }
 
 .rich-editor-wrapper .ql-editor.ql-blank::before {
   color: #9ca3af;
   font-style: normal;
-  font-family: 'DM Sans', Arial, sans-serif;
+  font-family: 'Inter', 'DM Sans', Arial, sans-serif;
 }
 
 .rich-editor-wrapper .ql-snow .ql-stroke {

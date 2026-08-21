@@ -25,7 +25,7 @@ const id = props.id || (label ? label.toLowerCase().replace(/\s+/g, '-') : 'inpu
         <label htmlFor={id} className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted">
           {label}
           {helper && <span className="font-normal lowercase tracking-normal text-[#999] ml-1">({helper})</span>}
-          {required && <span className="text-[#c5221f] ml-0.5">*</span>}
+          {required && <span className="text-danger ml-0.5">*</span>}
         </label>
       )}
       <div className="relative">
@@ -50,13 +50,13 @@ const id = props.id || (label ? label.toLowerCase().replace(/\s+/g, '-') : 'inpu
             icon ? 'pl-9' : 'pl-3'
           } pr-3 py-2.5 ${
             error
-              ? 'border-[#c5221f] bg-[#fce8e6] focus:border-[#c5221f]'
+              ? 'border-danger bg-danger/10 focus:border-danger'
               : 'border-line focus:border-terra'
           } ${disabled ? 'opacity-50 cursor-not-allowed bg-[#f5f0eb]' : ''}`}
           {...props}
         />
       </div>
-      {error && <span className="text-[10px] text-[#c5221f] font-medium">{error}</span>}
+      {error && <span className="text-[10px] text-danger font-medium">{error}</span>}
     </div>
   );
 }

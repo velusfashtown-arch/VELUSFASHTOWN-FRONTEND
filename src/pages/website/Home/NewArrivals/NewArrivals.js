@@ -40,7 +40,7 @@ function SignatureCard({ edit, index }) {
     <Link
       ref={cardRef}
       to={edit.to}
-className={`group relative min-h-[300px] overflow-hidden bg-sand text-white no-underline md:min-h-[365px] transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+      className={`group relative min-h-[300px] overflow-hidden bg-sand text-white no-underline md:min-h-[365px] transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
       <img
@@ -88,7 +88,7 @@ export default function NewArrivals({ products, loading }) {
     <section className="mx-auto max-w-[1530px] px-[7vw] py-[clamp(65px,8vw,120px)] max-[620px]:px-[18px] max-[620px]:py-[61px]" id="new-arrivals">
       <div
         ref={headerRef}
-className={`mb-[37px] flex items-end justify-between max-[620px]:mb-[26px] transition-[opacity,transform] duration-700 ${headerVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+        className={`mb-[37px] flex items-end justify-between max-[620px]:mb-[26px] transition-[opacity,transform] duration-700 ${headerVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
       >
         <div>
           <p className="mb-3 text-[10px] font-bold tracking-[0.19em] text-terra">JUST DROPPED</p>
@@ -106,7 +106,7 @@ className={`mb-[37px] flex items-end justify-between max-[620px]:mb-[26px] trans
       ) : featuredProducts.length ? (
         <div className="grid grid-cols-4 gap-[17px] max-[900px]:grid-cols-2 max-[900px]:gap-y-[37px] max-[620px]:gap-[11px] max-[620px]:gap-y-[30px]">
           {featuredProducts.map((product, i) => (
-<div
+            <div
               key={product.id}
               className="transition-[opacity,transform] duration-700 opacity-100 translate-y-0"
               style={{ transitionDelay: `${i * 100}ms` }}

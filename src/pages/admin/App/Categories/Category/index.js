@@ -9,6 +9,11 @@ import AdminInput from '../../../Common/Form/Input';
 import AdminTextarea from '../../../Common/Form/Textarea';
 import AdminCheckbox from '../../../Common/Form/Checkbox';
 import { adminBtnPrimary, adminBtnSecondary, adminToast } from '../../../Common/buttonClasses';
+import PageHeader from '../../../Common/PageHeader';
+
+function CategoryPageIcon() {
+  return <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>;
+}
 
 function CategoryModal({ category, onClose, onSaved }) {
   const token = getToken();
@@ -153,6 +158,12 @@ export default function AdminCategory() {
 
   return (
     <div>
+      <PageHeader
+        icon={<CategoryPageIcon />}
+        title="Category"
+        description="Top-level product categories that organize your entire catalog."
+        actions={<button type="button" onClick={openAdd} className={adminBtnPrimary}><span className="text-base leading-none">+</span> Add Category</button>}
+      />
 {success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
       {(error || localError) && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{(error || localError)}</div>}
 
@@ -168,10 +179,7 @@ export default function AdminCategory() {
       />
 
       <AdminTable
-        title="Category"
         searchKeys={['name', 'description']}
-        onAdd={openAdd}
-        addLabel="Add Category"
         onRefresh={loadCategory}
         loading={loading}
         refreshing={refreshing}

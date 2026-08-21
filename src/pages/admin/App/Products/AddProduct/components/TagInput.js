@@ -50,14 +50,14 @@ export default function TagInput({
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
       {label && (
-        <label className="text-[11px] font-semibold tracking-wide text-gray-600">
+        <label className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted">
           {label}
-          {required && <span className="text-red-500 ml-0.5">*</span>}
-          {helper && <span className="font-normal tracking-normal text-gray-400 ml-1.5">({helper})</span>}
+          {required && <span className="text-danger ml-0.5">*</span>}
+          {helper && <span className="font-normal lowercase tracking-normal text-[#999] ml-1">({helper})</span>}
         </label>
       )}
-      <div className={`flex flex-wrap gap-1.5 px-3 py-2 border rounded-lg bg-white transition-all duration-150
-        ${error ? 'border-red-300' : 'border-gray-200 focus-within:border-terra/50 focus-within:ring-1 focus-within:ring-terra/20'}`}
+      <div className={`flex flex-wrap gap-1.5 px-3 py-2 border rounded-lg bg-paper transition-all duration-150 min-h-[42px]
+        ${error ? 'border-danger bg-danger/10' : 'border-line focus-within:border-terra/50 focus-within:ring-1 focus-within:ring-terra/20'}`}
       >
         {tags.map((tag, index) => (
           <span
@@ -87,16 +87,16 @@ export default function TagInput({
             onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
             onKeyDown={handleKeyDown}
             placeholder={tags.length === 0 ? placeholder : ''}
-            className="w-full border-none outline-none text-[13px] py-0.5 bg-transparent text-ink placeholder:text-gray-300"
+            className="w-full border-none outline-none text-[13px] py-0.5 bg-transparent text-ink placeholder:text-[#b3aca6]"
           />
           {showSuggestions && filteredSuggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 max-h-40 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-paper border border-line rounded-lg shadow-[0_12px_32px_rgba(47,31,25,0.1)] z-10 max-h-40 overflow-y-auto">
               {filteredSuggestions.slice(0, 8).map((suggestion) => (
                 <button
                   key={suggestion}
                   type="button"
                   onMouseDown={() => addTag(suggestion)}
-                  className="w-full text-left px-3 py-2 text-[13px] text-gray-700 hover:bg-terra/5 transition-colors flex items-center gap-2"
+                  className="w-full text-left px-3 py-2 text-[13px] text-ink hover:bg-terra/5 transition-colors flex items-center gap-2"
                 >
                   <FiPlus className="w-3 h-3 text-terra flex-shrink-0" />
                   {suggestion}
@@ -106,7 +106,7 @@ export default function TagInput({
           )}
         </div>
       </div>
-      {error && <span className="text-[11px] text-red-500 font-medium">{error}</span>}
+      {error && <span className="text-[10px] text-danger font-medium">{error}</span>}
     </div>
   );
 }

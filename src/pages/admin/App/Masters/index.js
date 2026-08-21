@@ -9,6 +9,11 @@ import AdminInput from '../../Common/Form/Input';
 import AdminCheckbox from '../../Common/Form/Checkbox';
 import FormField from '../../Common/Form/FormField';
 import { adminBtnPrimary, adminBtnSecondary, adminToast } from '../../Common/buttonClasses';
+import PageHeader from '../../Common/PageHeader';
+
+function MastersIcon() {
+  return <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M4 12h16M4 18h9" strokeLinecap="round" /></svg>;
+}
 
 const FIELD_TYPES = [
   { value: 'text', label: 'Text' },
@@ -132,7 +137,7 @@ function MasterModal({ field, onClose, onSaved, groupOptions = [], categories = 
       }
     >
       <form id="master-field-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {error && <p className="m-0 text-[12px] font-medium text-[#c5221f]">{error}</p>}
+        {error && <p className="m-0 text-[12px] font-medium text-admin-danger">{error}</p>}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <AdminInput
@@ -240,9 +245,9 @@ function MasterModal({ field, onClose, onSaved, groupOptions = [], categories = 
         )}
 
         {isChoiceType && (
-          <div className="flex flex-col gap-3 rounded-lg border border-line bg-[rgba(47,31,25,0.02)] p-4">
+          <div className="flex flex-col gap-3 rounded-lg border border-admin-border bg-admin-bg p-4">
             <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.08em] text-muted">Options</label>
+                <label className="text-[10px] font-bold uppercase tracking-[0.08em] text-admin-muted">Options</label>
                 {form.options.map((opt, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <AdminInput
@@ -251,12 +256,12 @@ function MasterModal({ field, onClose, onSaved, groupOptions = [], categories = 
                       placeholder="Value"
                       className="flex-1"
                     />
-                    <button type="button" onClick={() => removeOption(i)} className="shrink-0 rounded-md border border-line px-2.5 py-2 text-[11px] text-muted hover:border-[#c5221f]/30 hover:text-[#c5221f]">
+                    <button type="button" onClick={() => removeOption(i)} className="shrink-0 rounded-md border border-admin-border px-2.5 py-2 text-[11px] text-admin-muted hover:border-admin-danger/30 hover:text-admin-danger">
                       Remove
                     </button>
                   </div>
                 ))}
-                <button type="button" onClick={addOption} className="self-start text-[11px] font-semibold text-terra hover:text-wine">
+                <button type="button" onClick={addOption} className="self-start text-[11px] font-semibold text-admin-primary hover:text-admin-primary-hover">
                   + Add option
                 </button>
             </div>
@@ -327,16 +332,15 @@ export default function AdminMasters() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h2 className="m-0 text-lg font-semibold text-ink">Masters</h2>
-        <p className="m-0 mt-1 text-[13px] text-muted">
-          Define extra fields for the Add Product form — they show up in a "Custom Fields" section
-          on every product, no code changes needed.
-        </p>
-      </div>
+      <PageHeader
+        icon={<MastersIcon />}
+        title="Masters"
+        description={'Define extra fields for the Add Product form — they show up in a "Custom Fields" section on every product, no code changes needed.'}
+        actions={<button type="button" onClick={openAdd} className={adminBtnPrimary}><span className="text-base leading-none">+</span> Add Master Field</button>}
+      />
 
-      {success && <div className={`${adminToast} bg-[#e6f4ea] text-[#137333] border border-[rgba(19,115,51,0.15)]`}>{success}</div>}
-      {(error || localError) && <div className={`${adminToast} bg-[#fce8e6] text-[#c5221f] border border-[rgba(197,34,31,0.15)]`}>{error || localError}</div>}
+      {success && <div className={`${adminToast} bg-admin-success-light text-admin-success border border-admin-success/20`}>{success}</div>}
+      {(error || localError) && <div className={`${adminToast} bg-admin-danger-light text-admin-danger border border-admin-danger/20`}>{error || localError}</div>}
 
       {modalOpen && (
         <MasterModal
@@ -356,10 +360,7 @@ export default function AdminMasters() {
       />
 
       <AdminTable
-        title="Masters"
         searchKeys={['label', 'key']}
-        onAdd={openAdd}
-        addLabel="Add Master Field"
         onRefresh={loadFields}
         loading={loading}
         refreshing={refreshing}
@@ -373,26 +374,26 @@ export default function AdminMasters() {
             header: 'Field',
             render: (f) => (
               <div>
-                <b className="text-ink">{f.label}</b>
-                {f.isCore && <span className="ml-1.5 text-[10px] font-semibold text-terra">core</span>}
-                {f.required && <span className="ml-1.5 text-[10px] font-semibold text-[#c5221f]">required</span>}
-                <small className="block text-[11px] text-muted">
+                <b className="text-admin-text">{f.label}</b>
+                {f.isCore && <span className="ml-1.5 text-[10px] font-semibold text-admin-primary">core</span>}
+                {f.required && <span className="ml-1.5 text-[10px] font-semibold text-admin-danger">required</span>}
+                <small className="block text-[11px] text-admin-muted">
                   key: {f.key}{f.group ? ` · ${f.group}` : ''}
                 </small>
               </div>
             ),
           },
-          { key: 'fieldType', header: 'Type', render: (f) => <span className="text-[12px] text-ink">{typeLabel(f.fieldType)}</span> },
+          { key: 'fieldType', header: 'Type', render: (f) => <span className="text-[12px] text-admin-text">{typeLabel(f.fieldType)}</span> },
           {
             key: 'category',
             header: 'Category',
-            render: (f) => <span className="text-[12px] text-ink">{f.category?.name || 'All Categories'}</span>,
+            render: (f) => <span className="text-[12px] text-admin-text">{f.category?.name || 'All Categories'}</span>,
           },
           {
             key: 'isActive',
             header: 'Status',
             render: (f) => (
-              <span className={`text-[11px] font-semibold ${f.isActive ? 'text-[#137333]' : 'text-muted'}`}>
+              <span className={`text-[11px] font-semibold ${f.isActive ? 'text-admin-success' : 'text-admin-muted'}`}>
                 {f.isActive ? 'Active' : 'Inactive'}
               </span>
             ),

@@ -6,8 +6,10 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { api } from '../../../../lib/api';
 import { getToken } from '../../../../lib/auth';
+import { adminBtnPrimary, adminBtnSecondary } from '../../Common/buttonClasses';
 
-const inputClass = 'w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink outline-none focus:border-terra';
+const inputClass = 'w-full rounded-lg border border-[rgba(47,31,25,0.14)] bg-paper px-3 py-2.5 text-sm text-ink outline-none transition-colors focus:border-terra';
+const labelClass = 'mb-1.5 block text-xs font-semibold text-ink';
 
 function emptyBanner() {
   return {
@@ -103,34 +105,34 @@ export default function Banners() {
 
   return (
     <div className="space-y-5">
-      {error ? <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+      {error ? <div className="rounded-xl border border-[#f3d4d4] bg-[#fce8e6] p-3 text-sm text-[#b93b3b]">{error}</div> : null}
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted">{banners.length} banner(s).</p>
-        <button type="button" onClick={openNew} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)]">
-          + Add Banner
+        <button type="button" onClick={openNew} className={adminBtnPrimary}>
+          <span className="text-base leading-none">+</span> Add Banner
         </button>
       </div>
 
       {banners.length === 0 && !editing ? (
-        <div className="rounded-xl border border-dashed border-line bg-paper p-10 text-center text-sm text-muted">No banners yet.</div>
+        <div className="rounded-2xl border border-dashed border-[rgba(47,31,25,0.16)] bg-paper p-10 text-center text-sm text-muted">No banners yet.</div>
       ) : null}
 
       <div className="space-y-3">
         {banners.map((banner) => (
-          <div key={banner._id} className={`rounded-xl border border-line bg-paper p-4 ${banner.status !== 'active' ? 'opacity-60' : ''}`}>
-            <div className="flex items-center justify-between gap-3">
+          <div key={banner._id} className={`rounded-2xl border border-[rgba(47,31,25,0.08)] bg-paper p-4 shadow-[0_4px_16px_rgba(47,31,25,0.04)] transition-shadow hover:shadow-[0_6px_20px_rgba(47,31,25,0.07)] ${banner.status !== 'active' ? 'opacity-60' : ''}`}>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase ${banner.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-muted'}`}>{banner.status}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${banner.status === 'active' ? 'bg-[#e6f4ea] text-[#137333]' : 'bg-[rgba(47,31,25,0.06)] text-muted'}`}>{banner.status}</span>
                   {banner.startDate ? <span className="text-[11px] text-muted">{banner.startDate} → {banner.endDate || '∞'}</span> : null}
                 </div>
                 <p className="mt-1 truncate text-sm font-semibold text-ink">{banner.title || 'Untitled banner'}</p>
               </div>
-              <div className="flex shrink-0 items-center gap-1">
-                <button type="button" onClick={() => handleToggle(banner)} className="rounded border border-line px-2 py-1.5 text-xs text-muted hover:bg-cream">{banner.status === 'active' ? 'Deactivate' : 'Activate'}</button>
-                <button type="button" onClick={() => openEdit(banner)} className="rounded border border-line px-2 py-1.5 text-xs font-semibold text-terra hover:bg-cream">Edit</button>
-                <button type="button" onClick={() => handleDelete(banner._id)} className="rounded border border-[#f3d4d4] px-2 py-1.5 text-xs font-semibold text-[#b93b3b] transition-colors hover:bg-[#fce8e6]">Delete</button>
+              <div className="flex shrink-0 flex-wrap items-center gap-1">
+                <button type="button" onClick={() => handleToggle(banner)} className="rounded-md border border-[rgba(47,31,25,0.14)] px-2.5 py-1.5 text-[11px] font-semibold text-muted transition-colors hover:bg-sand hover:text-ink">{banner.status === 'active' ? 'Deactivate' : 'Activate'}</button>
+                <button type="button" onClick={() => openEdit(banner)} className="rounded-md border border-[rgba(47,31,25,0.14)] px-2.5 py-1.5 text-[11px] font-semibold text-terra transition-colors hover:border-terra/30 hover:bg-terra/10">Edit</button>
+                <button type="button" onClick={() => handleDelete(banner._id)} className="rounded-md border border-[#f3d4d4] px-2.5 py-1.5 text-[11px] font-semibold text-[#b93b3b] transition-colors hover:bg-[#fce8e6]">Delete</button>
               </div>
             </div>
           </div>
@@ -139,60 +141,60 @@ export default function Banners() {
 
       {editing ? (
         <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setEditing(null)}>
-          <div className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto bg-paper p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+          <div className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto bg-paper p-5 shadow-2xl animate-admin-slide-in sm:p-6" onClick={(e) => e.stopPropagation()}>
             <div className="mb-5 flex items-center justify-between">
-              <h3 className="text-lg font-bold text-ink">{isNew ? 'Add Banner' : 'Edit Banner'}</h3>
-              <button type="button" onClick={() => setEditing(null)} className="text-muted hover:text-ink">✕</button>
+              <h3 className="font-playfair text-lg font-semibold text-ink">{isNew ? 'Add Banner' : 'Edit Banner'}</h3>
+              <button type="button" onClick={() => setEditing(null)} className="grid h-8 w-8 place-items-center rounded-full text-muted transition-colors hover:bg-sand hover:text-ink">✕</button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="mb-1 block text-xs font-semibold text-ink">Title</label>
+                <label className={labelClass}>Title</label>
                 <input className={inputClass} value={editing.title || ''} onChange={(e) => setEditing((prev) => ({ ...prev, title: e.target.value }))} />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-semibold text-ink">Subtitle</label>
+                <label className={labelClass}>Subtitle</label>
                 <input className={inputClass} value={editing.subtitle || ''} onChange={(e) => setEditing((prev) => ({ ...prev, subtitle: e.target.value }))} />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-semibold text-ink">Desktop Image URL</label>
+                <label className={labelClass}>Desktop Image URL</label>
                 <input className={inputClass} value={editing.desktopImage || ''} onChange={(e) => setEditing((prev) => ({ ...prev, desktopImage: e.target.value }))} placeholder="/images/Home/Banner/01.png" />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-semibold text-ink">Mobile Image URL</label>
+                <label className={labelClass}>Mobile Image URL</label>
                 <input className={inputClass} value={editing.mobileImage || ''} onChange={(e) => setEditing((prev) => ({ ...prev, mobileImage: e.target.value }))} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-ink">Button Text</label>
+                  <label className={labelClass}>Button Text</label>
                   <input className={inputClass} value={editing.buttonText || ''} onChange={(e) => setEditing((prev) => ({ ...prev, buttonText: e.target.value }))} placeholder="Shop Now" />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-ink">Button URL</label>
+                  <label className={labelClass}>Button URL</label>
                   <input className={inputClass} value={editing.buttonUrl || ''} onChange={(e) => setEditing((prev) => ({ ...prev, buttonUrl: e.target.value }))} placeholder="/shop" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-ink">Start Date</label>
+                  <label className={labelClass}>Start Date</label>
                   <input type="date" className={inputClass} value={editing.startDate || ''} onChange={(e) => setEditing((prev) => ({ ...prev, startDate: e.target.value }))} />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-ink">End Date</label>
+                  <label className={labelClass}>End Date</label>
                   <input type="date" className={inputClass} value={editing.endDate || ''} onChange={(e) => setEditing((prev) => ({ ...prev, endDate: e.target.value }))} />
                 </div>
               </div>
               <div>
-                <label className="mb-1 block text-xs font-semibold text-ink">Status</label>
+                <label className={labelClass}>Status</label>
                 <select className={inputClass} value={editing.status} onChange={(e) => setEditing((prev) => ({ ...prev, status: e.target.value }))}>
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setEditing(null)} className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-muted hover:bg-cream">Cancel</button>
-                <button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-terra px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-[0_2px_8px_rgba(167,78,62,0.28)] transition-all duration-200 hover:bg-wine hover:shadow-[0_4px_14px_rgba(167,78,62,0.36)] disabled:opacity-60">
+              <div className="flex justify-end gap-2.5 pt-2">
+                <button type="button" onClick={() => setEditing(null)} className={adminBtnSecondary}>Cancel</button>
+                <button type="button" onClick={handleSave} disabled={saving} className={adminBtnPrimary}>
                   {saving ? 'Saving…' : 'Save Banner'}
                 </button>
               </div>

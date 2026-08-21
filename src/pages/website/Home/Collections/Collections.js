@@ -29,7 +29,7 @@ function CollectionCard({ collection, index }) {
   return (
     <Link
       ref={cardRef}
-className={`group relative block min-h-[438px] overflow-hidden bg-[#8b5145] text-left text-white no-underline max-[900px]:min-h-[350px] max-[620px]:min-h-[270px] transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+      className={`group relative block min-h-[438px] overflow-hidden bg-[#8b5145] text-left text-white no-underline max-[900px]:min-h-[350px] max-[620px]:min-h-[270px] transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
       style={{ transitionDelay: `${index * 100}ms` }}
       to={collection.href}
     >
@@ -72,7 +72,7 @@ export default function Collections() {
     <section className="py-[clamp(65px,8vw,120px)] px-[7vw] max-[620px]:px-[18px] max-[620px]:py-[61px]" id="collections">
       <div
         ref={headerRef}
-className={`text-center mb-[38px] max-[620px]:mb-[25px] transition-[opacity,transform] duration-700 ${headerVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+        className={`text-center mb-[38px] max-[620px]:mb-[25px] transition-[opacity,transform] duration-700 ${headerVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
       >
         <p className="text-terra font-bold text-[10px] tracking-[0.19em] mb-[11px]">CURATED FOR YOU</p>
         <h2 className="m-0 font-playfair font-medium tracking-[-.055em] leading-[.95] text-[clamp(42px,4.15vw,66px)] max-[620px]:text-[42px]">Shop the <em className="not-italic font-medium">edit</em></h2>
@@ -85,4 +85,3 @@ className={`text-center mb-[38px] max-[620px]:mb-[25px] transition-[opacity,tran
     </section>
   );
 }
-

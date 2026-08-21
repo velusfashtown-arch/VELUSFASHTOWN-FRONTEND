@@ -21,10 +21,10 @@ function ServiceItem({ icon, title, description, index, border }) {
   return (
     <div
       ref={itemRef}
-className={`flex flex-col items-center max-[620px]:items-start transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} ${border}`}
+      className={`flex flex-col items-center max-[620px]:items-start transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} ${border}`}
       style={{ transitionDelay: `${index * 150}ms` }}
     >
-<div className="mb-[11px] inline-flex h-6 w-6 items-center justify-center text-[#f3c997] transition-all duration-300 hover:scale-110 hover:text-[#f8d9aa] max-[620px]:mb-2">
+      <div className="mb-[11px] inline-flex h-6 w-6 items-center justify-center text-[#f3c997] transition-all duration-300 hover:scale-110 hover:text-[#f8d9aa] max-[620px]:mb-2">
         {icon}
       </div>
       <strong className="block text-[#f3c997] text-[9px] tracking-[0.16em]">{title}</strong>
@@ -35,7 +35,7 @@ className={`flex flex-col items-center max-[620px]:items-start transition-[opaci
 
 export default function ServiceStrip() {
   return (
-    <section className="bg-[#442920] text-[#fff8ef] py-[35px] px-[8vw] grid grid-cols-3 gap-[30px] text-center max-[620px]:py-[27px] max-[620px]:px-5 max-[620px]:grid-cols-1 max-[620px]:gap-6 max-[620px]:text-left" aria-label="Store services">
+    <section className="bg-[#1e1b18] text-[#fff8ef] py-[35px] px-[8vw] grid grid-cols-3 gap-[30px] text-center max-[620px]:py-[27px] max-[620px]:px-5 max-[620px]:grid-cols-1 max-[620px]:gap-6 max-[620px]:text-left" aria-label="Store services">
       <ServiceItem
         icon={<svg viewBox="0 0 24 24" className="w-full h-full" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z" /><circle cx="7" cy="18" r="2" /><circle cx="18" cy="18" r="2" /></svg>}
         title="COMPLIMENTARY SHIPPING"
@@ -60,4 +60,3 @@ export default function ServiceStrip() {
     </section>
   );
 }
-

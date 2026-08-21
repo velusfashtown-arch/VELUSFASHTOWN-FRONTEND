@@ -50,16 +50,16 @@ export default function AdminModal({
       onClick={handleOverlayClick}
     >
       <div
-className={`flex max-h-[calc(100dvh-1rem)] w-full flex-col overflow-hidden rounded-lg border border-line bg-paper shadow-[0_8px_32px_rgba(0,0,0,0.12)] sm:max-h-[88vh] sm:rounded-xl ${sizeClasses[size] || sizeClasses.md} animate-admin-modal-in`}
+        className={`flex max-h-[calc(100dvh-1rem)] w-full flex-col overflow-hidden rounded-xl border border-admin-border bg-white shadow-modal sm:max-h-[88vh] sm:rounded-2xl ${sizeClasses[size] || sizeClasses.md} animate-admin-modal-in`}
       >
         {/* Header */}
         {title && (
-          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[rgba(47,31,25,0.08)] px-4 py-4 sm:px-5 sm:py-[18px]">
-            <h3 className="m-0 min-w-0 font-playfair text-base font-semibold tracking-[-0.02em] text-ink sm:text-lg">{title}</h3>
+          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-admin-border px-4 py-4 sm:px-5 sm:py-[18px]">
+            <h3 className="m-0 min-w-0 font-playfair text-base font-semibold tracking-[-0.02em] text-admin-text sm:text-lg">{title}</h3>
             {showClose && (
               <button
                 onClick={onClose}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[rgba(47,31,25,0.08)] text-muted transition-colors hover:border-terra/30 hover:bg-terra/10 hover:text-terra"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-admin-border text-admin-muted transition-colors hover:border-admin-primary/30 hover:bg-admin-primary-light hover:text-admin-primary"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -76,7 +76,7 @@ className={`flex max-h-[calc(100dvh-1rem)] w-full flex-col overflow-hidden round
 
         {/* Footer — fixed at bottom */}
         {footer !== undefined ? (
-          <div className="shrink-0 border-t border-[rgba(47,31,25,0.08)] bg-[rgba(250,245,239,0.55)] px-4 py-3 sm:rounded-b-xl sm:px-5 sm:py-4">
+          <div className="shrink-0 border-t border-admin-border bg-admin-bg/50 px-4 py-3 sm:rounded-b-2xl sm:px-5 sm:py-4">
             {footer}
           </div>
         ) : null}
@@ -84,4 +84,3 @@ className={`flex max-h-[calc(100dvh-1rem)] w-full flex-col overflow-hidden round
     </div>
   );
 }
-

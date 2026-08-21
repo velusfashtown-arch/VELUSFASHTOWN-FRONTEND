@@ -51,7 +51,7 @@ export default function StoryBanner() {
       />
       <div className="absolute z-[1] inset-0 bg-[linear-gradient(90deg,rgba(46,20,12,.77),rgba(46,20,12,.21)_66%,rgba(46,20,12,.1))] max-[620px]:bg-[linear-gradient(90deg,rgba(46,20,12,.8),rgba(46,20,12,.16))]" />
       <div
-className={`relative z-[2] max-w-[450px] py-[130px] pb-[82px] pl-[13.5vw] max-[620px]:px-[26px] max-[620px]:py-[96px] max-[620px]:pb-[65px] transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+        className={`relative z-[2] max-w-[450px] py-[130px] pb-[82px] pl-[13.5vw] max-[620px]:px-[26px] max-[620px]:py-[96px] max-[620px]:pb-[65px] transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
       >
         <p className="text-[#ffe6c7] font-bold text-[10px] tracking-[0.19em] mb-3">VELU'S PROMISE</p>
         <h2 className="m-0 font-playfair font-medium tracking-[-.055em] leading-[.95] text-[clamp(42px,4.15vw,66px)] max-[620px]:text-[42px]">
@@ -67,4 +67,3 @@ className={`relative z-[2] max-w-[450px] py-[130px] pb-[82px] pl-[13.5vw] max-[6
     </section>
   );
 }
-

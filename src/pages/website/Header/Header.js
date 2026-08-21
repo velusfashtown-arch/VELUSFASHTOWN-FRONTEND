@@ -173,7 +173,7 @@ export default function Header() {
                   <button className="border-0 bg-transparent p-0 text-[10px] font-bold tracking-[0.12em] text-terra" type="button" onClick={handleLogout}>SIGN OUT</button>
                 </>
               ) : (
-<Link to="/login" onClick={() => setMenuOpen(false)} className="inline-flex min-h-[46px] w-full items-center justify-center border border-terra bg-terra px-5 py-3 text-[10px] font-bold tracking-[0.14em] text-[#fffaf5] no-underline transition hover:border-wine hover:bg-wine">SIGN IN / CREATE ACCOUNT</Link>
+                <Link to="/login" onClick={() => setMenuOpen(false)} className="inline-flex min-h-[46px] w-full items-center justify-center border border-terra bg-terra px-5 py-3 text-[10px] font-bold tracking-[0.14em] text-[#fffaf5] no-underline transition hover:border-wine hover:bg-wine">SIGN IN / CREATE ACCOUNT</Link>
               )}
             </div>
           </aside>

@@ -45,9 +45,9 @@ export default function AdminLayout({ children, pageTitle }) {
     return () => { document.body.style.overflow = previousOverflow; };
   }, [mobileSidebarOpen]);
 
-return (
+  return (
     <AdminWebsiteProvider>
-      <div className="flex min-h-screen bg-[#f5f0eb] font-sans">
+      <div className="flex min-h-screen bg-admin-bg font-sans">
         {/* Sidebar */}
         <AdminSidebar
           isCollapsed={sidebarCollapsed}
@@ -56,10 +56,10 @@ return (
           onMobileClose={closeMobileSidebar}
         />
 
-{/* Main Content */}
+        {/* Main Content */}
         <div
           className={`flex min-h-screen min-w-0 flex-1 flex-col transition-all duration-200 ${
-            sidebarCollapsed ? 'md:ml-[72px]' : 'md:ml-[220px]'
+            sidebarCollapsed ? 'md:ml-[72px]' : 'md:ml-[240px]'
           }`}
         >
           <AdminHeader
@@ -68,7 +68,7 @@ return (
             onMenuToggle={openMobileSidebar}
           />
 
-          <div className="min-w-0 flex-1 p-3 md:p-4">
+          <div className="min-w-0 flex-1 p-3 md:p-5 lg:p-6">
             {children}
           </div>
         </div>
@@ -76,4 +76,3 @@ return (
     </AdminWebsiteProvider>
   );
 }
-
